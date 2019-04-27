@@ -1,0 +1,20 @@
+package dou.ding.nyat.blog.service.impl;
+
+import dou.ding.nyat.blog.entity.TagEntity;
+import dou.ding.nyat.blog.model.Tag;
+import dou.ding.nyat.blog.repository.TagRepository;
+import dou.ding.nyat.blog.service.ServiceAbstract;
+import dou.ding.nyat.blog.service.TagService;
+import dou.ding.nyat.blog.util.BeanTools;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional
+public class TagServiceImpl extends ServiceAbstract<Integer, Tag, TagEntity, TagRepository> implements TagService {
+    @Autowired
+    public TagServiceImpl(TagRepository repository, BeanTools beanTools) {
+        super(repository, beanTools);
+    }
+}
