@@ -7,7 +7,16 @@
   <script type="text/javascript" src="${'/ckeditor/ckeditor.js'}"></script>
   <script type="text/javascript" src="${'/client/script.js'}"></script>
   <script>
+      function showAutoComplete(element, data) {
+
+      }
+
       window.onload = function () {
+          var searchBox = document.getElementById("autocomplete-box");
+          getAllTags(function (respData) {
+              showAutoComplete(searchBox, respData);
+          });
+
           var form = document.getElementById("new-article-form");
           form.onsubmit = function (ev) {
               ev.preventDefault();
@@ -16,9 +25,9 @@
                   title: document.getElementsByName("title")[0].value,
                   content: CKEDITOR.instances["input-content"].getData()
               };
-              addNewArticle(data, window.location.pathname);
-          }
-      }
+              addNewArticle(data, "/api" + window.location.pathname);
+          };
+      };
   </script>
 </head>
 <body>
@@ -36,6 +45,12 @@
       <label>
         Title
         <input class="form-control" type="text" name="title" value="">
+      </label>
+    </div>
+    <div class="form-group">
+      <label>
+        Tags:
+        <input id="autocomplete-box" class="form-control" type="text" name="tag" autocomplete="off">
       </label>
     </div>
     <div class="form-group">

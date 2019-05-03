@@ -19,6 +19,14 @@
     <java.version>1.8</java.version>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>CKFINDER-CKEDITOR</id>
+      <name>CKFINDER-CKEDITOR Libraries</name>
+      <url>https://github.com/dingnjat/mvn-repo/raw/master/</url>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -73,36 +81,26 @@
       <groupId>com.finder</groupId>
       <artifactId>fileeditor</artifactId>
       <version>2.6.2.1</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/src/main/resources/lib/CKFinderPlugin-FileEditor-2.6.2.1.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.finder</groupId>
       <artifactId>imgresize</artifactId>
       <version>2.6.2.1</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/src/main/resources/lib/CKFinderPlugin-ImageResize-2.6.2.1.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.finder</groupId>
       <artifactId>watermark</artifactId>
       <version>2.6.2.1</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/src/main/resources/lib/CKFinderPlugin-Watermark-2.6.2.1.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.finder</groupId>
       <artifactId>ckfinder</artifactId>
       <version>2.6.2.1</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/src/main/resources/lib/CKFinder-2.6.2.1.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>net.coobird</groupId>
       <artifactId>thumbnailator</artifactId>
       <version>0.4.8</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/src/main/resources/lib/thumbnailator-0.4.8.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>commons-fileupload</groupId>

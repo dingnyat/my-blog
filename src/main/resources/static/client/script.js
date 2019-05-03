@@ -1,7 +1,7 @@
 function getArticleByCode(code) {
     var data = null;
     var req = new XMLHttpRequest();
-    req.open("GET", "/article/" + code, true);
+    req.open("GET", "/api/article/" + code, true);
     req.responseType = "json";
     req.onreadystatechange = function () {
         if (this.readyState !== XMLHttpRequest.DONE) {
@@ -33,4 +33,21 @@ function addNewArticle(article, url) {
         }
     };
     req.send(JSON.stringify(article));
+}
+
+function getAllTags(func) {
+    var req = new XMLHttpRequest();
+    req.open("GET", "/api/get-all-tags", true);
+    req.responseType = "json";
+    req.onreadystatechange = function () {
+        if (this.readyState !== XMLHttpRequest.DONE) {
+            return;
+        }
+        if (this.status !== 200) {
+            console.log("Can't get tags");
+        } else {
+            func(this.response);
+        }
+    };
+    req.send();
 }

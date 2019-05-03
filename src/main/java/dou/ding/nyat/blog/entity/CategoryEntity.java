@@ -8,6 +8,7 @@ import java.util.Set;
 public class CategoryEntity {
     @Id
     @Column(name = "id", nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "code", nullable = false, unique = true, length = 64)
