@@ -2,6 +2,8 @@ package dou.ding.nyat.blog.controller.client;
 
 import dou.ding.nyat.blog.model.Article;
 import dou.ding.nyat.blog.service.ArticleService;
+import dou.ding.nyat.blog.service.CategoryService;
+import dou.ding.nyat.blog.service.SeriesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +19,18 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    private SeriesService seriesService;
+
+    @Autowired
+    private CategoryService categoryService;
+
     @GetMapping("/user/{username}/workspace/new-article")
     public ModelAndView newArticle(@PathVariable("username") String username) {
-        return new ModelAndView("client/new-article");
+        ModelAndView modelAndView = new ModelAndView("client/new-article");
+        modelAndView.addObject("seriesList", seriesService.getAllRecords());
+        modelAndView.addObject("categories", categoryService.getAllRecords());
+        return modelAndView;
     }
 
     @PostMapping("/api/user/{username}/workspace/new-article")

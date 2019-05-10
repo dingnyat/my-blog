@@ -32,10 +32,8 @@ public class UrlAuthenSuccessHandler extends SimpleUrlAuthenticationSuccessHandl
         String targetUrl = "";
         if (roles.contains("ROLE_ADMIN")) {
             targetUrl = "/admin/dashboard";
-            request.getSession().setAttribute("CKFinder_UserRole", "ROLE_ADMIN");
         } else if (roles.contains("ROLE_AUTHOR")) {
             targetUrl = "/user/" + username + "/workspace";
-            request.getSession().setAttribute("CKFinder_UserRole", "ROLE_AUTHOR");
         }
         if (response.isCommitted()) {
             System.out.println("Can't redirect");

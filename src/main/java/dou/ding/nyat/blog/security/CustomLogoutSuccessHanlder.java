@@ -13,7 +13,6 @@ import java.io.IOException;
 public class CustomLogoutSuccessHanlder extends SimpleUrlLogoutSuccessHandler {
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        request.getSession().removeAttribute("CKFinder_UserRole");
         request.getSession().removeAttribute("isLoggedIn");
         super.onLogoutSuccess(request, response, authentication);
     }
