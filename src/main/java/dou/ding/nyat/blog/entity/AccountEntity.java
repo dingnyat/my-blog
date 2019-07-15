@@ -21,8 +21,8 @@ public class AccountEntity {
     @Column(name = "email", unique = true, length = 128)
     private String email;
 
-    @Column(name = "enabled", nullable = false)
-    private boolean enabled;
+    @Column(name = "is_actived", nullable = false)
+    private boolean isActived;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "account_role",
@@ -34,11 +34,8 @@ public class AccountEntity {
     @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
     private AuthorEntity author;
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
-    private AccountVerificationTokenEntity accountVerificationToken;
-
     public AccountEntity() {
-        this.enabled = false;
+        this.isActived = false;
     }
 
     public int getId() {
@@ -81,12 +78,12 @@ public class AccountEntity {
         this.roles = roles;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public boolean isActived() {
+        return isActived;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setActived(boolean actived) {
+        isActived = actived;
     }
 
     public AuthorEntity getAuthor() {
@@ -95,13 +92,5 @@ public class AccountEntity {
 
     public void setAuthor(AuthorEntity author) {
         this.author = author;
-    }
-
-    public AccountVerificationTokenEntity getAccountVerificationToken() {
-        return accountVerificationToken;
-    }
-
-    public void setAccountVerificationToken(AccountVerificationTokenEntity accountVerificationToken) {
-        this.accountVerificationToken = accountVerificationToken;
     }
 }
