@@ -2,28 +2,34 @@ package dou.ding.nyat.blog.entity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "comment")
 public class CommentEntity {
+
     @Id
     @Column(name = "id", nullable = false, updatable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
-    @Column(name = "writer", nullable = false, length = 64)
-    private String writer;
+    @Column(name = "comment_by", nullable = false, length = 64)
+    private String commentBy;
 
     @Column(name = "content", nullable = false, columnDefinition = "text")
     private String content;
 
     @Temporal(value = TemporalType.TIMESTAMP)
-    @Column(name = "time", nullable = false)
-    private Date time;
+    @Column(name = "created_date", nullable = false)
+    private Date createdDate;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "parent_comment_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_comment_comment"))
+    private Set<CommentEntity> childComments;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_comment_article"))
-    private ArticleEntity article;
+    @JoinColumn(name = "post_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_comment_post"))
+    private PostEntity post;
 
     @Column(name = "is_accepted", nullable = false)
     private boolean isAccepted;
@@ -36,28 +42,20 @@ public class CommentEntity {
         this.isRemoved = false;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getWriter() {
-        return writer;
+    public String getCommentBy() {
+        return commentBy;
     }
 
-    public void setWriter(String writer) {
-        this.writer = writer;
-    }
-
-    public ArticleEntity getArticle() {
-        return article;
-    }
-
-    public void setArticle(ArticleEntity article) {
-        this.article = article;
+    public void setCommentBy(String commentBy) {
+        this.commentBy = commentBy;
     }
 
     public String getContent() {
@@ -68,12 +66,28 @@ public class CommentEntity {
         this.content = content;
     }
 
-    public Date getTime() {
-        return time;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Set<CommentEntity> getChildComments() {
+        return childComments;
+    }
+
+    public void setChildComments(Set<CommentEntity> childComments) {
+        this.childComments = childComments;
+    }
+
+    public PostEntity getPost() {
+        return post;
+    }
+
+    public void setPost(PostEntity post) {
+        this.post = post;
     }
 
     public boolean isAccepted() {

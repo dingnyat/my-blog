@@ -20,7 +20,6 @@ public class ClientController {
 
     @GetMapping("/login")
     public String login() {
-        System.out.println((new BCryptPasswordEncoder(12)).encode("zxcvbnm"));
         return "client/login";
     }
 

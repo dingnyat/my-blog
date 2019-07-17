@@ -1,7 +1,7 @@
 package dou.ding.nyat.blog.controller.client;
 
-import dou.ding.nyat.blog.model.Article;
-import dou.ding.nyat.blog.service.ArticleService;
+import dou.ding.nyat.blog.model.Post;
+import dou.ding.nyat.blog.service.PostService;
 import dou.ding.nyat.blog.service.CategoryService;
 import dou.ding.nyat.blog.service.SeriesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.util.Date;
 public class ArticleController {
 
     @Autowired
-    private ArticleService articleService;
+    private PostService postService;
 
     @Autowired
     private SeriesService seriesService;
@@ -35,11 +35,11 @@ public class ArticleController {
 
     @PostMapping("/api/user/{username}/workspace/new-article")
     @ResponseBody
-    public ResponseEntity<?> newArticle(@PathVariable("username") String username, @RequestBody Article article) {
+    public ResponseEntity<?> newArticle(@PathVariable("username") String username, @RequestBody Post post) {
         try {
-            article.setTime(new Date());
-            article.setPositionInSeries(1);
-            articleService.create(article);
+            post.setCreatedDate(new Date());
+            post.setPositionInSeries(1);
+            postService.create(post);
             return new ResponseEntity<>("Successfully!", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Server error!", HttpStatus.INTERNAL_SERVER_ERROR);

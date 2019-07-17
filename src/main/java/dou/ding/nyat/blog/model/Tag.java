@@ -1,6 +1,7 @@
 package dou.ding.nyat.blog.model;
 
 public class Tag extends CommonModel<Integer> {
+
     private String code;
     private String name;
 

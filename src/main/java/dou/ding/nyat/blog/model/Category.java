@@ -3,10 +3,11 @@ package dou.ding.nyat.blog.model;
 import java.util.Set;
 
 public class Category extends CommonModel<Integer> {
+
     private String code;
     private String name;
     private String description;
-    private Set<Series> seriesSet;
+    private Set<Series> series;
     private Set<Tag> tags;
 
     public Category() {
@@ -36,12 +37,12 @@ public class Category extends CommonModel<Integer> {
         this.description = description;
     }
 
-    public Set<Series> getSeriesSet() {
-        return seriesSet;
+    public Set<Series> getSeries() {
+        return series;
     }
 
-    public void setSeriesSet(Set<Series> seriesSet) {
-        this.seriesSet = seriesSet;
+    public void setSeries(Set<Series> series) {
+        this.series = series;
     }
 
     public Set<Tag> getTags() {

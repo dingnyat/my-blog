@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <#assign title = "Workspace">
-  <#include "./fragment/header-html.ftl">
+    <#assign title = "Workspace">
+    <#include "./fragment/header-html.ftl">
   <script type="text/javascript" src="${'/vendor/ckeditor/ckeditor.js'}"></script>
   <script type="text/javascript" src="${'/client/script.js'}"></script>
   <script>
@@ -17,7 +17,7 @@
               });
           });
 
-          let form = document.getElementById("new-article-form");
+          let form = document.getElementById("new-post-form");
           form.onsubmit = function (ev) {
               ev.preventDefault();
               let data = {
@@ -41,7 +41,7 @@
       };
   </script>
   <style>
-    #new-article-form label {
+    #new-post-form label {
       width: 100%;
     }
 
@@ -54,8 +54,8 @@
 <body>
 <#include "./fragment/nav.ftl">
 <section class="container-fluid text-center pt-5 pb-5">
-  <h3 class="mt-3">Write a new article</h3>
-  <form id="new-article-form" class="text-left" action="${springMacroRequestContext.getRequestUri()}" method="post">
+  <h3 class="mt-3">Write a new post</h3>
+  <form id="new-post-form" class="text-left" action="${springMacroRequestContext.getRequestUri()}" method="post">
     <div class="form-group">
       <label for="input-code">Code</label>
       <input id="input-code" class="form-control" type="text" name="code" value="">
@@ -75,18 +75,18 @@
     <div class="form-group">
       <label for="select-category">Category</label>
       <select class="form-control" id="select-category">
-        <#list categories as category>
-          <option value="${category.code}">${category.name}</option>
-        </#list>
+          <#list categories as category>
+            <option value="${category.code}">${category.name}</option>
+          </#list>
       </select>
     </div>
     <div class="form-row">
       <div class="form-group col-md-6">
         <label for="select-series">Series</label>
         <select class="form-control" id="select-series">
-          <#list seriesList as series>
-            <option value="${series.code}">${series.name}</option>
-          </#list>
+            <#list seriesList as series>
+              <option value="${series.code}">${series.name}</option>
+            </#list>
         </select>
       </div>
       <div class="form-group col-md-6">

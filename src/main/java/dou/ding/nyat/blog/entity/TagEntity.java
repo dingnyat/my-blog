@@ -19,7 +19,7 @@ public class TagEntity {
     private String name;
 
     @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
-    private Set<ArticleEntity> articles;
+    private Set<PostEntity> posts;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_category_category_tag"))
@@ -52,11 +52,19 @@ public class TagEntity {
         this.name = name;
     }
 
-    public Set<ArticleEntity> getArticles() {
-        return articles;
+    public Set<PostEntity> getPosts() {
+        return posts;
     }
 
-    public void setArticles(Set<ArticleEntity> articles) {
-        this.articles = articles;
+    public void setPosts(Set<PostEntity> posts) {
+        this.posts = posts;
+    }
+
+    public CategoryEntity getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryEntity category) {
+        this.category = category;
     }
 }

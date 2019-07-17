@@ -6,6 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Set;
 
 public class Author extends CommonModel<Integer> {
+
+    private String code;
     private String name;
     private String description;
     private String avatarUrl;
@@ -14,6 +16,14 @@ public class Author extends CommonModel<Integer> {
     private MultipartFile avatarFile;
 
     public Author() {
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {

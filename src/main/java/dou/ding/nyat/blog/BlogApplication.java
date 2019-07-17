@@ -2,6 +2,7 @@ package dou.ding.nyat.blog;
 
 import dou.ding.nyat.blog.security.CustomLogoutSuccessHanlder;
 import dou.ding.nyat.blog.security.CustomPersistentTokenBasedRememberMeService;
+import dou.ding.nyat.blog.security.RoleEnum;
 import dou.ding.nyat.blog.security.UrlAuthenSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -59,8 +60,8 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/login", "/logout").permitAll()
-                .antMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasRole("AUTHOR")
+                .antMatchers("/admin/**", "/api/admin/**").hasRole(RoleEnum.ADMIN.getName())
+                .antMatchers("/user/**").hasRole(RoleEnum.AUTHOR.getName())
                 .and().exceptionHandling().accessDeniedPage("/access-denied");
 
         http.authorizeRequests().and()

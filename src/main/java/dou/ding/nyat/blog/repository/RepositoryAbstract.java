@@ -52,7 +52,7 @@ public abstract class RepositoryAbstract<PrimaryKeyType extends Serializable, E>
     }
 
     public List<E> getAllRecords() {
-        entityClazz.getName();
+        // entityClazz.getName();
         return entityManager.createQuery("SELECT e FROM " + entityName + " e", entityClazz).getResultList();
     }
 

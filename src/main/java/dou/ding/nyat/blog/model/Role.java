@@ -1,6 +1,7 @@
 package dou.ding.nyat.blog.model;
 
 public class Role extends CommonModel<Integer> {
+
     private String name;
 
     public Role() {

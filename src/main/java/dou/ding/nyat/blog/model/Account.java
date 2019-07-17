@@ -7,10 +7,11 @@ public class Account extends CommonModel<Integer> {
     private String username;
     private String password;
     private String email;
+    private boolean isActived;
     private Set<Role> roles;
-    private boolean enabled;
 
     public Account() {
+        this.isActived = false;
     }
 
     public String getUsername() {
@@ -45,11 +46,11 @@ public class Account extends CommonModel<Integer> {
         this.roles = roles;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public boolean isActived() {
+        return isActived;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setActived(boolean actived) {
+        isActived = actived;
     }
 }

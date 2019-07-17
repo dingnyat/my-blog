@@ -1,11 +1,14 @@
 package dou.ding.nyat.blog.model;
 
 import java.util.Date;
+import java.util.Set;
 
 public class Comment extends CommonModel<Integer> {
-    private String writer;
+
+    private String commentBy;
     private String content;
-    private Date time;
+    private Date createdDate;
+    private Set<Comment> childComments;
     private boolean isAccepted;
     private boolean isRemoved;
 
@@ -14,12 +17,12 @@ public class Comment extends CommonModel<Integer> {
         this.isRemoved = false;
     }
 
-    public String getWriter() {
-        return writer;
+    public String getCommentBy() {
+        return commentBy;
     }
 
-    public void setWriter(String writer) {
-        this.writer = writer;
+    public void setCommentBy(String commentBy) {
+        this.commentBy = commentBy;
     }
 
     public String getContent() {
@@ -30,12 +33,20 @@ public class Comment extends CommonModel<Integer> {
         this.content = content;
     }
 
-    public Date getTime() {
-        return time;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Set<Comment> getChildComments() {
+        return childComments;
+    }
+
+    public void setChildComments(Set<Comment> childComments) {
+        this.childComments = childComments;
     }
 
     public boolean isAccepted() {

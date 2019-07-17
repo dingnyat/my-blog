@@ -21,8 +21,8 @@ public class SeriesEntity {
     @Column(name = "description", nullable = false, length = 65536)
     private String description;
 
-    @OneToMany(mappedBy = "articleSeries", fetch = FetchType.LAZY)
-    private Set<ArticleEntity> articles;
+    @OneToMany(mappedBy = "series", fetch = FetchType.LAZY)
+    private Set<PostEntity> posts;
 
     @ManyToMany(mappedBy = "series", fetch = FetchType.LAZY)
     private Set<CategoryEntity> categories;
@@ -62,12 +62,12 @@ public class SeriesEntity {
         this.description = description;
     }
 
-    public Set<ArticleEntity> getArticles() {
-        return articles;
+    public Set<PostEntity> getPosts() {
+        return posts;
     }
 
-    public void setArticles(Set<ArticleEntity> articles) {
-        this.articles = articles;
+    public void setPosts(Set<PostEntity> posts) {
+        this.posts = posts;
     }
 
     public Set<CategoryEntity> getCategories() {

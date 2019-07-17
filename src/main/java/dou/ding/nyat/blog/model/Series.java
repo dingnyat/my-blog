@@ -1,12 +1,10 @@
 package dou.ding.nyat.blog.model;
 
-import java.util.Set;
-
 public class Series extends CommonModel<Integer> {
+
     private String code;
     private String name;
     private String description;
-    private Set<Article> articles;
 
     public Series() {
     }
@@ -33,13 +31,5 @@ public class Series extends CommonModel<Integer> {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Set<Article> getArticles() {
-        return articles;
-    }
-
-    public void setArticles(Set<Article> articles) {
-        this.articles = articles;
     }
 }

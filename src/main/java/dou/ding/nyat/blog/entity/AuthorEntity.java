@@ -12,6 +12,9 @@ public class AuthorEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "code", nullable = false, unique = true)
+    private String code;
+
     @Column(name = "name", nullable = false, length = 128)
     private String name;
 
@@ -25,8 +28,8 @@ public class AuthorEntity {
     @JoinColumn(name = "account_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_author_account_account"))
     private AccountEntity account;
 
-    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
-    private Set<ArticleEntity> articles;
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+    private Set<PostEntity> posts;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<SocialLinkEntity> socialLinks;
@@ -40,6 +43,14 @@ public class AuthorEntity {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {
@@ -66,12 +77,12 @@ public class AuthorEntity {
         this.socialLinks = socialLinks;
     }
 
-    public Set<ArticleEntity> getArticles() {
-        return articles;
+    public Set<PostEntity> getPosts() {
+        return posts;
     }
 
-    public void setArticles(Set<ArticleEntity> articles) {
-        this.articles = articles;
+    public void setPosts(Set<PostEntity> posts) {
+        this.posts = posts;
     }
 
     public AccountEntity getAccount() {

@@ -34,7 +34,7 @@ public class AccountServiceImpl extends ServiceAbstract<Integer, Account, Accoun
 
     @Override
     public boolean isEmailExisted(String email) {
-        return repository.getByEmail(email) != null;
+        return (repository.getByEmail(email) != null);
     }
 
     @Override

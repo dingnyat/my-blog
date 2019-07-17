@@ -1,6 +1,7 @@
 package dou.ding.nyat.blog.model;
 
 public class SocialLink extends CommonModel<Integer> {
+
     private String name;
     private String link;
 
