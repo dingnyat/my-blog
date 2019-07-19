@@ -19,11 +19,11 @@ public interface ServiceInterface<PrimaryKeyType extends Serializable, M> {
 
     List<M> search(List<SearchCriteria> searchCriteria);
 
-    Long getTheNumberOfSearchedRecords(List<SearchCriteria> searchCriteria);
+    Long countSearchedRecords(List<SearchCriteria> searchCriteria);
 
     List<M> getTableData(DataTableRequest dataTableRequest, String... fieldNames);
 
-    Long getTheNumberOfFilteredRecords(DataTableRequest dataTableRequest, String... fieldNames);
+    Long countTableDataRecords(DataTableRequest dataTableRequest, String... fieldNames);
 
-    Long getTheNumberOfAllRecords();
+    Long countAllRecords();
 }

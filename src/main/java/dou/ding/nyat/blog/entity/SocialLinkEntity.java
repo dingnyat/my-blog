@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "social_link")
 public class SocialLinkEntity {
     @Id
-    @Column(name = "id", nullable = false, unique = true, updatable = false)
+    @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
@@ -15,11 +15,6 @@ public class SocialLinkEntity {
 
     @Column(name = "link", nullable = false, length = 1024)
     private String link;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", nullable = false, insertable = false, updatable = false,
-            referencedColumnName = "id", foreignKey = @ForeignKey(name = "author_social_social"))
-    private AuthorEntity author;
 
     public SocialLinkEntity() {
     }
@@ -46,13 +41,5 @@ public class SocialLinkEntity {
 
     public void setLink(String link) {
         this.link = link;
-    }
-
-    public AuthorEntity getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(AuthorEntity author) {
-        this.author = author;
     }
 }

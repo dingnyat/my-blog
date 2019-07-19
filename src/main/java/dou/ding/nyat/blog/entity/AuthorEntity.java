@@ -24,14 +24,15 @@ public class AuthorEntity {
     @Column(name = "avatar_url", length = 1024)
     private String avatarUrl;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_author_account_account"))
     private AccountEntity account;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private Set<PostEntity> posts;
 
-    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true) // thêm cái orphanRemoval mới xóa được
+    @JoinColumn(name = "author_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_author_social_social"))
     private Set<SocialLinkEntity> socialLinks;
 
     public AuthorEntity() {
@@ -69,20 +70,12 @@ public class AuthorEntity {
         this.description = description;
     }
 
-    public Set<SocialLinkEntity> getSocialLinks() {
-        return socialLinks;
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
-    public void setSocialLinks(Set<SocialLinkEntity> socialLinks) {
-        this.socialLinks = socialLinks;
-    }
-
-    public Set<PostEntity> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(Set<PostEntity> posts) {
-        this.posts = posts;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public AccountEntity getAccount() {
@@ -93,11 +86,19 @@ public class AuthorEntity {
         this.account = account;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public Set<PostEntity> getPosts() {
+        return posts;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setPosts(Set<PostEntity> posts) {
+        this.posts = posts;
+    }
+
+    public Set<SocialLinkEntity> getSocialLinks() {
+        return socialLinks;
+    }
+
+    public void setSocialLinks(Set<SocialLinkEntity> socialLinks) {
+        this.socialLinks = socialLinks;
     }
 }

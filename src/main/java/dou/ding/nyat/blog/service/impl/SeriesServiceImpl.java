@@ -5,7 +5,6 @@ import dou.ding.nyat.blog.model.Series;
 import dou.ding.nyat.blog.repository.SeriesRepository;
 import dou.ding.nyat.blog.service.SeriesService;
 import dou.ding.nyat.blog.service.ServiceAbstract;
-import dou.ding.nyat.blog.util.BeanTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +13,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SeriesServiceImpl extends ServiceAbstract<Integer, Series, SeriesEntity, SeriesRepository> implements SeriesService {
     @Autowired
-    public SeriesServiceImpl(SeriesRepository repository, BeanTools beanTools) {
-        super(repository, beanTools);
+    public SeriesServiceImpl(SeriesRepository repository) {
+        super(repository);
+    }
+
+    @Override
+    public Integer create(Series model) {
+        return null;
+    }
+
+    @Override
+    public void update(Series model) {
+
+    }
+
+    @Override
+    public Series convertToModel(SeriesEntity entity) {
+        return null;
     }
 }

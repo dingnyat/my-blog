@@ -24,14 +24,14 @@ public class AccountEntity {
     @Column(name = "is_actived", nullable = false)
     private boolean isActived;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "account_role",
             joinColumns = {@JoinColumn(name = "account_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_account_account_role"))},
             inverseJoinColumns = {@JoinColumn(name = "role_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_account_role_role"))},
             uniqueConstraints = {@UniqueConstraint(columnNames = {"account_id", "role_id"})})
     private Set<RoleEntity> roles;
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private AuthorEntity author;
 
     public AccountEntity() {
@@ -70,20 +70,20 @@ public class AccountEntity {
         this.email = email;
     }
 
-    public Set<RoleEntity> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<RoleEntity> roles) {
-        this.roles = roles;
-    }
-
     public boolean isActived() {
         return isActived;
     }
 
     public void setActived(boolean actived) {
         isActived = actived;
+    }
+
+    public Set<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<RoleEntity> roles) {
+        this.roles = roles;
     }
 
     public AuthorEntity getAuthor() {

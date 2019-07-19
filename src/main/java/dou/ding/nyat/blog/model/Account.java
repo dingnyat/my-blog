@@ -9,6 +9,7 @@ public class Account extends CommonModel<Integer> {
     private String email;
     private boolean isActived;
     private Set<Role> roles;
+    private Author author;
 
     public Account() {
         this.isActived = false;
@@ -52,5 +53,13 @@ public class Account extends CommonModel<Integer> {
 
     public void setActived(boolean actived) {
         isActived = actived;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 }
