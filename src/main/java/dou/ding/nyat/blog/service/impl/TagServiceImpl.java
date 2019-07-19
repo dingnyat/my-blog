@@ -29,6 +29,10 @@ public class TagServiceImpl extends ServiceAbstract<Integer, Tag, TagEntity, Tag
 
     @Override
     public Tag convertToModel(TagEntity entity) {
-        return null;
+        Tag tag = new Tag();
+        tag.setId(entity.getId());
+        tag.setCode(entity.getCode());
+        tag.setName(entity.getName());
+        return tag;
     }
 }

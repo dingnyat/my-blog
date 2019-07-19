@@ -21,10 +21,6 @@ public class TagEntity {
     @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     private Set<PostEntity> posts;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_category_category_tag"))
-    private CategoryEntity category;
-
     public TagEntity() {
     }
 
@@ -58,13 +54,5 @@ public class TagEntity {
 
     public void setPosts(Set<PostEntity> posts) {
         this.posts = posts;
-    }
-
-    public CategoryEntity getCategory() {
-        return category;
-    }
-
-    public void setCategory(CategoryEntity category) {
-        this.category = category;
     }
 }

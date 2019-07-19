@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
-  <a class="navbar-brand" href="${'/'}">Annanjin</a>
+  <a class="navbar-brand text-success font-weight-bold" href="${'/'}">Annanjin</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu-bar"
           aria-controls="menu-bar" aria-expanded="false" aria-label="Menu Toggler">
     <span class="navbar-toggler-icon"></span>
@@ -15,7 +15,8 @@
            aria-expanded="false">Quản Lý</a>
         <div class="dropdown-menu" aria-labelledby="manage-dropdown-btn">
           <a class="dropdown-item" href="${'/admin/author'}">Tác Giả</a>
-          <a class="dropdown-item" href="${'/admin/category'}">Thẻ/Danh Mục/Series</a>
+          <a class="dropdown-item" href="${'/admin/category'}">Danh Mục/Thẻ</a>
+          <a class="dropdown-item" href="${'/admin/series'}">Series</a>
           <a class="dropdown-item" href="${'/admin/post'}">Bài Viết</a>
         </div>
       </li>

@@ -98,7 +98,7 @@
                   row.child.hide();
                   $(tr).removeClass("shown");
               } else {
-                  let btn = '<button data-toggle="modal" data-target="#add-link-modal" class="btn btn-sm btn-info" data-id="' + row.data().id + '">Thêm</button>';
+                  let btn = '<button data-toggle="modal" data-target="#add-link-modal" class="btn btn-sm btn-primary mb-1" data-id="' + row.data().id + '">Thêm</button>';
                   let content = '<table class="table table-bordered" style="margin:0;padding:0;">';
                   content += '<thead>' +
                       '<th>Tên</th>' +
@@ -194,10 +194,13 @@
                       $("#add-account-modal form")[0].reset();
                       $("#input-file-label").removeClass("selected").html("Choose thumbnail image...").css("color", "white");
                       $("#add-account-modal").modal("hide");
+                      $("#notification-dialog .modal-body p").html("Đã thêm tác giả!");
+                      $("#notification-dialog").modal("show");
                       authorTable.draw();
                   },
                   error: function (data) {
-                      alert("Loi");
+                      $("#notification-dialog .modal-body p").html("Lỗi xảy ra!");
+                      $("#notification-dialog").modal("show");
                   }
               });
           });
@@ -216,10 +219,13 @@
                       $("#update-author-modal form")[0].reset();
                       $("#input-file-label").removeClass("selected").html("Choose thumbnail image...").css("color", "white");
                       $("#update-author-modal").modal("hide");
+                      $("#notification-dialog .modal-body p").html("Đã cập nhật tác giả!");
+                      $("#notification-dialog").modal("show");
                       authorTable.draw();
                   },
                   error: function (data) {
-                      alert("Loi");
+                      $("#notification-dialog .modal-body p").html("Lỗi xảy ra!");
+                      $("#notification-dialog").modal("show");
                   }
               });
           });
@@ -237,10 +243,13 @@
                   success: function (data) {
                       $("#update-account-modal form")[0].reset();
                       $("#update-account-modal").modal("hide");
+                      $("#notification-dialog .modal-body p").html("Đã cập nhật tài khoản!");
+                      $("#notification-dialog").modal("show");
                       authorTable.draw();
                   },
                   error: function (data) {
-                      alert("Loi");
+                      $("#notification-dialog .modal-body p").html("Lỗi xảy ra!");
+                      $("#notification-dialog").modal("show");
                   }
               });
           });
@@ -258,10 +267,13 @@
                   success: function (data) {
                       $("#add-link-modal form")[0].reset();
                       $("#add-link-modal").modal("hide");
+                      $("#notification-dialog .modal-body p").html("Đã thêm liên kết!");
+                      $("#notification-dialog").modal("show");
                       authorTable.draw();
                   },
                   error: function (data) {
-                      alert("Loi");
+                      $("#notification-dialog .modal-body p").html("Lỗi xảy ra!");
+                      $("#notification-dialog").modal("show");
                   }
               });
           })
@@ -278,6 +290,8 @@
               dataType: "text",
               success: function () {
                   $("#multiple-delete-confirm-dialog").modal("hide");
+                  $("#notification-dialog .modal-body p").html("Đã xóa tác giả!");
+                  $("#notification-dialog").modal("show");
                   authorTable.draw();
               },
               error: function () {
@@ -295,6 +309,8 @@
               dataType: "text",
               success: function () {
                   $("#delete-confirm-dialog").modal("hide");
+                  $("#notification-dialog .modal-body p").html("Đã xóa tác giả!");
+                  $("#notification-dialog").modal("show");
                   authorTable.draw();
               },
               error: function () {
@@ -311,6 +327,8 @@
               dataType: "text",
               data: {linkId: linkId, authorId: authorId},
               success: function () {
+                  $("#notification-dialog .modal-body p").html("Đã xóa liên kết!");
+                  $("#notification-dialog").modal("show");
                   authorTable.draw();
               },
               error: function () {
@@ -326,7 +344,7 @@
       }
   </script>
   <style>
-    #add-account-modal .modal-body {
+    .form-modal .modal-body {
       overflow-y: auto;
       height: calc(100vh - 200px);
     }
@@ -355,7 +373,7 @@
         </div>
         <div class="col-md-6">
           <button type="button" data-target="#add-account-modal" data-toggle="modal"
-                  class="btn btn-primary pull-right">Thêm
+                  class="btn btn-primary pull-right">Thêm Mới
           </button>
         </div>
       </div>
@@ -397,7 +415,7 @@
     </div>
   </div>
     <#--add account dialog-->
-  <div class="modal fade" role="dialog" id="add-account-modal">
+  <div class="modal form-modal fade" role="dialog" id="add-account-modal">
     <div class="modal-dialog modal-md">
       <div class="modal-content">
         <form method="post" action="${'/admin/account/add'}" enctype="multipart/form-data">
@@ -477,7 +495,7 @@
           <p></p>
         </div>
         <div class="modal-footer mx-auto d-block">
-          <button class="btn btn-warning" data-dismiss="modal">Hủy</button>
+          <button class="btn btn-warning" data-dismiss="modal">Tắt</button>
         </div>
       </div>
     </div>
@@ -518,7 +536,7 @@
     </div>
   </div>
     <#--update author dialog-->
-  <div class="modal fade" role="dialog" id="update-author-modal">
+  <div class="modal form-modal fade" role="dialog" id="update-author-modal">
     <div class="modal-dialog modal-md">
       <div class="modal-content">
         <form method="post" action="${'/admin/author/update'}" enctype="multipart/form-data">
@@ -574,7 +592,7 @@
     </div>
   </div>
     <#--update account dialog-->
-  <div class="modal fade" role="dialog" id="update-account-modal">
+  <div class="modal form-modal fade" role="dialog" id="update-account-modal">
     <div class="modal-dialog modal-md">
       <div class="modal-content">
         <form method="post" action="${'/admin/account/update'}" enctype="multipart/form-data">
@@ -606,7 +624,7 @@
             <div class="form-group">
               <label class="control-label col-md-4" for="input-email">Email:</label>
               <div class="col-md-12">
-                <input class="form-control" name="email" id="input-email" type="text">
+                <input class="form-control" name="email" id="input-email" type="email">
               </div>
             </div>
           </div>
@@ -619,7 +637,7 @@
     </div>
   </div>
     <#--add link dialog-->
-  <div class="modal fade" role="dialog" id="add-link-modal">
+  <div class="modal form-modal fade" role="dialog" id="add-link-modal">
     <div class="modal-dialog modal-md">
       <div class="modal-content">
         <form method="post" action="${'/admin/author/add-link'}" enctype="multipart/form-data">
@@ -643,7 +661,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-warning" data-dismiss="modal">Hủy</button>
-            <button type="submit" class="btn btn-info">Thêm mới</button>
+            <button type="submit" class="btn btn-primary">Thêm mới</button>
           </div>
         </form>
       </div>

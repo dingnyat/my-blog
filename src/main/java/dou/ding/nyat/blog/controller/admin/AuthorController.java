@@ -10,6 +10,8 @@ import dou.ding.nyat.blog.util.PasswordUtils;
 import dou.ding.nyat.blog.util.datatable.DataTableRequest;
 import dou.ding.nyat.blog.util.datatable.DataTableResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +50,7 @@ public class AuthorController {
 
     @PostMapping("/account/add")
     @ResponseBody
-    public String add(@ModelAttribute Account account) {
+    public ResponseEntity<String> add(@ModelAttribute Account account) {
         try {
 
             if (account.getAuthor().getAvatarFile() != null && !account.getAuthor().getAvatarFile().isEmpty()) {
@@ -63,16 +65,16 @@ public class AuthorController {
             account.setPassword(PasswordUtils.encryptPassword(account.getPassword()));
             account.setActived(true);
             accountService.create(account);
-            return "OK";
+            return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return "ERROR";
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/author/update")
     @ResponseBody
-    public String update(@ModelAttribute Author author) {
+    public ResponseEntity<String> update(@ModelAttribute Author author) {
         try {
 
             if (author.getAvatarFile() != null && !author.getAvatarFile().isEmpty()) {
@@ -85,45 +87,45 @@ public class AuthorController {
             }
 
             authorService.update(author);
-            return "OK";
+            return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return "ERROR";
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/author/multiple-delete/{ids}")
     @ResponseBody
-    public String multipleDelete(@PathVariable("ids") List<Integer> ids) {
+    public ResponseEntity<String> multipleDelete(@PathVariable("ids") List<Integer> ids) {
         try {
             for (Integer id : ids) {
                 authorService.delete(id);
             }
-            return "OK";
+            return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
-            return "ERROR";
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/author/delete/{id}")
     @ResponseBody
-    public String delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
         try {
             authorService.delete(id);
-            return "OK";
+            return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
-            return "ERROR";
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/author/delete-link")
     @ResponseBody
-    public String deleteLink(@RequestParam("linkId") Integer linkId, @RequestParam("authorId") Integer authorId) {
+    public ResponseEntity<String> deleteLink(@RequestParam("linkId") Integer linkId, @RequestParam("authorId") Integer authorId) {
         try {
             authorService.deleteLink(linkId, authorId);
-            return "OK";
+            return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
-            return "ERROR";
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -137,25 +139,25 @@ public class AuthorController {
 
     @PutMapping("/account/update")
     @ResponseBody
-    public String updateAccount(@ModelAttribute Account account) {
+    public ResponseEntity<String> updateAccount(@ModelAttribute Account account) {
         try {
             if (account.getPassword() != null && !account.getPassword().isEmpty())
                 account.setPassword(PasswordUtils.encryptPassword(account.getPassword()));
             accountService.update(account);
-            return "OK";
+            return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
-            return "ERROR";
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/author/add-link/{id}")
     @ResponseBody
-    public String addLink(@PathVariable("id") Integer authorId, @ModelAttribute SocialLink socialLink) {
+    public ResponseEntity<String> addLink(@PathVariable("id") Integer authorId, @ModelAttribute SocialLink socialLink) {
         try {
             authorService.addLink(authorId, socialLink);
-            return "OK";
+            return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
-            return "ERROR";
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

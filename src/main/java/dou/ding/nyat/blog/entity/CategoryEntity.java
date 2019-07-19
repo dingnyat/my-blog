@@ -27,7 +27,8 @@ public class CategoryEntity {
             uniqueConstraints = {@UniqueConstraint(columnNames = {"category_id", "series_id"})})
     private Set<SeriesEntity> series;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "category_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_category_category_tag"))
     private Set<TagEntity> tags;
 
     public CategoryEntity() {
