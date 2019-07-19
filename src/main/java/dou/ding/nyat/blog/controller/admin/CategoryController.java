@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,13 +24,14 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @Autowired
-    private SeriesService seriesService;
-
-    @Autowired
     private TagService tagService;
 
+    @Autowired
+    private SeriesService seriesService;
+
     @GetMapping("/category")
-    public String category() {
+    public String category(Model model) {
+        model.addAttribute("seriesList", seriesService.getAllRecords());
         return "admin/category";
     }
 
@@ -46,12 +48,12 @@ public class CategoryController {
 
     @PostMapping("/category/add")
     @ResponseBody
-    public String add(@ModelAttribute Category category) {
+    public ResponseEntity<String> add(@ModelAttribute Category category) {
         try {
             categoryService.create(category);
-            return "OK";
+            return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
-            return "ERROR";
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -106,6 +108,28 @@ public class CategoryController {
             for (Integer id : ids) {
                 categoryService.delete(id);
             }
+            return new ResponseEntity<>("OK", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/category/deselect-series")
+    @ResponseBody
+    public ResponseEntity<String> deselectSeries(@RequestParam("seriesId") Integer seriesId, @RequestParam("categoryId") Integer categoryId) {
+        try {
+            categoryService.deselectSeries(seriesId, categoryId);
+            return new ResponseEntity<>("OK", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/category/link-series")
+    @ResponseBody
+    public ResponseEntity<String> linkSeries(@RequestParam("seriesId") Integer seriesId, @RequestParam("categoryId") Integer categoryId) {
+        try {
+            categoryService.linkSeries(seriesId, categoryId);
             return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);

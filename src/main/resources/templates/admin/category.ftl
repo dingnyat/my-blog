@@ -143,7 +143,34 @@
                           content += '<tr>' +
                               '<td>' + data.name + '</td>' +
                               '<td>' + data.code + '</a></td>' +
-                              '<td><button class="btn btn-danger" onclick="deleteTag(' + data.id + ', ' + row.data().id + ')"><i class="fas fa-times"></i></button></td>' +
+                              '<td><button class="btn btn-danger" onclick="deleteTag(' + data.id + ')"><i class="fas fa-trash"></i></button></td>' +
+                              '</tr>';
+                      });
+                      content += '</tbody></table>';
+
+                      row.child(btn + content).show();
+                      $(tr).addClass("shown");
+                  }
+              })
+              .on("click", "td.series-details", function () {
+                  let tr = this.parentNode;
+                  let row = categoryTable.row(tr);
+                  if (row.child.isShown()) {
+                      row.child.hide();
+                      $(tr).removeClass("shown");
+                  } else {
+                      let btn = '<button data-toggle="modal" data-target="#link-series-category-modal" class="btn btn-sm btn-primary mb-1" data-id="' + row.data().id + '">Gắn thêm series</button>';
+                      let content = '<table class="table table-bordered" style="margin:0;padding:0;">';
+                      content += '<thead>' +
+                          '<th>Tên Series</th>' +
+                          '<th>Mã Series</th>' +
+                          '<th>#</th>' +
+                          '</thead><tbody>';
+                      row.data()['series'].forEach(function (data) {
+                          content += '<tr>' +
+                              '<td>' + data.name + '</td>' +
+                              '<td>' + data.code + '</a></td>' +
+                              '<td><button class="btn btn-danger" onclick="deselectSeries(' + data.id + ', ' + row.data().id + ')"><i class="fas fa-times"></i></button></td>' +
                               '</tr>';
                       });
                       content += '</tbody></table>';
@@ -154,6 +181,10 @@
               });
 
           $("#link-tag-category-modal").on("show.bs.modal", function (e) {
+              selectedId = $(e.relatedTarget).data("id");
+          });
+
+          $("#link-series-category-modal").on("show.bs.modal", function (e) {
               selectedId = $(e.relatedTarget).data("id");
           });
 
@@ -170,7 +201,6 @@
               $("#update-category-modal #input-description").val(row.description);
               $("#update-category-modal #input-id").val(row.id);
           });
-
 
 
           $("#add-category-modal form").submit(function (e) {
@@ -216,6 +246,28 @@
                   },
                   error: function (data) {
                       $("#notification-dialog .modal-body p").html("Lỗi xảy ra!");
+                      $("#notification-dialog").modal("show");
+                  }
+              });
+          });
+
+          $("#link-series-category-modal form").submit(function (e) {
+              e.preventDefault();
+              let seriesId = $("#link-series-category-modal form #select-series").val();
+              $.ajax({
+                  url: "/admin/category/link-series",
+                  type: "PUT",
+                  dataType: "text",
+                  data: {seriesId: seriesId, categoryId: selectedId},
+                  success: function () {
+                      $("#link-series-category-modal form")[0].reset();
+                      $("#link-series-category-modal").modal("hide");
+                      $("#notification-dialog .modal-body p").html("Đã gắn series vào danh mục!");
+                      $("#notification-dialog").modal("show");
+                      categoryTable.draw();
+                  },
+                  error: function () {
+                      $("#notification-dialog .modal-body p").html("Lỗi xảy ra. Thử lại sau!");
                       $("#notification-dialog").modal("show");
                   }
               });
@@ -302,6 +354,24 @@
               }
           });
           selectedItems.clear();
+      }
+
+      function deselectSeries(seriesId, categoryId) {
+          $.ajax({
+              url: "/admin/category/deselect-series",
+              type: "DELETE",
+              dataType: "text",
+              data: {seriesId: seriesId, categoryId: categoryId},
+              success: function () {
+                  $("#notification-dialog .modal-body p").html("Đã bỏ gắn series!");
+                  $("#notification-dialog").modal("show");
+                  categoryTable.draw();
+              },
+              error: function () {
+                  $("#notification-dialog .modal-body p").html("Lỗi xảy ra. Thử lại sau!");
+                  $("#notification-dialog").modal("show");
+              }
+          });
       }
   </script>
   <style>
@@ -478,6 +548,31 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-warning" data-dismiss="modal">Hủy</button>
             <button type="submit" class="btn btn-primary">Thêm mới</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+    <#--select series modal-->
+  <div class="modal fade" role="dialog" id="link-series-category-modal">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <form method="post" action="${'/admin/category/link-series'}" enctype="multipart/form-data">
+          <div class="modal-header">
+            <h3 class="modal-title">Gắn Series</h3>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <label for="select-series">Series</label>
+            <select class="form-control" id="select-series">
+                <#list seriesList as series>
+                  <option value="${series.id}">${series.name}</option>
+                </#list>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-warning" data-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn btn-primary">Gắn</button>
           </div>
         </form>
       </div>

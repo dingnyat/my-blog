@@ -19,16 +19,29 @@ public class SeriesServiceImpl extends ServiceAbstract<Integer, Series, SeriesEn
 
     @Override
     public Integer create(Series model) {
-        return null;
+        SeriesEntity seriesEntity = new SeriesEntity();
+        seriesEntity.setCode(model.getCode());
+        seriesEntity.setName(model.getName());
+        seriesEntity.setDescription(model.getDescription());
+        return repository.create(seriesEntity);
     }
 
     @Override
     public void update(Series model) {
-
+        SeriesEntity seriesEntity = repository.getById(model.getId());
+        seriesEntity.setCode(model.getCode());
+        seriesEntity.setName(model.getName());
+        seriesEntity.setDescription(model.getDescription());
+        repository.update(seriesEntity);
     }
 
     @Override
     public Series convertToModel(SeriesEntity entity) {
-        return null;
+        Series series = new Series();
+        series.setId(entity.getId());
+        series.setCode(entity.getCode());
+        series.setName(entity.getName());
+        series.setDescription(entity.getDescription());
+        return series;
     }
 }

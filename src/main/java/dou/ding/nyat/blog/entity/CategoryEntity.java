@@ -20,7 +20,7 @@ public class CategoryEntity {
     @Column(name = "description", length = 65536)
     private String description;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "category_series",
             joinColumns = {@JoinColumn(name = "category_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_category_category_series"))},
             inverseJoinColumns = {@JoinColumn(name = "series_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_category_series_series"))},

@@ -1,11 +1,13 @@
 package dou.ding.nyat.blog.service.impl;
 
 import dou.ding.nyat.blog.entity.CategoryEntity;
+import dou.ding.nyat.blog.entity.SeriesEntity;
 import dou.ding.nyat.blog.entity.TagEntity;
 import dou.ding.nyat.blog.model.Category;
 import dou.ding.nyat.blog.model.Series;
 import dou.ding.nyat.blog.model.Tag;
 import dou.ding.nyat.blog.repository.CategoryRepository;
+import dou.ding.nyat.blog.repository.SeriesRepository;
 import dou.ding.nyat.blog.service.CategoryService;
 import dou.ding.nyat.blog.service.ServiceAbstract;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class CategoryServiceImpl extends ServiceAbstract<Integer, Category, CategoryEntity, CategoryRepository> implements CategoryService {
+
+    @Autowired
+    private SeriesRepository seriesRepository;
 
     @Autowired
     public CategoryServiceImpl(CategoryRepository repository) {
@@ -78,5 +83,22 @@ public class CategoryServiceImpl extends ServiceAbstract<Integer, Category, Cate
         tagEntity.setName(tag.getName());
         categoryEntity.getTags().add(tagEntity);
         repository.update(categoryEntity);
+    }
+
+    @Override
+    public void deselectSeries(Integer seriesId, Integer categoryId) {
+        CategoryEntity entity = repository.getById(categoryId);
+        if (entity == null) return;
+        entity.getSeries().removeIf(seriesEntity -> seriesEntity.getId() == seriesId);
+        repository.update(entity);
+    }
+
+    @Override
+    public void linkSeries(Integer seriesId, Integer categoryId) {
+        CategoryEntity entity = repository.getById(categoryId);
+        SeriesEntity seriesEntity = seriesRepository.getById(seriesId);
+        if (entity == null) return;
+        entity.getSeries().add(seriesEntity);
+        repository.update(entity);
     }
 }
