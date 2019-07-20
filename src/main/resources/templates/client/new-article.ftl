@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <#assign title = "Workspace">
-    <#include "./fragment/header-html.ftl">
+    <#include "fragment/layout-header.ftl">
   <script type="text/javascript" src="${'/vendor/ckeditor/ckeditor.js'}"></script>
   <script type="text/javascript" src="${'/client/script.js'}"></script>
   <script>

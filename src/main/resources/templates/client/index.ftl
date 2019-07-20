@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <#include "./fragment/header-html.ftl">
+  <#include "fragment/layout-header.ftl">
 </head>
 <body>
 <#include "./fragment/nav.ftl">

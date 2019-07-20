@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <#assign title = "Workspace">
-    <#include "./fragment/header-html.ftl">
+    <#include "fragment/layout-header.ftl">
 </head>
 <body>
 <#include "./fragment/nav.ftl">
