@@ -17,9 +17,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
+
+import java.util.Collections;
 
 @SpringBootApplication
 public class BlogApplication extends WebSecurityConfigurerAdapter {
+
+    public BlogApplication(FreeMarkerConfigurer freeMarkerConfigurer) {
+        freeMarkerConfigurer.getTaglibFactory().setClasspathTlds(Collections.singletonList("/META-INF/security.tld"));
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(BlogApplication.class, args);
