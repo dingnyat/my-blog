@@ -35,6 +35,16 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
         return "error/error";
     }
 
+    @GetMapping("/invalid-session")
+    public String invalidSession() {
+        return "error/invalid-session";
+    }
+
+    @GetMapping("/expired-session")
+    public String expiredSession() {
+        return "error/expired-session";
+    }
+
     @GetMapping("/access-denied")
     public String accessDenied() {
         return "error/access-denied";

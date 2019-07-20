@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -79,5 +80,10 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
                 .and().rememberMe().key("remember-me").rememberMeServices(this.rememberMeService()).tokenValiditySeconds(60 * 60 * 24 * 7)
                 .and().logout().logoutUrl("/logout").logoutSuccessHandler(this.logoutSuccessHanlder)
                 .deleteCookies("JSESSIONID", "remember-me").invalidateHttpSession(true);
+
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // default value
+                .invalidSessionUrl("/invalid-session").maximumSessions(2) // when set value 1, user creates a new session then old one become be invalid
+                .expiredUrl("/expired-session")
+                .and().sessionFixation().migrateSession();// default value // prevent session fixation acttack. // When user tries to authenticate again, old session is invalidated and the attributes from the old session are copied over new one
     }
 }
