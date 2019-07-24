@@ -1,4 +1,4 @@
-package dou.ding.nyat.blog.controller.admin;
+package dou.ding.nyat.blog.controller.workspace;
 
 import dou.ding.nyat.blog.model.Category;
 import dou.ding.nyat.blog.model.Tag;
@@ -32,7 +32,7 @@ public class CategoryController {
     @GetMapping("/category")
     public String category(Model model) {
         model.addAttribute("seriesList", seriesService.getAllRecords());
-        return "admin/category";
+        return "workspace/category";
     }
 
     @PostMapping("/category/list")

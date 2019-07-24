@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.stream.Collectors;
-
 @Service
 @Transactional
 public class AuthorServiceImpl extends ServiceAbstract<Integer, Author, AuthorEntity, AuthorRepository> implements AuthorService {
@@ -20,11 +18,6 @@ public class AuthorServiceImpl extends ServiceAbstract<Integer, Author, AuthorEn
     @Autowired
     public AuthorServiceImpl(AuthorRepository repository) {
         super(repository);
-    }
-
-    @Override
-    public Integer create(Author model) {
-        return null;
     }
 
     @Override
@@ -36,24 +29,6 @@ public class AuthorServiceImpl extends ServiceAbstract<Integer, Author, AuthorEn
         if (author.getAvatarUrl() != null && !author.getAvatarUrl().isEmpty())
             authorEntity.setAvatarUrl(author.getAvatarUrl());
         repository.update(authorEntity);
-    }
-
-    @Override
-    public Author convertToModel(AuthorEntity entity) {
-        Author author = new Author();
-        author.setId(entity.getId());
-        author.setCode(entity.getCode());
-        author.setName(entity.getName());
-        author.setDescription(entity.getDescription());
-        author.setAvatarUrl(entity.getAvatarUrl());
-        author.setSocialLinks(entity.getSocialLinks().stream().map(socialLinkEntity -> {
-            SocialLink socialLink = new SocialLink();
-            socialLink.setId(socialLinkEntity.getId());
-            socialLink.setName(socialLinkEntity.getName());
-            socialLink.setLink(socialLinkEntity.getLink());
-            return socialLink;
-        }).collect(Collectors.toSet()));
-        return author;
     }
 
     @Override

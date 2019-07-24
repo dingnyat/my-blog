@@ -30,16 +30,13 @@ public class UrlAuthenSuccessHandler extends SimpleUrlAuthenticationSuccessHandl
         List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String username = authentication.getName();
         String targetUrl = "";
-        if (roles.contains("ROLE_ADMIN")) {
-            targetUrl = "/admin/dashboard";
-        } else if (roles.contains("ROLE_AUTHOR")) {
-            targetUrl = "/user/" + username + "/workspace";
+        if (roles.contains("ROLE_AUTHOR")) {
+            targetUrl = "/user/workspace";
         }
         if (response.isCommitted()) {
             System.out.println("Can't redirect");
             return;
         }
-        request.getSession().setAttribute("isLoggedIn", "true");
         redirectStrategy.sendRedirect(request, response, targetUrl);
     }
 

@@ -1,11 +1,18 @@
 package dou.ding.nyat.blog.entity;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "post")
+@EntityListeners(AuditingEntityListener.class)
 public class PostEntity {
 
     @Id
@@ -23,7 +30,7 @@ public class PostEntity {
     private String content;
 
     @Column(name = "position_in_series")
-    private int positionInSeries;
+    private Integer positionInSeries;
 
     @Column(name = "is_actived", nullable = false)
     private boolean isActived;
@@ -32,17 +39,26 @@ public class PostEntity {
     private boolean isCommentBlocked;
 
     @Column(name = "created_date", nullable = false)
-    @Temporal(value = TemporalType.DATE)
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @CreatedDate
     private Date createdDate;
 
-    @Column(name = "last_updated_date", nullable = false)
-    @Temporal(value = TemporalType.DATE)
-    private Date lastUpdatedDate;
+    @Column(name = "last_modified_date")
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @LastModifiedDate
+    private Date lastModifiedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false,
             referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_post_author_author"))
+    @CreatedBy
     private AuthorEntity author;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "last_modified_by",
+            referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_post_modified_by"))
+    @LastModifiedBy
+    private AuthorEntity lastModifiedBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "series_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_post_series_series"))
@@ -60,6 +76,7 @@ public class PostEntity {
 
     public PostEntity() {
         this.isActived = false;
+        this.isCommentBlocked = false;
     }
 
     public int getId() {
@@ -94,11 +111,11 @@ public class PostEntity {
         this.content = content;
     }
 
-    public int getPositionInSeries() {
+    public Integer getPositionInSeries() {
         return positionInSeries;
     }
 
-    public void setPositionInSeries(int positionInSeries) {
+    public void setPositionInSeries(Integer positionInSeries) {
         this.positionInSeries = positionInSeries;
     }
 
@@ -126,12 +143,12 @@ public class PostEntity {
         this.createdDate = createdDate;
     }
 
-    public Date getLastUpdatedDate() {
-        return lastUpdatedDate;
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public void setLastUpdatedDate(Date lastUpdatedDate) {
-        this.lastUpdatedDate = lastUpdatedDate;
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public AuthorEntity getAuthor() {

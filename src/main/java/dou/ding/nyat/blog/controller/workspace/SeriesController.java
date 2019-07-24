@@ -1,4 +1,4 @@
-package dou.ding.nyat.blog.controller.admin;
+package dou.ding.nyat.blog.controller.workspace;
 
 import dou.ding.nyat.blog.model.Series;
 import dou.ding.nyat.blog.service.SeriesService;
@@ -21,7 +21,7 @@ public class SeriesController {
 
     @GetMapping("/series")
     public String series() {
-        return "admin/series";
+        return "workspace/series";
     }
 
     @PostMapping("/series/list")

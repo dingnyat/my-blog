@@ -4,9 +4,11 @@ import dou.ding.nyat.blog.model.CommonModel;
 import dou.ding.nyat.blog.repository.RepositoryInterface;
 import dou.ding.nyat.blog.util.datatable.DataTableRequest;
 import dou.ding.nyat.blog.util.search.SearchCriteria;
+import org.modelmapper.ModelMapper;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,13 +17,27 @@ public abstract class ServiceAbstract<PrimaryKeyType extends Serializable, M ext
 
     protected D repository;
 
+    protected ModelMapper mapper;
+
+    private Class<M> modelClazz;
+    private Class<E> entityClazz;
+
     public ServiceAbstract(D repository) {
         this.repository = repository;
+        this.mapper = new ModelMapper();
+        this.modelClazz = (Class<M>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+        this.entityClazz = (Class<E>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[2];
     }
 
-    public abstract PrimaryKeyType create(M model);
+    public PrimaryKeyType create(M model) {
+        return (PrimaryKeyType) repository.create(mapper.map(model, entityClazz));
+    }
 
-    public abstract void update(M model);
+    public void update(M model) {
+        E entity = (E) repository.getById(model.getId());
+        mapper.map(model, entity);
+        repository.update(entity);
+    }
 
     public void delete(PrimaryKeyType id) {
         E entity = (E) repository.getById(id);
@@ -60,5 +76,7 @@ public abstract class ServiceAbstract<PrimaryKeyType extends Serializable, M ext
         return repository.getTheNumberOfAllRecords();
     }
 
-    public abstract M convertToModel(E entity);
+    public M convertToModel(E entity) {
+        return mapper.map(entity, modelClazz);
+    }
 }

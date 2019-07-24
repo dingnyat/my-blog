@@ -6,6 +6,7 @@ import dou.ding.nyat.blog.repository.RepositoryAbstract;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 
 @Repository
@@ -15,9 +16,12 @@ public class AccountRepositoryImpl extends RepositoryAbstract<Integer, AccountEn
     @Override
     public AccountEntity getByUsername(String username) {
         try {
-            return this.entityManager
+            entityManager.setFlushMode(FlushModeType.COMMIT); // lien quan den AditorAware
+            AccountEntity accountEntity = this.entityManager
                     .createQuery("SELECT a FROM AccountEntity a WHERE a.username = :username", AccountEntity.class)
                     .setParameter("username", username).getSingleResult();
+            entityManager.setFlushMode(FlushModeType.AUTO);
+            return accountEntity;
         } catch (NoResultException e) {
             return null;
         }

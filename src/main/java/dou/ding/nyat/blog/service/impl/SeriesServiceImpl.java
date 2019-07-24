@@ -16,32 +16,4 @@ public class SeriesServiceImpl extends ServiceAbstract<Integer, Series, SeriesEn
     public SeriesServiceImpl(SeriesRepository repository) {
         super(repository);
     }
-
-    @Override
-    public Integer create(Series model) {
-        SeriesEntity seriesEntity = new SeriesEntity();
-        seriesEntity.setCode(model.getCode());
-        seriesEntity.setName(model.getName());
-        seriesEntity.setDescription(model.getDescription());
-        return repository.create(seriesEntity);
-    }
-
-    @Override
-    public void update(Series model) {
-        SeriesEntity seriesEntity = repository.getById(model.getId());
-        seriesEntity.setCode(model.getCode());
-        seriesEntity.setName(model.getName());
-        seriesEntity.setDescription(model.getDescription());
-        repository.update(seriesEntity);
-    }
-
-    @Override
-    public Series convertToModel(SeriesEntity entity) {
-        Series series = new Series();
-        series.setId(entity.getId());
-        series.setCode(entity.getCode());
-        series.setName(entity.getName());
-        series.setDescription(entity.getDescription());
-        return series;
-    }
 }

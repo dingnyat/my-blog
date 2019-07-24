@@ -1,6 +1,6 @@
 <meta charset="UTF-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title><#if title??>${title} | </#if>Admin</title>
+<title><#if title??>${title} | </#if>Annanjin</title>
 <!--jQuery-->
 <script type="text/javascript" src="${'/vendor/jquery/jquery-3.3.1.min.js'}"></script>
 <!--Bootstrap jQuery-->

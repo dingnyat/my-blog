@@ -1,13 +1,12 @@
 package dou.ding.nyat.blog.model;
 
-import java.util.Date;
 import java.util.Set;
 
 public class Comment extends CommonModel<Integer> {
 
     private String commentBy;
     private String content;
-    private Date createdDate;
+    private String createdDate;
     private Set<Comment> childComments;
     private boolean isAccepted;
     private boolean isRemoved;
@@ -33,11 +32,11 @@ public class Comment extends CommonModel<Integer> {
         this.content = content;
     }
 
-    public Date getCreatedDate() {
+    public String getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
     }
 

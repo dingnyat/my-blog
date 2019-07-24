@@ -1,6 +1,5 @@
 package dou.ding.nyat.blog.model;
 
-import java.util.Date;
 import java.util.Set;
 
 public class Post extends CommonModel<Integer> {
@@ -8,18 +7,21 @@ public class Post extends CommonModel<Integer> {
     private String code;
     private String title;
     private String content;
-    private int positionInSeries;
+    private Integer positionInSeries;
     private boolean isActived;
     private boolean isCommentBlocked;
-    private Date createdDate;
-    private Date lastUpdatedDate;
-    private Author author;
-    private Series series;
+    private String createdDate;
+    private String lastModifiedDate;
+    private String authorCode;
+    private String authorName;
+    private String seriesCode;
+    private String seriesName;
     private Set<Tag> tags;
     private Set<Comment> comments;
 
     public Post() {
         this.isActived = false;
+        this.isCommentBlocked = false;
     }
 
     public String getCode() {
@@ -46,11 +48,11 @@ public class Post extends CommonModel<Integer> {
         this.content = content;
     }
 
-    public int getPositionInSeries() {
+    public Integer getPositionInSeries() {
         return positionInSeries;
     }
 
-    public void setPositionInSeries(int positionInSeries) {
+    public void setPositionInSeries(Integer positionInSeries) {
         this.positionInSeries = positionInSeries;
     }
 
@@ -70,36 +72,52 @@ public class Post extends CommonModel<Integer> {
         isCommentBlocked = commentBlocked;
     }
 
-    public Date getCreatedDate() {
+    public String getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Date getLastUpdatedDate() {
-        return lastUpdatedDate;
+    public String getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public void setLastUpdatedDate(Date lastUpdatedDate) {
-        this.lastUpdatedDate = lastUpdatedDate;
+    public void setLastModifiedDate(String lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
-    public Author getAuthor() {
-        return author;
+    public String getAuthorCode() {
+        return authorCode;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
+    public void setAuthorCode(String authorCode) {
+        this.authorCode = authorCode;
     }
 
-    public Series getSeries() {
-        return series;
+    public String getAuthorName() {
+        return authorName;
     }
 
-    public void setSeries(Series series) {
-        this.series = series;
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public String getSeriesCode() {
+        return seriesCode;
+    }
+
+    public void setSeriesCode(String seriesCode) {
+        this.seriesCode = seriesCode;
+    }
+
+    public String getSeriesName() {
+        return seriesName;
+    }
+
+    public void setSeriesName(String seriesName) {
+        this.seriesName = seriesName;
     }
 
     public Set<Tag> getTags() {

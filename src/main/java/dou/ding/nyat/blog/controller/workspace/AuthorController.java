@@ -1,4 +1,4 @@
-package dou.ding.nyat.blog.controller.admin;
+package dou.ding.nyat.blog.controller.workspace;
 
 import dou.ding.nyat.blog.model.Account;
 import dou.ding.nyat.blog.model.Author;
@@ -34,7 +34,7 @@ public class AuthorController {
 
     @GetMapping("/author")
     public String account() {
-        return "admin/author";
+        return "workspace/author";
     }
 
     @PostMapping("/author/list")

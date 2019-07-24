@@ -16,23 +16,4 @@ public class TagServiceImpl extends ServiceAbstract<Integer, Tag, TagEntity, Tag
     public TagServiceImpl(TagRepository repository) {
         super(repository);
     }
-
-    @Override
-    public Integer create(Tag model) {
-        return null;
-    }
-
-    @Override
-    public void update(Tag model) {
-
-    }
-
-    @Override
-    public Tag convertToModel(TagEntity entity) {
-        Tag tag = new Tag();
-        tag.setId(entity.getId());
-        tag.setCode(entity.getCode());
-        tag.setName(entity.getName());
-        return tag;
-    }
 }
