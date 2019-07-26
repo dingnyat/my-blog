@@ -84,7 +84,8 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
                 .deleteCookies("JSESSIONID", "remember-me").invalidateHttpSession(true);
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // default value
-                .invalidSessionUrl("/invalid-session").maximumSessions(2) // when set value 1, user creates a new session then old one become be invalid
+//                .invalidSessionUrl("/invalid-session")
+                .maximumSessions(2) // when set value 1, user creates a new session then old one become be invalid
                 .expiredUrl("/expired-session")
                 .and().sessionFixation().migrateSession();// default value // prevent session fixation acttack. // When user tries to authenticate again, old session is invalidated and the attributes from the old session are copied over new one
     }

@@ -5,7 +5,7 @@ import dou.ding.nyat.blog.model.Author;
 import dou.ding.nyat.blog.model.SocialLink;
 import dou.ding.nyat.blog.service.AccountService;
 import dou.ding.nyat.blog.service.AuthorService;
-import dou.ding.nyat.blog.util.FileStore;
+import dou.ding.nyat.blog.util.PathContants;
 import dou.ding.nyat.blog.util.PasswordUtils;
 import dou.ding.nyat.blog.util.datatable.DataTableRequest;
 import dou.ding.nyat.blog.util.datatable.DataTableResponse;
@@ -57,7 +57,7 @@ public class AuthorController {
                 String ext = Objects.requireNonNull(account.getAuthor().getAvatarFile()
                         .getOriginalFilename()).substring(account.getAuthor().getAvatarFile().getOriginalFilename().lastIndexOf("."));
                 String avatarUrl = System.currentTimeMillis() + "-author" + ext;
-                Path path = Paths.get(FileStore.IMAGE_UPLOAD_PATH + File.separator + avatarUrl);
+                Path path = Paths.get(PathContants.IMAGE_UPLOAD_PATH + File.separator + avatarUrl);
                 Files.write(path, account.getAuthor().getAvatarFile().getBytes());
                 account.getAuthor().setAvatarUrl(avatarUrl);
             }
@@ -81,7 +81,7 @@ public class AuthorController {
                 String ext = Objects.requireNonNull(author.getAvatarFile()
                         .getOriginalFilename()).substring(author.getAvatarFile().getOriginalFilename().lastIndexOf("."));
                 String avatarUrl = System.currentTimeMillis() + "-author" + ext;
-                Path path = Paths.get(FileStore.IMAGE_UPLOAD_PATH + File.separator + avatarUrl);
+                Path path = Paths.get(PathContants.IMAGE_UPLOAD_PATH + File.separator + avatarUrl);
                 Files.write(path, author.getAvatarFile().getBytes());
                 author.setAvatarUrl(avatarUrl);
             }

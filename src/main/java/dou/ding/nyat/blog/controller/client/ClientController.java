@@ -23,4 +23,9 @@ public class ClientController {
         }
         return "client/login";
     }
+
+    @GetMapping("/test")
+    public String test(){
+        return "client/test";
+    }
 }

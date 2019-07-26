@@ -72,7 +72,7 @@
                 }
             });
 
-            $("#multiple-delete-btn").on("click", function (e) {
+            $("#multiple-delete-btn").on("click", function () {
                 if (selectedItems.size < 1) {
                     $("#notification-dialog .modal-body p").html("Chọn ít nhất một mục để xóa!");
                     $("#notification-dialog").modal("show");
@@ -130,14 +130,14 @@
                     contentType: false,
                     processData: false,
                     data: formData,
-                    success: function (data) {
+                    success: function () {
                         $("#add-series-modal form")[0].reset();
                         $("#add-series-modal").modal("hide");
                         $("#notification-dialog .modal-body p").html("Đã thêm series!");
                         $("#notification-dialog").modal("show");
                         seriesTable.draw();
                     },
-                    error: function (data) {
+                    error: function () {
                         $("#notification-dialog .modal-body p").html("Lỗi xảy ra!");
                         $("#notification-dialog").modal("show");
                     }
@@ -154,14 +154,14 @@
                     contentType: false,
                     processData: false,
                     data: formData,
-                    success: function (data) {
+                    success: function () {
                         $("#update-series-modal form")[0].reset();
                         $("#update-series-modal").modal("hide");
                         $("#notification-dialog .modal-body p").html("Đã cập nhật series!");
                         $("#notification-dialog").modal("show");
                         seriesTable.draw();
                     },
-                    error: function (data) {
+                    error: function () {
                         $("#notification-dialog .modal-body p").html("Lỗi xảy ra!");
                         $("#notification-dialog").modal("show");
                     }
@@ -272,7 +272,7 @@
                     <table id="series-table" class="table table-borderless table-hover">
                         <thead>
                         <tr>
-                            <th style="width: 5%;">#</th>
+                            <th style="width: 5%;"></th>
                             <th style="width: 5%;">Id</th>
                             <th style="width: 10%;">Mã</th>
                             <th>Tên</th>
@@ -282,7 +282,7 @@
                         </thead>
                         <tfoot>
                         <tr>
-                            <th>
+                            <th class="text-center">
                                 <button class="btn btn-sm btn-danger" id="multiple-delete-btn" data-toggle="tooltip"
                                         title="Xóa mục đã chọn">
                                     <i class="fas fa-trash"></i>

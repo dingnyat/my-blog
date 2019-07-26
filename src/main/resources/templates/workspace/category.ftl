@@ -436,7 +436,7 @@
                     <table id="category-table" class="table table-borderless table-hover">
                         <thead>
                         <tr>
-                            <th style="width: 5%;">#</th>
+                            <th style="width: 5%;"></th>
                             <th style="width: 5%;">Id</th>
                             <th style="width: 10%;">Mã</th>
                             <th>Tên</th>
@@ -448,7 +448,7 @@
                         </thead>
                         <tfoot>
                         <tr>
-                            <th>
+                            <th class="text-center">
                                 <button class="btn btn-sm btn-danger" id="multiple-delete-btn" data-toggle="tooltip"
                                         title="Xóa mục đã chọn">
                                     <i class="fas fa-trash"></i>

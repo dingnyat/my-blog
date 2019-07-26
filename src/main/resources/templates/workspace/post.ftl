@@ -42,7 +42,7 @@
                         render: function (data, type, row) {
                             return '<a data-toggle="tooltip" title="Xem bài viết" href="/post/' + row.code +'" class="btn btn-sm btn-success ml-1"><i class="fas fa-arrow-right"></i></a>'
                                 + '<a data-toggle="tooltip" title="Chỉnh Sửa" href="/user/post/update/' + row.id +'" class="btn btn-sm btn-info ml-1"><i class="fas fa-edit"></i></a>'
-                                + '<button data-toggle="tooltip" title="Xóa bài viết" data-toggle="modal" data-target="#delete-confirm-dialog" data-json="' + encodeURI(JSON.stringify(row)) + '" class="btn btn-sm btn-danger ml-1"><i class="fas fa-trash"></i></button>';
+                                + '<button title="Xóa bài viết" data-toggle="modal tooltip" data-target="#delete-confirm-dialog" data-json="' + encodeURI(JSON.stringify(row)) + '" class="btn btn-sm btn-danger ml-1"><i class="fas fa-trash"></i></button>';
                         },
                         targets: 5
                     }
@@ -196,7 +196,7 @@
                         </thead>
                         <tfoot>
                         <tr>
-                            <th>
+                            <th class="text-center">
                                 <button class="btn btn-sm btn-danger" id="multiple-delete-btn" data-toggle="tooltip"
                                         title="Xóa mục đã chọn">
                                     <i class="fas fa-trash"></i>
