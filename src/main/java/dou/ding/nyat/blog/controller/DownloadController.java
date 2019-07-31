@@ -1,6 +1,6 @@
 package dou.ding.nyat.blog.controller;
 
-import dou.ding.nyat.blog.util.PathContants;
+import dou.ding.nyat.blog.util.PathConstants;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +13,9 @@ import java.nio.file.Files;
 
 @Controller
 public class DownloadController {
-    @GetMapping(value = PathContants.DOWNLOAD_PATH_PREFIX + "images/" + "{imgName}")
+    @GetMapping(value = PathConstants.DOWNLOAD_PATH_PREFIX + "images/" + "{imgName}")
     public void loadImage(@PathVariable("imgName") String imgName, HttpServletResponse response) throws IOException {
-        String filePath = PathContants.IMAGE_UPLOAD_PATH + File.separator + imgName;
+        String filePath = PathConstants.IMAGE_UPLOAD_PATH + File.separator + imgName;
         File file = new File(filePath);
         response.setContentType(MediaType.IMAGE_PNG_VALUE);
         if (file.isFile()) {

@@ -9,7 +9,7 @@
   <link rel="stylesheet" type="text/css" href="${'/vendor/bootstrap/bootstrap.min.css'}">
 </head>
 <body>
-<section class="text-center">
+<section class="text-center pt-5">
   <h1 class="h1">¯\_(⊙_ʖ⊙)_/¯ Oops!</h1>
   <h1 style="color: #ff024d;" class="h1">Access is denied!</h1>
   <h1 class="h2">You have no permission to access the page.</h1>

@@ -3,7 +3,7 @@ package dou.ding.nyat.blog.config;
 import com.ckfinder.connector.configuration.Configuration;
 import com.ckfinder.connector.configuration.Events;
 import com.ckfinder.connector.utils.PathUtils;
-import dou.ding.nyat.blog.util.PathContants;
+import dou.ding.nyat.blog.util.PathConstants;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
@@ -59,7 +59,7 @@ public class CKFinderConfig extends Configuration {
                     if (servletConf.getInitParameter("baseURL") == null) {
                         this.baseURL = childNode.getTextContent().trim();
                     } else {
-                        this.baseURL = servletConf.getInitParameter("baseURL") + PathContants.DOWNLOAD_PATH_PREFIX;
+                        this.baseURL = servletConf.getInitParameter("baseURL") + PathConstants.DOWNLOAD_PATH_PREFIX;
                     }
                     this.baseURL = PathUtils.escape(this.baseURL);
                     this.baseURL = PathUtils.addSlashToEnd(this.baseURL);

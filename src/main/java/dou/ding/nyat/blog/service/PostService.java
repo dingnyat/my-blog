@@ -1,5 +1,6 @@
 package dou.ding.nyat.blog.service;
 
+import dou.ding.nyat.blog.model.Comment;
 import dou.ding.nyat.blog.model.Post;
 import dou.ding.nyat.blog.util.datatable.DataTableRequest;
 
@@ -13,4 +14,10 @@ public interface PostService extends ServiceInterface<Integer, Post> {
     Long countAllRecords(String username);
 
     Boolean isAuthor(String username, Integer postId);
+
+    Post getByCode(String code);
+
+    void addChildComment(Integer parentCommentId, Comment comment);
+
+    void addComment(Integer postId, Comment comment);
 }

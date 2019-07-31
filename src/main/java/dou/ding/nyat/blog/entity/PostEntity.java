@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -71,8 +72,8 @@ public class PostEntity {
             uniqueConstraints = {@UniqueConstraint(columnNames = {"post_id", "tag_id"})})
     private Set<TagEntity> tags;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
-    private Set<CommentEntity> comments;
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentEntity> comments;
 
     public PostEntity() {
         this.isActived = false;
@@ -175,11 +176,19 @@ public class PostEntity {
         this.tags = tags;
     }
 
-    public Set<CommentEntity> getComments() {
+    public AuthorEntity getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(AuthorEntity lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public List<CommentEntity> getComments() {
         return comments;
     }
 
-    public void setComments(Set<CommentEntity> comments) {
+    public void setComments(List<CommentEntity> comments) {
         this.comments = comments;
     }
 }

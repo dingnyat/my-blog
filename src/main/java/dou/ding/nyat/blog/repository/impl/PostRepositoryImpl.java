@@ -11,6 +11,7 @@ import dou.ding.nyat.blog.util.search.SearchOperator;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
@@ -101,5 +102,16 @@ public class PostRepositoryImpl extends RepositoryAbstract<Integer, PostEntity> 
         postQuery.where(builder.or(predicates.toArray(new Predicate[]{})));
 
         return entityManager.createQuery(postQuery.select(builder.count(postRoot))).getSingleResult();
+    }
+
+    @Override
+    public PostEntity getByCode(String code) {
+        try {
+            return entityManager
+                    .createQuery("SELECT p FROM PostEntity p WHERE p.code='" + code + "'", PostEntity.class)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }

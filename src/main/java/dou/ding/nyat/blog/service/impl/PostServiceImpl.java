@@ -1,13 +1,12 @@
 package dou.ding.nyat.blog.service.impl;
 
 import dou.ding.nyat.blog.entity.AccountEntity;
+import dou.ding.nyat.blog.entity.CommentEntity;
 import dou.ding.nyat.blog.entity.PostEntity;
+import dou.ding.nyat.blog.model.Comment;
 import dou.ding.nyat.blog.model.Post;
 import dou.ding.nyat.blog.model.Tag;
-import dou.ding.nyat.blog.repository.AccountRepository;
-import dou.ding.nyat.blog.repository.PostRepository;
-import dou.ding.nyat.blog.repository.SeriesRepository;
-import dou.ding.nyat.blog.repository.TagRepository;
+import dou.ding.nyat.blog.repository.*;
 import dou.ding.nyat.blog.service.PostService;
 import dou.ding.nyat.blog.service.ServiceAbstract;
 import dou.ding.nyat.blog.util.DateTimeUtils;
@@ -16,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +31,9 @@ public class PostServiceImpl extends ServiceAbstract<Integer, Post, PostEntity, 
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Autowired
     public PostServiceImpl(PostRepository repository) {
@@ -93,9 +95,33 @@ public class PostServiceImpl extends ServiceAbstract<Integer, Post, PostEntity, 
         post.setCommentBlocked(entity.isCommentBlocked());
         post.setCreatedDate(DateTimeUtils.formatDate(entity.getCreatedDate(), DateTimeUtils.DD_MM_YYYY));
         post.setLastModifiedDate(DateTimeUtils.formatDate(entity.getLastModifiedDate(), DateTimeUtils.DD_MM_YYYY));
-        post.setComments(new HashSet<>());
-        mapper.map(entity.getComments(), post.getComments());
+
+        post.setComments(new ArrayList<>());
+
+        if (entity.getComments() != null && entity.getComments().size() > 0) {
+            entity.getComments().forEach(commentEntity -> {
+                Comment comment = new Comment();
+                setComment(commentEntity, comment);
+                post.getComments().add(comment);
+            });
+        }
+
         return post;
+    }
+
+    public void setComment(CommentEntity entity, Comment model) {
+        model.setId(entity.getId());
+        model.setCommentBy(entity.getCommentBy());
+        model.setCreatedDate(DateTimeUtils.formatDate(entity.getCreatedDate(), DateTimeUtils.DD_MM_YYYY));
+        model.setContent(entity.getContent());
+        model.setChildComments(new ArrayList<>());
+        if (entity.getChildComments() != null && entity.getChildComments().size() > 0) {
+            entity.getChildComments().forEach(commentEntity -> {
+                Comment comment = new Comment();
+                setComment(commentEntity, comment);
+                model.getChildComments().add(comment);
+            });
+        }
     }
 
     @Override
@@ -119,5 +145,42 @@ public class PostServiceImpl extends ServiceAbstract<Integer, Post, PostEntity, 
         AccountEntity account = accountRepository.getByUsername(username);
         PostEntity post = repository.getById(postId);
         return post.getAuthor().getId() == account.getAuthor().getId();
+    }
+
+    @Override
+    public Post getByCode(String code) {
+        PostEntity postEntity = repository.getByCode(code);
+        if (postEntity != null) return convertToModel(postEntity);
+        return null;
+    }
+
+    @Override
+    public void addChildComment(Integer parentCommentId, Comment comment) {
+        CommentEntity commentEntity = commentRepository.getById(parentCommentId);
+        if (commentEntity != null) {
+            CommentEntity entity = new CommentEntity();
+            entity.setCommentBy(comment.getCommentBy());
+            entity.setContent(comment.getContent());
+            entity.setAccepted(false);
+            entity.setRemoved(false);
+            commentEntity.getChildComments().add(entity);
+            entity.setParentComment(commentEntity);
+            commentRepository.update(commentEntity);
+        }
+    }
+
+    @Override
+    public void addComment(Integer postId, Comment comment) {
+        PostEntity postEntity = repository.getById(postId);
+        if (postEntity != null) {
+            CommentEntity entity = new CommentEntity();
+            entity.setCommentBy(comment.getCommentBy());
+            entity.setContent(comment.getContent());
+            entity.setAccepted(false);
+            entity.setRemoved(false);
+            postEntity.getComments().add(entity);
+            entity.setPost(postEntity);
+            repository.update(postEntity);
+        }
     }
 }

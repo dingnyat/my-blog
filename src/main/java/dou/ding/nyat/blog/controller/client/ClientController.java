@@ -1,15 +1,27 @@
 package dou.ding.nyat.blog.controller.client;
 
+import dou.ding.nyat.blog.model.Comment;
+import dou.ding.nyat.blog.model.Post;
 import dou.ding.nyat.blog.service.AccountService;
+import dou.ding.nyat.blog.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class ClientController {
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private PostService postService;
 
     @GetMapping("/")
     public String homepage() {
@@ -24,8 +36,32 @@ public class ClientController {
         return "client/login";
     }
 
-    @GetMapping("/test")
-    public String test(){
-        return "client/test";
+    @GetMapping("/post/{code}")
+    public String post(@PathVariable("code") String code, Model model) {
+        Post post = postService.getByCode(code);
+        if (post == null) {
+            model.addAttribute("errorCodeMessage", "Error 404, Not Found!");
+            model.addAttribute("message", "Sorry, Something went wrong!");
+            return "error/error";
+        }
+        model.addAttribute("post", post);
+        return "client/post";
+    }
+
+    @PostMapping("/post/add-comment")
+    public ResponseEntity<String> addComment(@ModelAttribute Comment comment) {
+        try {
+            if (comment.getPostId() == null && comment.getParentCommentId() != null) {
+                // why not add just only comment? comment has parentcommentid itself
+                postService.addChildComment(comment.getParentCommentId(), comment);
+            }
+            if (comment.getPostId() != null && comment.getParentCommentId() == null) {
+                // why not add just only comment? comment has parentcommentid itself
+                postService.addComment(comment.getPostId(), comment);
+            }
+            return new ResponseEntity<>("OK", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

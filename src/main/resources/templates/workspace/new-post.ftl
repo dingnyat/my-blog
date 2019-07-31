@@ -6,14 +6,14 @@
     <#include "./fragment/layout-header.ftl">
     <script type="text/javascript" src="${'/vendor/ckeditor/ckeditor.js'}"></script>
     <script>
+        let selectedTags = new Map();
         window.onload = function () {
-            let selectedTags = new Map();
-            let searchBox = document.getElementById("autocomplete-box");
+            let searchBox = document.getElementById("autocomplete-tags");
 
             getAllTags(function (respData) {
                 searchAutocomplete(searchBox, respData, function (selectedItem) {
                     selectedTags.set(selectedItem.id, selectedItem);
-                    showSelectedTags(document.getElementById("selected-tag-list"), selectedTags);
+                    showSelectedTags(document.getElementById("selected-tags"), selectedTags);
                 });
             });
 
@@ -51,6 +51,20 @@
                 }
             };
             req.send();
+        }
+
+        function showSelectedTags(element, selectedTags) {
+            element.innerHTML = '';
+            let content = '';
+            selectedTags.forEach(function (value, key) {
+                content += '<span class="chip my-1 ml-1">' + value.name + '<i onclick="deselectTag(' + key + ')" class="close fas fa-times"></i></span>';
+            });
+            element.innerHTML = content;
+        }
+
+        function deselectTag(id) {
+            selectedTags.delete(id.toString()); // key trong map lưu ở dạng string. còn id truyền vào là số (crazy when key is passed in onlick func)
+            showSelectedTags(document.getElementById("selected-tags"), selectedTags);
         }
 
         function searchAutocomplete(element, data, getSelectedItemFunc) {
@@ -130,26 +144,6 @@
             }
         }
 
-        function showSelectedTags(element, selectedTags) {
-            element.innerHTML = "";
-            selectedTags.forEach(function (value, key) {
-                let tagDiv = document.createElement("div");
-                tagDiv.setAttribute("class", "alert alert-info post-tag");
-                tagDiv.innerHTML = value.name;
-                let delBtn = document.createElement("button");
-                delBtn.setAttribute("type", "button");
-                delBtn.setAttribute("class", "close");
-                delBtn.setAttribute("data-dismiss", "alert");
-                delBtn.innerHTML = "&#10005;";
-                delBtn.addEventListener("click", function () {
-                    selectedTags.delete(key);
-                    showSelectedTags(element, selectedTags);
-                });
-                tagDiv.appendChild(delBtn);
-                element.appendChild(tagDiv);
-            });
-        }
-
         function addNewPost(post, url) {
             let req = new XMLHttpRequest();
             req.open("POST", url, true);
@@ -175,25 +169,48 @@
             cursor: pointer;
             background-color: #f6f7ff;
             border-bottom: 1px solid #d4d4d4;
+            border-radius: 8px;
         }
 
-        /*when hovering an item:*/
         .autocomplete-items div:hover {
             background-color: #2eb7ff;
         }
 
-        /*when navigating through the items using the arrow keys:*/
         .autocomplete-active {
             background-color: DodgerBlue !important;
             color: #ffffff;
         }
 
-        .post-tag {
-            width: 20%;
-            margin: 1px 5px 10px 5px;
-            max-height: 30px;
-            line-height: 30px;
-            padding: 1px 4px 30px 12px;
+        .chip {
+            display: inline-block;
+            height: 32px;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(0, 0, 0, .6);
+            line-height: 32px;
+            padding: 0 12px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all .3s linear;
+            background-color: #f1c3e2;
+        }
+
+        .chip .close {
+            cursor: pointer;
+            float: right;
+            font-size: 16px;
+            line-height: 32px;
+            padding-left: 8px;
+            transition: all .1s linear;
+        }
+
+        .chip .close:hover {
+            color: #ff1744;
+        }
+
+        form .sign.fas {
+            color: rgba(0, 0, 0, 0.6);
+            margin-right: 10px;
         }
 
         #new-post-form label {
@@ -223,12 +240,12 @@
             <input id="input-title" class="form-control" type="text" name="title" value="">
         </div>
         <div class="form-group">
-            <label for="autocomplete-box">Thẻ :</label>
-            <input id="autocomplete-box" class="form-control" type="text" name="tag" autocomplete="off">
+            <label for="autocomplete-tags">Thẻ :</label>
+            <input id="autocomplete-tags" class="form-control" type="text" name="tag" autocomplete="off">
         </div>
-        <div class="form-group">
-            <div id="selected-tag-list" class="d-flex">
-            </div>
+        <div class="my-3 ml-3">
+            <i class="sign fas fa-tags"></i>
+            <span id="selected-tags"></span>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
@@ -261,7 +278,6 @@
             <button class="btn btn-lg btn-warning text-center" type="submit">Đăng Bài</button>
         </div>
     </form>
-
 
     <!--nofitication dialog-->
     <div class="modal fade" role="dialog" id="notification-dialog">

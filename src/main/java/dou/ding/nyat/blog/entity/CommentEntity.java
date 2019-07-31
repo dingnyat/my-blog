@@ -1,11 +1,15 @@
 package dou.ding.nyat.blog.entity;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "comment")
+@EntityListeners(value = AuditingEntityListener.class)
 public class CommentEntity {
 
     @Id
@@ -19,16 +23,20 @@ public class CommentEntity {
     @Column(name = "content", nullable = false, columnDefinition = "text")
     private String content;
 
+    @CreatedDate
     @Temporal(value = TemporalType.TIMESTAMP)
     @Column(name = "created_date", nullable = false)
     private Date createdDate;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "parent_comment_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_comment_comment"))
-    private Set<CommentEntity> childComments;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "parentComment")
+    private List<CommentEntity> childComments;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_comment_post"))
+    @JoinColumn(name = "parent_comment_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_comment_comment"))
+    private CommentEntity parentComment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_comment_post"))
     private PostEntity post;
 
     @Column(name = "is_accepted", nullable = false)
@@ -74,11 +82,11 @@ public class CommentEntity {
         this.createdDate = createdDate;
     }
 
-    public Set<CommentEntity> getChildComments() {
+    public List<CommentEntity> getChildComments() {
         return childComments;
     }
 
-    public void setChildComments(Set<CommentEntity> childComments) {
+    public void setChildComments(List<CommentEntity> childComments) {
         this.childComments = childComments;
     }
 
@@ -104,5 +112,13 @@ public class CommentEntity {
 
     public void setRemoved(boolean removed) {
         isRemoved = removed;
+    }
+
+    public CommentEntity getParentComment() {
+        return parentComment;
+    }
+
+    public void setParentComment(CommentEntity parentComment) {
+        this.parentComment = parentComment;
     }
 }

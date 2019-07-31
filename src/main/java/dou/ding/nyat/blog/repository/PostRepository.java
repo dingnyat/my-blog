@@ -11,4 +11,6 @@ public interface PostRepository extends RepositoryInterface<Integer, PostEntity>
     Long countTableDataRecords(String username, DataTableRequest dataTableRequest, String... fieldNames);
 
     Long countAllRecords(String username);
+
+    PostEntity getByCode(String code);
 }

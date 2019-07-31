@@ -1,15 +1,18 @@
 package dou.ding.nyat.blog.model;
 
-import java.util.Set;
+import java.util.List;
 
 public class Comment extends CommonModel<Integer> {
 
     private String commentBy;
     private String content;
     private String createdDate;
-    private Set<Comment> childComments;
+    private List<Comment> childComments;
     private boolean isAccepted;
     private boolean isRemoved;
+
+    private Integer postId;
+    private Integer parentCommentId;
 
     public Comment() {
         this.isAccepted = false;
@@ -40,11 +43,11 @@ public class Comment extends CommonModel<Integer> {
         this.createdDate = createdDate;
     }
 
-    public Set<Comment> getChildComments() {
+    public List<Comment> getChildComments() {
         return childComments;
     }
 
-    public void setChildComments(Set<Comment> childComments) {
+    public void setChildComments(List<Comment> childComments) {
         this.childComments = childComments;
     }
 
@@ -62,5 +65,21 @@ public class Comment extends CommonModel<Integer> {
 
     public void setRemoved(boolean removed) {
         isRemoved = removed;
+    }
+
+    public Integer getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Integer postId) {
+        this.postId = postId;
+    }
+
+    public Integer getParentCommentId() {
+        return parentCommentId;
+    }
+
+    public void setParentCommentId(Integer parentCommentId) {
+        this.parentCommentId = parentCommentId;
     }
 }

@@ -41,8 +41,8 @@
                         targets: 0
                     },
                     {
-                        render: function (data, type, row) {
-                            return '<img width="80px" height="auto" src="/public/image/' + data + '" alt="">';
+                        render: function (data) {
+                            return '<img width="80px" height="auto" src="/public/images/' + data + '" alt="">';
                         },
                         targets: 4
                     },
@@ -131,7 +131,7 @@
                 }
             });
 
-            $("#multiple-delete-btn").on("click", function (e) {
+            $("#multiple-delete-btn").on("click", function () {
                 if (selectedItems.size < 1) {
                     $("#notification-dialog .modal-body p").html("Chọn ít nhất một mục để xóa!");
                     $("#notification-dialog").modal("show");
@@ -190,7 +190,7 @@
                     contentType: false,
                     processData: false,
                     data: formData,
-                    success: function (data) {
+                    success: function () {
                         $("#add-account-modal form")[0].reset();
                         $("#input-file-label").removeClass("selected").html("Choose thumbnail image...").css("color", "white");
                         $("#add-account-modal").modal("hide");
@@ -198,7 +198,7 @@
                         $("#notification-dialog").modal("show");
                         authorTable.draw();
                     },
-                    error: function (data) {
+                    error: function () {
                         $("#notification-dialog .modal-body p").html("Lỗi xảy ra!");
                         $("#notification-dialog").modal("show");
                     }
@@ -215,7 +215,7 @@
                     contentType: false,
                     processData: false,
                     data: formData,
-                    success: function (data) {
+                    success: function () {
                         $("#update-author-modal form")[0].reset();
                         $("#input-file-label").removeClass("selected").html("Choose thumbnail image...").css("color", "white");
                         $("#update-author-modal").modal("hide");
@@ -223,7 +223,7 @@
                         $("#notification-dialog").modal("show");
                         authorTable.draw();
                     },
-                    error: function (data) {
+                    error: function () {
                         $("#notification-dialog .modal-body p").html("Lỗi xảy ra!");
                         $("#notification-dialog").modal("show");
                     }
@@ -240,14 +240,14 @@
                     contentType: false,
                     processData: false,
                     data: formData,
-                    success: function (data) {
+                    success: function () {
                         $("#update-account-modal form")[0].reset();
                         $("#update-account-modal").modal("hide");
                         $("#notification-dialog .modal-body p").html("Đã cập nhật tài khoản!");
                         $("#notification-dialog").modal("show");
                         authorTable.draw();
                     },
-                    error: function (data) {
+                    error: function () {
                         $("#notification-dialog .modal-body p").html("Lỗi xảy ra!");
                         $("#notification-dialog").modal("show");
                     }
@@ -264,14 +264,14 @@
                     contentType: false,
                     processData: false,
                     data: formData,
-                    success: function (data) {
+                    success: function () {
                         $("#add-link-modal form")[0].reset();
                         $("#add-link-modal").modal("hide");
                         $("#notification-dialog .modal-body p").html("Đã thêm liên kết!");
                         $("#notification-dialog").modal("show");
                         authorTable.draw();
                     },
-                    error: function (data) {
+                    error: function () {
                         $("#notification-dialog .modal-body p").html("Lỗi xảy ra!");
                         $("#notification-dialog").modal("show");
                     }

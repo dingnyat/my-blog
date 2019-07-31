@@ -1,5 +1,6 @@
 package dou.ding.nyat.blog.model;
 
+import java.util.List;
 import java.util.Set;
 
 public class Post extends CommonModel<Integer> {
@@ -17,7 +18,7 @@ public class Post extends CommonModel<Integer> {
     private String seriesCode;
     private String seriesName;
     private Set<Tag> tags;
-    private Set<Comment> comments;
+    private List<Comment> comments;
 
     public Post() {
         this.isActived = false;
@@ -128,11 +129,11 @@ public class Post extends CommonModel<Integer> {
         this.tags = tags;
     }
 
-    public Set<Comment> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 }
