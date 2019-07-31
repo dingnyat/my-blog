@@ -2,7 +2,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title><#if title??>${title} | </#if>Annanjin</title>
 <!--Bootstrap jQuery-->
-<script type="text/javascript" src="${'/vendor/jquery/jquery-3.3.1.slim.min.js'}"></script>
+<script type="text/javascript" src="${'/vendor/jquery/jquery-3.3.1.min.js'}"></script>
 <script type="text/javascript" src="${'/vendor/bootstrap/popper.min.js'}"></script>
 <script type="text/javascript" src="${'/vendor/bootstrap/bootstrap.min.js'}"></script>
 <!--Bootstrap css-->

@@ -5,6 +5,40 @@
     <#include "fragment/layout-header.ftl">
   <script type="text/javascript" src="${'/vendor/prism/prism.js'}"></script>
   <link rel="stylesheet" href="${'/vendor/prism/prism.css'}">
+  <script>
+      $(function () {
+          $("#add-comment").on("show.bs.modal", function (e) {
+              let parentCommentId = $(e.relatedTarget).data("comment-id");
+              let postId = $(e.relatedTarget).data("post-id");
+              $("#add-comment form input[name='postId']").val(postId);
+              $("#add-comment form input[name='parentCommentId']").val(parentCommentId);
+          });
+
+          $("#add-comment form").submit(function (e) {
+              e.preventDefault();
+              let formData = new FormData(this);
+              $.ajax({
+                  url: '/post/add-comment',
+                  type: 'POST',
+                  dataType: 'text',
+                  contentType: false,
+                  processData: false,
+                  data: formData,
+                  success: function (data) {
+                      window.location.reload();
+                      $("#add-comment form")[0].reset();
+                      $("#add-comment").modal("hide");
+                      $("#notification-dialog .modal-body p").html("Đã thêm bình luận!");
+                      $("#notification-dialog").modal("show");
+                  },
+                  error: function (data) {
+                      $("#notification-dialog .modal-body p").html("Lỗi xảy ra, vui lòng thử lại!");
+                      $("#notification-dialog").modal("show");
+                  }
+              });
+          })
+      });
+  </script>
   <style>
     .chip {
       display: inline-block;
@@ -107,7 +141,7 @@
                           </div>
                           <hr/>
                             <#list comment.childComments as cmt>
-                              <div class="row pl-5">
+                              <div class="row pl-4">
                                 <div class="col-md-12 child-comments">
                                     <@showComment cmt/>
                                 </div>
@@ -123,6 +157,7 @@
               </div>
             </div>
           </div>
+
           <div class="modal form-modal fade" role="dialog" id="add-comment">
             <div class="modal-dialog modal-dialog-centered modal-md">
               <div class="modal-content">
@@ -157,6 +192,23 @@
               </div>
             </div>
           </div>
+
+          <div class="modal" role="dialog" id="notification-dialog">
+            <div class="modal-dialog modal-sm modal-dialog-centered">
+              <div class="modal-content text-center">
+                <div class="model-header">
+                  <h3 class="modal-title">Thông báo</h3>
+                </div>
+                <div class="modal-body">
+                  <p></p>
+                </div>
+                <div class="modal-footer mx-auto d-block">
+                  <button class="btn btn-warning" data-dismiss="modal">OK</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
         <div class="col-md-3 text-center">
             <#include "./fragment/left-banner-side.ftl">
@@ -164,14 +216,6 @@
       </div>
     </div>
   </div>
-  <script>
-      $("#add-comment").on("show.bs.modal", function (e) {
-          let parentCommentId = $(e.relatedTarget).data("comment-id");
-          let postId = $(e.relatedTarget).data("post-id");
-          $("#add-comment form input[name='postId']").val(postId);
-          $("#add-comment form input[name='parentCommentId']").val(parentCommentId);
-      });
-  </script>
 </section>
 <#include "./fragment/footer.ftl">
 </body>

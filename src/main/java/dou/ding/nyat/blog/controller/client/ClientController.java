@@ -1,8 +1,10 @@
 package dou.ding.nyat.blog.controller.client;
 
+import dou.ding.nyat.blog.model.Author;
 import dou.ding.nyat.blog.model.Comment;
 import dou.ding.nyat.blog.model.Post;
 import dou.ding.nyat.blog.service.AccountService;
+import dou.ding.nyat.blog.service.AuthorService;
 import dou.ding.nyat.blog.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,9 @@ public class ClientController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private AuthorService authorService;
 
     @GetMapping("/")
     public String homepage() {
@@ -46,6 +51,18 @@ public class ClientController {
         }
         model.addAttribute("post", post);
         return "client/post";
+    }
+
+    @GetMapping("/author/{author-code}")
+    public String authorProfile(@PathVariable("author-code") String authorCode, Model model) {
+        Author author = authorService.getByCode(authorCode);
+        if (author == null){
+            model.addAttribute("errorCodeMessage", "Error 404, Not Found!");
+            model.addAttribute("message", "Sorry, Something went wrong!");
+            return "error/error";
+        }
+        model.addAttribute("author", author);
+        return "client/author-profile";
     }
 
     @PostMapping("/post/add-comment")

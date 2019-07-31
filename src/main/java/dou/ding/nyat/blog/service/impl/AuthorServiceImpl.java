@@ -49,4 +49,10 @@ public class AuthorServiceImpl extends ServiceAbstract<Integer, Author, AuthorEn
         authorEntity.getSocialLinks().add(socialLinkEntity);
         repository.update(authorEntity);
     }
+
+    @Override
+    public Author getByCode(String code) {
+        AuthorEntity authorEntity = repository.getByCode(code);
+        return authorEntity == null ? null : convertToModel(repository.getByCode(code));
+    }
 }
