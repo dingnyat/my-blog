@@ -34,7 +34,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
             Set<RoleEntity> roles = accountEntity.getRoles();
             roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
             return new User(accountEntity.getUsername(), accountEntity.getPassword(),
-                    accountEntity.isActived(), true, true, true, authorities);
+                    accountEntity.isActive(), true, true, true, authorities);
         } else {
             throw new UsernameNotFoundException("Account isn't existed!");
         }

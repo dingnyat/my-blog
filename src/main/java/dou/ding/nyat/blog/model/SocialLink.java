@@ -1,26 +1,9 @@
 package dou.ding.nyat.blog.model;
 
-public class SocialLink extends CommonModel<Integer> {
+import lombok.Data;
 
+@Data
+public class SocialLink extends CommonModel<Integer> {
     private String name;
     private String link;
-
-    public SocialLink() {
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
 }

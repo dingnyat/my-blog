@@ -1,8 +1,15 @@
 package dou.ding.nyat.blog.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "role")
 public class RoleEntity {
@@ -17,31 +24,4 @@ public class RoleEntity {
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<AccountEntity> accounts;
-
-    public RoleEntity() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<AccountEntity> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(Set<AccountEntity> accounts) {
-        this.accounts = accounts;
-    }
 }

@@ -30,7 +30,7 @@ public class AccountServiceImpl extends ServiceAbstract<Integer, Account, Accoun
         AccountEntity accountEntity = new AccountEntity();
         accountEntity.setUsername(account.getUsername());
         accountEntity.setPassword(account.getPassword());
-        accountEntity.setActived(account.isActived());
+        accountEntity.setActive(account.isActived());
         accountEntity.setEmail(account.getEmail());
 
         AuthorEntity authorEntity = new AuthorEntity();

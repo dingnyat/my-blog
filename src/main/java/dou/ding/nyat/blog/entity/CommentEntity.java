@@ -1,5 +1,7 @@
 package dou.ding.nyat.blog.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -7,6 +9,8 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "comment")
 @EntityListeners(value = AuditingEntityListener.class)
@@ -48,77 +52,5 @@ public class CommentEntity {
     public CommentEntity() {
         this.isAccepted = false;
         this.isRemoved = false;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCommentBy() {
-        return commentBy;
-    }
-
-    public void setCommentBy(String commentBy) {
-        this.commentBy = commentBy;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public List<CommentEntity> getChildComments() {
-        return childComments;
-    }
-
-    public void setChildComments(List<CommentEntity> childComments) {
-        this.childComments = childComments;
-    }
-
-    public PostEntity getPost() {
-        return post;
-    }
-
-    public void setPost(PostEntity post) {
-        this.post = post;
-    }
-
-    public boolean isAccepted() {
-        return isAccepted;
-    }
-
-    public void setAccepted(boolean accepted) {
-        isAccepted = accepted;
-    }
-
-    public boolean isRemoved() {
-        return isRemoved;
-    }
-
-    public void setRemoved(boolean removed) {
-        isRemoved = removed;
-    }
-
-    public CommentEntity getParentComment() {
-        return parentComment;
-    }
-
-    public void setParentComment(CommentEntity parentComment) {
-        this.parentComment = parentComment;
     }
 }

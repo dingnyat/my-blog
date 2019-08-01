@@ -1,8 +1,15 @@
 package dou.ding.nyat.blog.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "category")
 public class CategoryEntity {
@@ -30,55 +37,4 @@ public class CategoryEntity {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "category_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_category_category_tag"))
     private Set<TagEntity> tags;
-
-    public CategoryEntity() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Set<SeriesEntity> getSeries() {
-        return series;
-    }
-
-    public void setSeries(Set<SeriesEntity> series) {
-        this.series = series;
-    }
-
-    public Set<TagEntity> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<TagEntity> tags) {
-        this.tags = tags;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

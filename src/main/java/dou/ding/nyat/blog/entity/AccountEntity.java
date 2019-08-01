@@ -1,8 +1,13 @@
 package dou.ding.nyat.blog.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "account")
 public class AccountEntity {
@@ -21,8 +26,9 @@ public class AccountEntity {
     @Column(name = "email", unique = true, length = 128)
     private String email;
 
-    @Column(name = "is_actived", nullable = false)
-    private boolean isActived;
+    // TODO sửa tên biến
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "account_role",
@@ -35,62 +41,6 @@ public class AccountEntity {
     private AuthorEntity author;
 
     public AccountEntity() {
-        this.isActived = false;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public boolean isActived() {
-        return isActived;
-    }
-
-    public void setActived(boolean actived) {
-        isActived = actived;
-    }
-
-    public Set<RoleEntity> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<RoleEntity> roles) {
-        this.roles = roles;
-    }
-
-    public AuthorEntity getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(AuthorEntity author) {
-        this.author = author;
+        this.isActive = false;
     }
 }

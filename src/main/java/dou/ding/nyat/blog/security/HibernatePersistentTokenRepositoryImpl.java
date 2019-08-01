@@ -22,7 +22,7 @@ public class HibernatePersistentTokenRepositoryImpl implements PersistentTokenRe
         PersistentLogin persistentLogin = new PersistentLogin();
         persistentLogin.setUsername(persistentRememberMeToken.getUsername());
         persistentLogin.setSeries(persistentRememberMeToken.getSeries());
-        persistentLogin.setLast_used(persistentRememberMeToken.getDate());
+        persistentLogin.setLastUsed(persistentRememberMeToken.getDate());
         persistentLogin.setToken(persistentRememberMeToken.getTokenValue());
         entityManager.persist(persistentLogin);
     }
@@ -32,14 +32,14 @@ public class HibernatePersistentTokenRepositoryImpl implements PersistentTokenRe
         PersistentLogin persistentLogin = entityManager.find(PersistentLogin.class, series);
         if (persistentLogin == null) return null;
         return new PersistentRememberMeToken(persistentLogin.getUsername(),
-                persistentLogin.getSeries(), persistentLogin.getToken(), persistentLogin.getLast_used());
+                persistentLogin.getSeries(), persistentLogin.getToken(), persistentLogin.getLastUsed());
     }
 
     @Override
     public void updateToken(String series, String token, Date lastDate) {
         PersistentLogin persistentLogin = entityManager.find(PersistentLogin.class, series);
         persistentLogin.setToken(token);
-        persistentLogin.setLast_used(lastDate);
+        persistentLogin.setLastUsed(lastDate);
         entityManager.merge(persistentLogin);
     }
 

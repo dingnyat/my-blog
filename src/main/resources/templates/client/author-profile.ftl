@@ -39,7 +39,9 @@
           <div class="row post-author-div">
             <div class="col-md-12">
               <h3>Xem thêm bài viết của ${author.name}</h3>
-              <#--TODO chưa làm-->
+              <div class="col-md-4 post-div">
+                <#--TODO chưa làm-->
+              </div>
             </div>
           </div>
         </div>

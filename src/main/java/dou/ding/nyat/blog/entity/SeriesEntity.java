@@ -1,8 +1,15 @@
 package dou.ding.nyat.blog.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "series")
 public class SeriesEntity {
@@ -26,55 +33,4 @@ public class SeriesEntity {
 
     @ManyToMany(mappedBy = "series", fetch = FetchType.LAZY)
     private Set<CategoryEntity> categories;
-
-    public SeriesEntity() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Set<PostEntity> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(Set<PostEntity> posts) {
-        this.posts = posts;
-    }
-
-    public Set<CategoryEntity> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(Set<CategoryEntity> categories) {
-        this.categories = categories;
-    }
 }

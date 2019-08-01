@@ -1,8 +1,15 @@
 package dou.ding.nyat.blog.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "author")
 public class AuthorEntity {
@@ -31,74 +38,8 @@ public class AuthorEntity {
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private Set<PostEntity> posts;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true) // thêm cái orphanRemoval mới xóa được
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    // thêm cái orphanRemoval mới xóa được
     @JoinColumn(name = "author_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_author_social_social"))
     private Set<SocialLinkEntity> socialLinks;
-
-    public AuthorEntity() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
-    }
-
-    public AccountEntity getAccount() {
-        return account;
-    }
-
-    public void setAccount(AccountEntity account) {
-        this.account = account;
-    }
-
-    public Set<PostEntity> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(Set<PostEntity> posts) {
-        this.posts = posts;
-    }
-
-    public Set<SocialLinkEntity> getSocialLinks() {
-        return socialLinks;
-    }
-
-    public void setSocialLinks(Set<SocialLinkEntity> socialLinks) {
-        this.socialLinks = socialLinks;
-    }
 }

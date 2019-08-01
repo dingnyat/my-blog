@@ -1,5 +1,8 @@
 package dou.ding.nyat.blog.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -11,6 +14,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "post")
 @EntityListeners(AuditingEntityListener.class)
@@ -78,117 +83,5 @@ public class PostEntity {
     public PostEntity() {
         this.isActived = false;
         this.isCommentBlocked = false;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Integer getPositionInSeries() {
-        return positionInSeries;
-    }
-
-    public void setPositionInSeries(Integer positionInSeries) {
-        this.positionInSeries = positionInSeries;
-    }
-
-    public boolean isActived() {
-        return isActived;
-    }
-
-    public void setActived(boolean actived) {
-        isActived = actived;
-    }
-
-    public boolean isCommentBlocked() {
-        return isCommentBlocked;
-    }
-
-    public void setCommentBlocked(boolean commentBlocked) {
-        isCommentBlocked = commentBlocked;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public AuthorEntity getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(AuthorEntity author) {
-        this.author = author;
-    }
-
-    public SeriesEntity getSeries() {
-        return series;
-    }
-
-    public void setSeries(SeriesEntity series) {
-        this.series = series;
-    }
-
-    public Set<TagEntity> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<TagEntity> tags) {
-        this.tags = tags;
-    }
-
-    public AuthorEntity getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(AuthorEntity lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public List<CommentEntity> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<CommentEntity> comments) {
-        this.comments = comments;
     }
 }
