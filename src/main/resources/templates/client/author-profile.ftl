@@ -40,7 +40,12 @@
             <div class="col-md-12">
               <h3>Xem thêm bài viết của ${author.name}</h3>
               <div class="col-md-4 post-div">
-                <#--TODO chưa làm-->
+                <div class="row">
+                  ${}
+                </div>
+                <div class="row"></div>
+                <div class="row"></div>
+                <div class="row"></div>
               </div>
             </div>
           </div>

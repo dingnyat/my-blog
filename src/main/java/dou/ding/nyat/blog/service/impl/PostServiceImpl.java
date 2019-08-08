@@ -49,6 +49,7 @@ public class PostServiceImpl extends ServiceAbstract<Integer, Post, PostEntity, 
         if (model.getSeriesCode() != null && !model.getSeriesCode().isEmpty())
             postEntity.setSeries(seriesRepository.getByCode(model.getSeriesCode()));
         if (model.getPositionInSeries() != null) postEntity.setPositionInSeries(model.getPositionInSeries());
+        postEntity.setSummary(model.getSummary());
         postEntity.setContent(model.getContent());
         postEntity.setActived(true);
         return repository.create(postEntity);
@@ -66,6 +67,7 @@ public class PostServiceImpl extends ServiceAbstract<Integer, Post, PostEntity, 
         if (model.getPositionInSeries() != null)
             entity.setPositionInSeries(model.getPositionInSeries());
         else entity.setPositionInSeries(null);
+        entity.setSummary(model.getSummary());
         entity.setContent(model.getContent());
         repository.update(entity);
     }
@@ -88,6 +90,7 @@ public class PostServiceImpl extends ServiceAbstract<Integer, Post, PostEntity, 
             post.setSeriesName(entity.getSeries().getName());
         }
         post.setPositionInSeries(entity.getPositionInSeries());
+        post.setSummary(entity.getSummary());
         post.setContent(entity.getContent());
         post.setAuthorCode(entity.getAuthor().getCode());
         post.setAuthorName(entity.getAuthor().getName());

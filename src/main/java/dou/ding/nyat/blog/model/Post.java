@@ -10,6 +10,7 @@ public class Post extends CommonModel<Integer> {
 
     private String code;
     private String title;
+    private String summary;
     private String content;
     private Integer positionInSeries;
     private boolean isActived;

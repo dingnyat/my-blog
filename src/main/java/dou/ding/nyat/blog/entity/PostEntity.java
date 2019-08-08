@@ -1,7 +1,6 @@
 package dou.ding.nyat.blog.entity;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -31,6 +30,10 @@ public class PostEntity {
 
     @Column(name = "title", nullable = false, length = 2048)
     private String title;
+
+    // TODO thêm summary chỗ thêm ở admin đi
+    @Column(name = "summary", columnDefinition = "text")
+    private String summary;
 
     @Column(name = "content", nullable = false, columnDefinition = "text")
     private String content;

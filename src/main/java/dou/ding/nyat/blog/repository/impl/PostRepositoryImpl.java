@@ -23,7 +23,6 @@ public class PostRepositoryImpl extends RepositoryAbstract<Integer, PostEntity> 
     @Override
     public List<PostEntity> getTableData(String username, DataTableRequest dataTableRequest, String... fieldNames) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-
         CriteriaQuery<PostEntity> postQuery = builder.createQuery(PostEntity.class);
         Root<PostEntity> postRoot = postQuery.from(PostEntity.class);
         Join<AuthorEntity, PostEntity> postAuthorJoin = postRoot.join("author");
@@ -64,7 +63,6 @@ public class PostRepositoryImpl extends RepositoryAbstract<Integer, PostEntity> 
     @Override
     public Long countTableDataRecords(String username, DataTableRequest dataTableRequest, String... fieldNames) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-
         CriteriaQuery<Long> postQuery = builder.createQuery(Long.class);
         Root<PostEntity> postRoot = postQuery.from(PostEntity.class);
         Join<AuthorEntity, PostEntity> postAuthorJoin = postRoot.join("author");

@@ -62,8 +62,12 @@ public class ClientController {
             return "error/error";
         }
         model.addAttribute("author", author);
+
         return "client/author-profile";
     }
+
+
+
 
     @PostMapping("/post/add-comment")
     public ResponseEntity<String> addComment(@ModelAttribute Comment comment) {
