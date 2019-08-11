@@ -1,1 +1,0 @@
-<img alt="banner" class="img-fluid" src="https://www.baeldung.com/wp-content/uploads/2018/03/201801_APM_ads_set_b_Java2_300.jpg">
