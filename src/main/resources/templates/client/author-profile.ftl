@@ -20,7 +20,7 @@
         <div class="col-md-9 author-div">
           <div class="row mb-4" style="display: flex; align-items: center;">
             <div class="col-md-3 author-avatar">
-              <img class="rounded-circle" src="${'/public/images/' + author.avatarUrl}" width="100%" height="100%"
+              <img class="rounded-circle" src="<@s.url '/public/images/' + author.avatarUrl/>" width="100%" height="100%"
                    alt="avatar"/>
             </div>
             <div class="col-md-6">

@@ -24,14 +24,14 @@
                   contentType: false,
                   processData: false,
                   data: formData,
-                  success: function (data) {
+                  success: function () {
                       window.location.reload();
                       $("#add-comment form")[0].reset();
                       $("#add-comment").modal("hide");
                       $("#notification-dialog .modal-body p").html("Đã thêm bình luận!");
                       $("#notification-dialog").modal("show");
                   },
-                  error: function (data) {
+                  error: function () {
                       $("#notification-dialog .modal-body p").html("Lỗi xảy ra, vui lòng thử lại!");
                       $("#notification-dialog").modal("show");
                   }
@@ -128,10 +128,12 @@
                         <div class="col-md-12">
                           <div class="row mb-2">
                             <div class="col-md-12">
-                              <span>${comment.commentBy} | ${comment.createdDate} | <span><a data-toggle="modal"
-                                                                                             data-comment-id="${comment.id}"
-                                                                                             data-target="#add-comment"
-                                                                                             href="javascript:void(0)">Trả lời</a></span></span>
+                              <span>${comment.commentBy} | ${comment.createdDate} |
+                                <span>
+                                  <a data-toggle="modal" data-comment-id="${comment.id}"
+                                         data-target="#add-comment" href="javascript:void(0)">Trả lời</a>
+                                </span>
+                              </span>
                             </div>
                           </div>
                           <div class="row">

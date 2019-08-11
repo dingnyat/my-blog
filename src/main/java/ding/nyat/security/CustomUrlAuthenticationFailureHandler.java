@@ -11,8 +11,7 @@ import java.io.IOException;
 public class CustomUrlAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        String targetUrl = "/login";
-        request.setAttribute("error", true);
+        String targetUrl = "/login?error=true";
         this.getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }

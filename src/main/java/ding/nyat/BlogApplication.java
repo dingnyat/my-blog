@@ -21,6 +21,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.CssLinkResourceTransformer;
@@ -33,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
-public class BlogApplication extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
+public class BlogApplication extends WebSecurityConfigurerAdapter {
 
     public BlogApplication(FreeMarkerConfigurer freeMarkerConfigurer) {
         freeMarkerConfigurer.getTaglibFactory().setClasspathTlds(Collections.singletonList("/META-INF/security.tld"));
@@ -91,15 +92,6 @@ public class BlogApplication extends WebSecurityConfigurerAdapter implements Web
     }
 
     @Bean
-    public FilterRegistrationBean<ResourceUrlEncodingFilter> resourceUrlEncodingFilter() {
-        ResourceUrlEncodingFilter filter = new ResourceUrlEncodingFilter();
-        FilterRegistrationBean<ResourceUrlEncodingFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(filter);
-        registrationBean.addUrlPatterns("/*");
-        return registrationBean;
-    }
-
-    @Bean
     public ServletRegistrationBean<ConnectorServlet> connectorServlet() {
         ServletRegistrationBean<ConnectorServlet> registrationBean = new ServletRegistrationBean<>();
         registrationBean.setServlet(new ConnectorServlet());
@@ -112,12 +104,23 @@ public class BlogApplication extends WebSecurityConfigurerAdapter implements Web
         return registrationBean;
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/")
-                .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS))
-                .resourceChain(false)
-                .addResolver(new VersionResourceResolver().addContentVersionStrategy("/**"))
-                .addTransformer(new CssLinkResourceTransformer());
+    @Bean
+    public FilterRegistrationBean<ResourceUrlEncodingFilter> resourceUrlEncodingFilter() {
+        FilterRegistrationBean<ResourceUrlEncodingFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new ResourceUrlEncodingFilter());
+        registrationBean.addUrlPatterns("/*");
+        return registrationBean;
+    }
+
+    @EnableWebMvc
+    public static class CacheStaticConfigurer implements WebMvcConfigurer {
+        @Override
+        public void addResourceHandlers(ResourceHandlerRegistry registry) {
+            registry.addResourceHandler("/**").addResourceLocations("classpath:/static/")
+                    .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS))
+                    .resourceChain(false)
+                    .addResolver(new VersionResourceResolver().addContentVersionStrategy("/**"))
+                    .addTransformer(new CssLinkResourceTransformer());
+        }
     }
 }
