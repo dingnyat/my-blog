@@ -1,10 +1,10 @@
 package ding.nyat.service.impl;
 
-import ding.nyat.repository.AccountRepository;
-import ding.nyat.repository.RoleRepository;
 import ding.nyat.entity.AccountEntity;
 import ding.nyat.entity.AuthorEntity;
 import ding.nyat.model.Account;
+import ding.nyat.repository.AccountRepository;
+import ding.nyat.security.Role;
 import ding.nyat.service.AccountService;
 import ding.nyat.service.ServiceAbstract;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,6 @@ import java.util.HashSet;
 @Service
 @Transactional
 public class AccountServiceImpl extends ServiceAbstract<Integer, Account, AccountEntity, AccountRepository> implements AccountService {
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     public AccountServiceImpl(@Autowired AccountRepository repository) {
         super(repository);
@@ -42,7 +39,7 @@ public class AccountServiceImpl extends ServiceAbstract<Integer, Account, Accoun
         authorEntity.setAccount(accountEntity); // nhớ set ngược lại account, thì mới cascade được
 
         accountEntity.setAuthor(authorEntity);
-        accountEntity.setRoles(new HashSet<>(Collections.singletonList(roleRepository.getById(2))));
+        accountEntity.setRoles(new HashSet<>(Collections.singletonList(Role.AUTHOR)));
         return repository.create(accountEntity);
     }
 
@@ -72,6 +69,6 @@ public class AccountServiceImpl extends ServiceAbstract<Integer, Account, Accoun
         // lười viết xuống repo hay dùng authorRepo. dù sao account cũng ít record với hiếm khi dùng method này
         return getAllRecords().stream()
                 .filter(account -> account.getAuthor().getId().equals(id))
-                .findFirst().orElse(null); // có thể dùng .get() ở cuối nhưng bị cảnh báo isPresent()
+                .findFirst().orElse(null);
     }
 }

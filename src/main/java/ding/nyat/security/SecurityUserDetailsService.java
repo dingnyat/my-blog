@@ -2,7 +2,6 @@ package ding.nyat.security;
 
 
 import ding.nyat.entity.AccountEntity;
-import ding.nyat.entity.RoleEntity;
 import ding.nyat.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,7 +39,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
         AccountEntity accountEntity = repository.getByUsername(username);
         if (accountEntity != null) {
             List<GrantedAuthority> authorities = new ArrayList<>();
-            Set<RoleEntity> roles = accountEntity.getRoles();
+            Set<Role> roles = accountEntity.getRoles();
             roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
             return new UserPrincipal(accountEntity.getUsername(), accountEntity.getPassword(),
                     accountEntity.isActive(), true, true, true, authorities);

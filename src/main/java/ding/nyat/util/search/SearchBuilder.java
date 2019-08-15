@@ -13,7 +13,7 @@ public class SearchBuilder {
 
     public SearchBuilder() {
         this.searchCriteria = new ArrayList<>();
-        final String searchRegex = "(\\w+?)(" + String.join("|", SearchOperator.SIMPLE_OPERATION_SET) + ")(\\p{Punct}?)(\\w+?)(\\p{Punct}?)";
+        final String searchRegex = "(\\w+?)(" + String.join("|", SearchOperator.SIMPLE_OPERATION_SET) + ")(\\p{Punct}?)(\\w+)(\\p{Punct}?)";
         pattern = Pattern.compile(searchRegex + ",");
     }
 

@@ -1,6 +1,7 @@
 package ding.nyat;
 
 import com.ckfinder.connector.ConnectorServlet;
+import com.zaxxer.hikari.HikariDataSource;
 import ding.nyat.config.CKFinderConfig;
 import ding.nyat.security.*;
 import ding.nyat.util.PasswordUtils;
@@ -29,6 +30,9 @@ import org.springframework.web.servlet.resource.ResourceUrlEncodingFilter;
 import org.springframework.web.servlet.resource.VersionResourceResolver;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.sql.PreparedStatement;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
@@ -36,8 +40,24 @@ import java.util.concurrent.TimeUnit;
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class BlogApplication extends WebSecurityConfigurerAdapter {
 
-    public BlogApplication(FreeMarkerConfigurer freeMarkerConfigurer) {
+    public BlogApplication(FreeMarkerConfigurer freeMarkerConfigurer, HikariDataSource dataSource) {
         freeMarkerConfigurer.getTaglibFactory().setClasspathTlds(Collections.singletonList("/META-INF/security.tld"));
+        try {
+            for (Field field : Role.class.getFields()) {
+                if (Modifier.isFinal(field.getModifiers()) && Modifier.isStatic(field.getModifiers())) {
+                    Role role = (Role) field.get(Role.class.newInstance());
+                    PreparedStatement preparedStatement =
+                            dataSource.getConnection().prepareStatement("INSERT INTO role VALUES (?, ?);");
+                    preparedStatement.setInt(1, role.getId());
+                    preparedStatement.setString(2, role.getName());
+                    preparedStatement.executeQuery();
+                }
+            }
+        } catch (Exception e) {
+            if (e.toString().contains("duplicate") || e.toString().contains("unique")) // ko thay class exeption
+                System.out.println("Initialize roles: already existed!");
+            else System.out.println("Initialize roles: Something went wrong! Can't create roles.");
+        }
     }
 
     public static void main(String[] args) {
@@ -67,8 +87,8 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/login", "/logout").permitAll()
-                .antMatchers("/admin/**", "/api/admin/**").hasRole(RoleEnum.ADMIN.getName())
-                .antMatchers("/user/**").hasRole(RoleEnum.AUTHOR.getName())
+                .antMatchers("/admin/**", "/api/admin/**").hasRole(Role.ADMIN.getName())
+                .antMatchers("/user/**").hasRole(Role.AUTHOR.getName())
                 .and().exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler());
 
         http.authorizeRequests()

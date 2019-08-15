@@ -1,5 +1,6 @@
 package ding.nyat.entity;
 
+import ding.nyat.security.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,7 +36,7 @@ public class AccountEntity {
             joinColumns = {@JoinColumn(name = "account_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_account_account_role"))},
             inverseJoinColumns = {@JoinColumn(name = "role_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_account_role_role"))},
             uniqueConstraints = {@UniqueConstraint(columnNames = {"account_id", "role_id"})})
-    private Set<RoleEntity> roles;
+    private Set<Role> roles;
 
     @OneToOne(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private AuthorEntity author;

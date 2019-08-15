@@ -56,7 +56,7 @@ public class ClientController {
     @GetMapping("/author/{author-code}")
     public String authorProfile(@PathVariable("author-code") String authorCode, Model model) {
         Author author = authorService.getByCode(authorCode);
-        if (author == null){
+        if (author == null) {
             model.addAttribute("errorCodeMessage", "Error 404, Not Found!");
             model.addAttribute("message", "Sorry, Something went wrong!");
             return "error/error";
