@@ -1,4 +1,5 @@
 <#import "/spring.ftl" as s>
+<#assign sec=JspTaglibs["http://www.springframework.org/security/tags"]/>
 <meta charset="UTF-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title><#if title??>${title} | </#if>Annanjin</title>

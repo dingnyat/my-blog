@@ -68,7 +68,7 @@ public class AccountServiceImpl extends ServiceAbstract<Integer, Account, Accoun
     public Account getByAuthorId(Integer id) {
         // lười viết xuống repo hay dùng authorRepo. dù sao account cũng ít record với hiếm khi dùng method này
         return getAllRecords().stream()
-                .filter(account -> account.getAuthor().getId().equals(id))
+                .filter(account -> account.getAuthor() != null && account.getAuthor().getId().equals(id))
                 .findFirst().orElse(null);
     }
 }

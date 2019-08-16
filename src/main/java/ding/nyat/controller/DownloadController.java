@@ -1,5 +1,6 @@
 package ding.nyat.controller;
 
+import com.ckfinder.connector.utils.PathUtils;
 import ding.nyat.util.PathConstants;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -31,13 +32,18 @@ public class DownloadController {
         }
     }
 
-    @RequestMapping(value = PathConstants.DOWNLOAD_PREFIX_URL + "/image/{image:.+}",
+    @RequestMapping(value = PathConstants.IMAGE_PREFIX_URL + "/{type}/{image:.+}",
             method = RequestMethod.GET,
             produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE})
     @ResponseBody
-    public byte[] loadImage(@PathVariable(value = "image") String image) {
+    public byte[] loadImage(@PathVariable("type") String type, @PathVariable(value = "image") String image) {
         try {
-            String filePath = PathConstants.IMAGE_UPLOAD_DIR + File.separator + image;
+            String filePath = "";
+            if (type.equals("public")) {
+                filePath = PathUtils.addSlashToEnd(PathConstants.IMAGE_UPLOAD_DIR) + image;
+            } else if (type.equals("user")) {
+                filePath = PathUtils.addSlashToEnd(PathConstants.AVATAR_UPLOAD_DIR) + image;
+            }
             File file = new File(filePath);
             return Files.readAllBytes(file.toPath());
         } catch (Exception e) {

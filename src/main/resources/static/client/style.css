@@ -1,58 +1,71 @@
 body {
-  padding-bottom: 10px;
-  background-color: #eeeeee;
+    background-color: #eeeeee;
 }
 
-.form-login {
-  width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin: 0 auto;
+@media (max-width: 576px) {
+    .search-nav-btn {
+        height: 50%;
+    }
 }
 
-.form-login .form-control {
-  position: relative;
-  box-sizing: border-box;
-  height: auto;
-  padding: 10px;
-  font-size: 16px;
-}
-
-.form-login .form-control:focus {
-  z-index: 2;
-}
-
-.form-login input[type="text"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.form-login input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
+/*@media (min-width: 768px) {
+    footer {
+        position: absolute;
+        bottom: 0;
+    }
+}*/
 
 .footer-link {
-  list-style-type: none;
+    list-style-type: none;
 }
 
 .footer-link a {
-  text-decoration: none;
-  font-size: 90%;
+    text-decoration: none;
+    font-size: 90%;
 }
 
 .footer-link a {
-  color: #8c8e8b;
+    color: #8c8e8b;
 }
 
 .footer-link a:hover {
-  color: #0e0e0e;
+    color: #0e0e0e;
 }
 
-#scroll-up-btn {
-  position: fixed;
-  bottom: 40px;
-  right: 40px;
+
+.form-modal .modal-body {
+    overflow-y: auto;
+    height: calc(100vh - 200px);
+}
+
+td {
+    word-break: break-all;
+    vertical-align: middle !important;
+}
+
+table.dataTable tbody td.select-checkbox,
+table.dataTable thead th.select-checkbox {
+    position: relative;
+}
+
+table.dataTable tbody td.select-checkbox:before,
+table.dataTable tbody td.select-checkbox:after,
+table.dataTable thead th.select-checkbox:before,
+table.dataTable thead th.select-checkbox:after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    box-sizing: border-box;
+}
+
+table.dataTable tbody td.select-checkbox:before,
+table.dataTable thead th.select-checkbox:before {
+    content: ' ';
+    margin-top: -6px;
+    margin-left: -6px;
+    border: 1px solid black;
+    border-radius: 3px;
 }

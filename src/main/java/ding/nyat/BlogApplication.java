@@ -5,7 +5,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import ding.nyat.config.CKFinderConfig;
 import ding.nyat.security.*;
 import ding.nyat.util.PasswordUtils;
-import ding.nyat.util.PathConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
@@ -22,6 +21,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -82,13 +82,12 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        // http.csrf().ignoringAntMatchers(CKFinderServletConfig.CKFINDER_URL, "/api/webhook/transfer");
+        http.csrf().ignoringAntMatchers(CKFinderConfig.CKFINDER_URL_PATTERN);
 
         http.authorizeRequests()
                 .antMatchers("/login", "/logout").permitAll()
-                .antMatchers("/admin/**", "/api/admin/**").hasRole(Role.ADMIN.getName())
-                .antMatchers("/user/**").hasRole(Role.AUTHOR.getName())
+                .antMatchers("/admin/**").hasRole(Role.ADMIN.getName())
+                .antMatchers("/workspace/**", "/user/**").hasAnyRole(Role.AUTHOR.getName(), Role.ADMIN.getName())
                 .and().exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler());
 
         http.authorizeRequests()
@@ -100,8 +99,8 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
                 .and()
                 .rememberMe().key("remember-me").tokenValiditySeconds(Integer.parseInt(env.getRequiredProperty("authentication.persistent-login.max-age")))
                 .rememberMeServices(new CustomPersistentTokenBasedRememberMeServices("remember-me", userDetailsService, persistentTokenRepository))
-                .and()
-                .logout().logoutUrl("/logout").logoutSuccessHandler(new CustomUrlLogoutSuccessHanlder())
+                .and()// dm binh thuong vanx dung logoutUrl ma sao tu nhien bi loi 404, phai dung cai nay. ko biet co lien quan den csrf ko
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")).logoutSuccessHandler(new CustomUrlLogoutSuccessHanlder())
                 .deleteCookies(env.getProperty("server.servlet.session.cookie.name")).invalidateHttpSession(true);
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // default value
@@ -116,10 +115,7 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
         ServletRegistrationBean<ConnectorServlet> registrationBean = new ServletRegistrationBean<>();
         registrationBean.setServlet(new ConnectorServlet());
         registrationBean.addUrlMappings(CKFinderConfig.CKFINDER_URL_PATTERN);
-        registrationBean.addInitParameter("XMLConfig", "classpath:/ckfinder_config.xml");
-        registrationBean.addInitParameter("debug", "false");
         registrationBean.addInitParameter("configuration", CKFinderConfig.class.getTypeName());
-        registrationBean.addInitParameter("baseDir", PathConstants.UPLOAD_BASE_DIR);
         registrationBean.addInitParameter("baseUrl", env.getRequiredProperty("server.base-url"));
         return registrationBean;
     }

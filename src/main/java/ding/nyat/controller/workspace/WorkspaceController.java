@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class WorkspaceController {
-    @GetMapping(value = {"/user/workspace"})
+    @GetMapping(value = {"/workspace"})
     public String dashboard() {
         return "workspace/workspace";
     }

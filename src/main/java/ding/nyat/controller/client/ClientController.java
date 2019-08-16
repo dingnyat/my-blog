@@ -36,7 +36,7 @@ public class ClientController {
     @GetMapping("/login")
     public String login(Authentication authentication) {
         if (authentication != null && authentication.getName() != null) {
-            return "redirect:/user/workspace";
+            return "redirect:/workspace";
         }
         return "client/login";
     }

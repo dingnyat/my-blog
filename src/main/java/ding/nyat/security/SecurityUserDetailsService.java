@@ -24,7 +24,6 @@ import java.util.Set;
 @Transactional(readOnly = true)
 public class SecurityUserDetailsService implements UserDetailsService {
 
-
     private SessionRegistry sessionRegistry;
 
     @Autowired
@@ -40,7 +39,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
         if (accountEntity != null) {
             List<GrantedAuthority> authorities = new ArrayList<>();
             Set<Role> roles = accountEntity.getRoles();
-            roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
+            roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getFullName())));
             return new UserPrincipal(accountEntity.getUsername(), accountEntity.getPassword(),
                     accountEntity.isActive(), true, true, true, authorities);
         } else {

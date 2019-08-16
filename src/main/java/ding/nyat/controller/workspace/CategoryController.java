@@ -1,5 +1,7 @@
 package ding.nyat.controller.workspace;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ding.nyat.model.Category;
 import ding.nyat.model.Tag;
 import ding.nyat.service.CategoryService;
@@ -116,8 +118,11 @@ public class CategoryController {
 
     @DeleteMapping("/category/deselect-series")
     @ResponseBody
-    public ResponseEntity<String> deselectSeries(@RequestParam("seriesId") Integer seriesId, @RequestParam("categoryId") Integer categoryId) {
+    public ResponseEntity<String> deselectSeries(@RequestBody String reqBody) {
         try {
+            JsonNode root = (new ObjectMapper()).readTree(reqBody);
+            Integer seriesId = root.get("seriesId").asInt();
+            Integer categoryId = root.get("categoryId").asInt();
             categoryService.deselectSeries(seriesId, categoryId);
             return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
@@ -127,8 +132,11 @@ public class CategoryController {
 
     @PutMapping("/category/link-series")
     @ResponseBody
-    public ResponseEntity<String> linkSeries(@RequestParam("seriesId") Integer seriesId, @RequestParam("categoryId") Integer categoryId) {
+    public ResponseEntity<String> linkSeries(@RequestBody String reqBody) {
         try {
+            JsonNode root = (new ObjectMapper()).readTree(reqBody);
+            Integer seriesId = root.get("seriesId").asInt();
+            Integer categoryId = root.get("categoryId").asInt();
             categoryService.linkSeries(seriesId, categoryId);
             return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {

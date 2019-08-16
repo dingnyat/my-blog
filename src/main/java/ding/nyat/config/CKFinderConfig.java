@@ -1,21 +1,26 @@
 package ding.nyat.config;
 
+import com.ckfinder.connector.configuration.AccessControlLevelsList;
 import com.ckfinder.connector.configuration.Configuration;
+import com.ckfinder.connector.configuration.ConfigurationPathBuilder;
 import com.ckfinder.connector.configuration.Events;
+import com.ckfinder.connector.data.AccessControlLevel;
+import com.ckfinder.connector.data.PluginInfo;
+import com.ckfinder.connector.data.PluginParam;
+import com.ckfinder.connector.data.ResourceType;
+import com.ckfinder.connector.errors.ConnectorException;
+import com.ckfinder.connector.plugins.ImageResize;
+import com.ckfinder.connector.plugins.Watermark;
 import com.ckfinder.connector.utils.PathUtils;
 import ding.nyat.util.PathConstants;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import javax.servlet.ServletConfig;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Scanner;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
 public class CKFinderConfig extends Configuration {
 
@@ -29,143 +34,128 @@ public class CKFinderConfig extends Configuration {
 
     @Override
     public void init() throws Exception {
-        DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
-        Resource resource = resourceLoader.getResource(this.xmlFilePath);
         Class<?> clazz = getClass().getSuperclass();
+
         Field field = clazz.getDeclaredField("lastCfgModificationDate");
+        field.setAccessible(true);
+        field.set(this, System.currentTimeMillis());
+
         Method method = clazz.getDeclaredMethod("clearConfiguration");
         method.setAccessible(true);
         method.invoke(this);
-        field.setAccessible(true);
-        field.set(this, System.currentTimeMillis());
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.parse(resource.getInputStream());
-        document.normalize();
-        Node node = document.getFirstChild();
-        if (node != null) {
-            NodeList nodeList = node.getChildNodes();
-            // Đọc xml
-            for (int i = 0; i < nodeList.getLength(); ++i) {
-                Node childNode = nodeList.item(i);
-                if (childNode.getNodeName().equals("enabled"))
-                    this.enabled = Boolean.valueOf(childNode.getTextContent().trim());
-                if (childNode.getNodeName().equals("baseDir")) {
-                    if (servletConf.getInitParameter("baseDir") == null) { // nếu bên CKFinderServletConfig.java chưa cấu hình baseDir
-                        this.baseDir = childNode.getTextContent().trim(); // thì lấy bên ckfinder_config.xml
-                    } else {
-                        this.baseDir = servletConf.getInitParameter("baseDir");
-                    }
-                    this.baseDir = PathUtils.escape(this.baseDir);
-                    this.baseDir = PathUtils.addSlashToEnd(this.baseDir);
-                }
-                if (childNode.getNodeName().equals("baseURL")) {
-                    if (servletConf.getInitParameter("baseURL") == null) {
-                        this.baseURL = childNode.getTextContent().trim();
-                    } else {
-                        this.baseURL = servletConf.getInitParameter("baseURL") + PathConstants.DOWNLOAD_PREFIX_URL;
-                    }
-                    this.baseURL = PathUtils.escape(this.baseURL);
-                    this.baseURL = PathUtils.addSlashToEnd(this.baseURL);
-                }
-                if (childNode.getNodeName().equals("licenseName"))
-                    this.licenseName = childNode.getTextContent().trim();
-                if (childNode.getNodeName().equals("licenseKey"))
-                    this.licenseKey = childNode.getTextContent().trim();
-                String value;
-                if (childNode.getNodeName().equals("imgWidth")) {
-                    value = childNode.getTextContent().trim();
-                    value = value.replaceAll("//D", "");
-                    try {
-                        this.imgWidth = Integer.valueOf(value);
-                    } catch (NumberFormatException var13) {
-                        this.imgWidth = null;
-                    }
-                }
-                if (childNode.getNodeName().equals("imgQuality")) {
-                    value = childNode.getTextContent().trim();
-                    value = value.replaceAll("//D", "");
-                    method = clazz.getDeclaredMethod("adjustQuality", String.class);
-                    method.setAccessible(true);
-                    this.imgQuality = Float.parseFloat(method.invoke(this, value).toString());
-                }
-                if (childNode.getNodeName().equals("imgHeight")) {
-                    value = childNode.getTextContent().trim();
-                    value = value.replaceAll("//D", "");
-                    try {
-                        this.imgHeight = Integer.valueOf(value);
-                    } catch (NumberFormatException var12) {
-                        this.imgHeight = null;
-                    }
-                }
-                if (childNode.getNodeName().equals("thumbs")) {
-                    method = clazz.getDeclaredMethod("setThumbs", NodeList.class);
-                    method.setAccessible(true);
-                    method.invoke(this, childNode.getChildNodes());
-                }
-                if (childNode.getNodeName().equals("accessControls")) {
-                    method = clazz.getDeclaredMethod("setACLs", NodeList.class);
-                    method.setAccessible(true);
-                    method.invoke(this, childNode.getChildNodes());
-                }
-                if (childNode.getNodeName().equals("hideFolders")) {
-                    method = clazz.getDeclaredMethod("setHiddenFolders", NodeList.class);
-                    method.setAccessible(true);
-                    method.invoke(this, childNode.getChildNodes());
-                }
-                if (childNode.getNodeName().equals("hideFiles")) {
-                    method = clazz.getDeclaredMethod("setHiddenFiles", NodeList.class);
-                    method.setAccessible(true);
-                    method.invoke(this, childNode.getChildNodes());
-                }
-                if (childNode.getNodeName().equals("checkDoubleExtension"))
-                    this.doubleExtensions = Boolean.valueOf(childNode.getTextContent().trim());
-                if (childNode.getNodeName().equals("disallowUnsafeCharacters"))
-                    this.disallowUnsafeCharacters = Boolean.valueOf(childNode.getTextContent().trim());
-                if (childNode.getNodeName().equals("forceASCII"))
-                    this.forceASCII = Boolean.valueOf(childNode.getTextContent().trim());
-                if (childNode.getNodeName().equals("checkSizeAfterScaling"))
-                    this.checkSizeAfterScaling = Boolean.valueOf(childNode.getTextContent().trim());
-                Scanner sc;
-                if (childNode.getNodeName().equals("htmlExtensions")) {
-                    value = childNode.getTextContent();
-                    sc = (new Scanner(value)).useDelimiter(",");
-                    while (sc.hasNext()) {
-                        String val = sc.next();
-                        if (val != null && !val.equals(""))
-                            this.htmlExtensions.add(val.trim().toLowerCase());
-                    }
-                }
-                if (childNode.getNodeName().equals("secureImageUploads"))
-                    this.secureImageUploads = Boolean.valueOf(childNode.getTextContent().trim());
-                if (childNode.getNodeName().equals("uriEncoding"))
-                    this.uriEncoding = childNode.getTextContent().trim();
-                if (childNode.getNodeName().equals("userRoleSessionVar"))
-                    this.userRoleSessionVar = childNode.getTextContent().trim();
-                if (childNode.getNodeName().equals("defaultResourceTypes")) {
-                    value = childNode.getTextContent().trim();
-                    sc = (new Scanner(value)).useDelimiter(",");
-                    while (sc.hasNext())
-                        this.defaultResourceTypes.add(sc.next());
-                }
-                if (childNode.getNodeName().equals("plugins")) {
-                    method = clazz.getDeclaredMethod("setPlugins", Node.class);
-                    method.setAccessible(true);
-                    method.invoke(this, childNode);
-                }
-                if (childNode.getNodeName().equals("basePathBuilderImpl")) {
-                    method = clazz.getDeclaredMethod("setBasePathImpl", String.class);
-                    method.setAccessible(true);
-                    method.invoke(this, childNode.getTextContent().trim());
-                }
-            }
-        }
-        method = clazz.getDeclaredMethod("setTypes", Document.class);
-        method.setAccessible(true);
-        method.invoke(this, document);
+
+        this.xmlFilePath = null;
+
+        this.enabled = true;
+
+        this.baseDir = PathUtils.escape(PathUtils.addSlashToEnd(PathConstants.UPLOAD_BASE_DIR));
+        this.baseURL = PathUtils.escape(PathUtils.addSlashToEnd(this.servletConf.getInitParameter("baseUrl")));
+
+        this.licenseName = "dingnyat";
+        this.licenseKey = "RSFAG1EQ2XKHSFY335S7UKDRUQLN6KKT";
+
+        this.imgWidth = 700;
+        this.imgHeight = 700;
+        this.imgQuality = 1F;
+        this.thumbsEnabled = true;
+        this.thumbsURL = this.baseURL + "_thumbs/";
+        this.thumbsDir = this.baseDir + "_thumbs";
+        this.thumbsPath = "";
+        this.thumbsQuality = 0.5F;
+        this.thumbsDirectAccess = false;
+        this.thumbsMaxHeight = 50;
+        this.thumbsMaxWidth = 50;
+
+        this.userRoleSessionVar = "CKFINDER_ROLE";
+        this.accessControlLevels = new AccessControlLevelsList<>(true);
+        AccessControlLevel acl = new AccessControlLevel();
+        acl.setRole("*");
+        acl.setResourceType("*");
+        acl.setFolder("/");
+        acl.setFileDelete(true);
+        acl.setFileRename(true);
+        acl.setFileUpload(true);
+        acl.setFileView(true);
+        acl.setFolderDelete(true);
+        acl.setFolderRename(true);
+        acl.setFolderCreate(true);
+        acl.setFolderView(true);
+        accessControlLevels.addItem(acl, false);
+
+        this.hiddenFolders = Arrays.asList(".*", "CVS");
+
+        this.hiddenFiles = Collections.singletonList(".*");
+
+        this.htmlExtensions = Arrays.asList("html", "htm", "xml", "js");
+
+        this.basePathBuilder = new ConfigurationPathBuilder();
+
+        this.doubleExtensions = true;
+        this.forceASCII = false;
+        this.checkSizeAfterScaling = true;
+        this.uriEncoding = "UTF-8";
+        this.secureImageUploads = true;
+        this.disallowUnsafeCharacters = false;
+        this.enableCsrfProtection = true;
+
+        this.defaultResourceTypes = new LinkedHashSet<>();
+
+        this.types = new LinkedHashMap<>();
+        ResourceType type = new ResourceType("Image");
+        type.setUrl(this.baseURL + PathConstants.IMAGE_PREFIX_URL + PathConstants.DOWNLOAD_PREFIX_URL);
+        type.setPath(PathConstants.IMAGE_UPLOAD_DIR);
+        type.setMaxSize("0");
+        type.setDeniedExtensions(null);
+        type.setAllowedExtensions("bmp,gif,jpeg,jpg,png");
+        this.types.put(type.getName(), type);
+
+        PluginInfo imgResizePlg = new PluginInfo();
+        imgResizePlg.setName("imageresize");
+        imgResizePlg.setEnabled(true);
+        imgResizePlg.setClassName(ImageResize.class.getTypeName());
+        PluginParam smThumb = new PluginParam();
+        smThumb.setName("smallThumb");
+        smThumb.setValue("90x90");
+        PluginParam mdThumb = new PluginParam();
+        mdThumb.setName("mediumThumb");
+        mdThumb.setValue("120x120");
+        PluginParam lgThumb = new PluginParam();
+        lgThumb.setName("largeThumb");
+        lgThumb.setValue("180x180");
+        imgResizePlg.setParams(Arrays.asList(smThumb, mdThumb, lgThumb));
+
+        PluginInfo watermark = new PluginInfo();
+        watermark.setName("watermark");
+        watermark.setEnabled(true);
+        watermark.setClassName(Watermark.class.getTypeName());
+        PluginParam param1 = new PluginParam();
+        param1.setName("source");
+        param1.setValue("/path/in/servlet/context/logo.gif");
+        PluginParam param2 = new PluginParam();
+        param2.setName("transparency");
+        param2.setValue("0.8");
+        PluginParam param3 = new PluginParam();
+        param3.setName("quality");
+        param3.setValue("100");
+        PluginParam param4 = new PluginParam();
+        param4.setName("marginRight");
+        param4.setValue("5");
+        PluginParam param5 = new PluginParam();
+        param5.setName("marginBottom");
+        param5.setValue("5");
+        watermark.setParams(Arrays.asList(param1, param2, param3, param4, param5));
+        watermark.setInternal(true);
+
+        this.plugins = Arrays.asList(imgResizePlg, watermark);
+
         field = clazz.getDeclaredField("events");
         field.setAccessible(true);
         field.set(this, new Events());
         this.registerEventHandlers();
+    }
+
+    @Override
+    public boolean checkIfReloadConfig() throws ConnectorException {
+        return false; // tắt cái logger error vì ko dung xml đi
     }
 }

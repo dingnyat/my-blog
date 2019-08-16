@@ -1,12 +1,13 @@
 package ding.nyat.controller.workspace;
 
+import com.ckfinder.connector.utils.PathUtils;
 import ding.nyat.model.Account;
 import ding.nyat.model.Author;
 import ding.nyat.model.SocialLink;
 import ding.nyat.service.AccountService;
 import ding.nyat.service.AuthorService;
-import ding.nyat.util.PathConstants;
 import ding.nyat.util.PasswordUtils;
+import ding.nyat.util.PathConstants;
 import ding.nyat.util.datatable.DataTableRequest;
 import ding.nyat.util.datatable.DataTableResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -57,7 +57,7 @@ public class AuthorController {
                 String ext = Objects.requireNonNull(account.getAuthor().getAvatarFile()
                         .getOriginalFilename()).substring(account.getAuthor().getAvatarFile().getOriginalFilename().lastIndexOf("."));
                 String avatarUrl = System.currentTimeMillis() + "-author" + ext;
-                Path path = Paths.get(PathConstants.IMAGE_UPLOAD_DIR + File.separator + avatarUrl);
+                Path path = Paths.get(PathUtils.addSlashToEnd(PathConstants.AVATAR_UPLOAD_DIR) + avatarUrl);
                 Files.write(path, account.getAuthor().getAvatarFile().getBytes());
                 account.getAuthor().setAvatarUrl(avatarUrl);
             }
@@ -81,7 +81,7 @@ public class AuthorController {
                 String ext = Objects.requireNonNull(author.getAvatarFile()
                         .getOriginalFilename()).substring(author.getAvatarFile().getOriginalFilename().lastIndexOf("."));
                 String avatarUrl = System.currentTimeMillis() + "-author" + ext;
-                Path path = Paths.get(PathConstants.IMAGE_UPLOAD_DIR + File.separator + avatarUrl);
+                Path path = Paths.get(PathUtils.addSlashToEnd(PathConstants.AVATAR_UPLOAD_DIR) + avatarUrl);
                 Files.write(path, author.getAvatarFile().getBytes());
                 author.setAvatarUrl(avatarUrl);
             }
