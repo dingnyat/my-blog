@@ -1,10 +1,11 @@
+<#import "spring.ftl" as s/>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
-  <title>CKFinder</title>
+  <title>File</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <meta name="robots" content="noindex, nofollow"/>
-  <script type="text/javascript" src="ckfinder.js"></script>
+  <script type="text/javascript" src="<@s.url '/vendor/ckfinder/ckfinder.js'/>"></script>
   <style type="text/css">
     body, html, iframe, #ckfinder {
       margin: 0;
@@ -21,22 +22,22 @@
 <script type="text/javascript">
     //<![CDATA[
     (function () {
-        var config = {};
-        var get = CKFinder.tools.getUrlParam;
-        var getBool = function (v) {
-            var t = get(v);
+        let config = {};
+        let get = CKFinder.tools.getUrlParam;
+        let getBool = function (v) {
+            let t = get(v);
 
             if (t === null)
                 return null;
 
-            return t == '0' ? false : true;
+            return t !== '0';
         };
 
-        var tmp;
+        let tmp;
         if (tmp = get('configId')) {
-            var win = window.opener || window;
+            let win = window.opener || window;
             try {
-                while ((!win.CKFinder || !win.CKFinder._.instanceConfig[tmp]) && win != window.top)
+                while ((!win.CKFinder || !win.CKFinder._.instanceConfig[tmp]) && win !== window.top)
                     win = win.parent;
 
                 if (win.CKFinder._.instanceConfig[tmp])
@@ -70,7 +71,7 @@
 
         if (typeof (config.selectActionFunction) == 'undefined') {
             // Try to get desired "File Select" action from the URL.
-            var action;
+            let action;
             if (tmp = get('CKEditor')) {
                 if (tmp.length)
                     action = 'ckeditor';
@@ -78,10 +79,10 @@
             if (!action)
                 action = get('action');
 
-            var parentWindow = (window.parent == window) ? window.opener : window.parent;
+            let parentWindow = (window.parent === window) ? window.opener : window.parent;
             switch (action) {
                 case 'js':
-                    var actionFunction = get('func');
+                    let actionFunction = get('func');
                     if (actionFunction && actionFunction.length > 0)
                         config.selectActionFunction = parentWindow[actionFunction];
 
@@ -91,7 +92,7 @@
                     break;
 
                 case 'ckeditor':
-                    var funcNum = get('CKEditorFuncNum');
+                    let funcNum = get('CKEditorFuncNum');
                     if (parentWindow['CKEDITOR']) {
                         config.selectActionFunction = function (fileUrl, data) {
                             parentWindow['CKEDITOR'].tools.callFunction(funcNum, fileUrl, data);
@@ -117,7 +118,7 @@
         // Always use 100% width and height when nested using this middle page.
         config.width = config.height = '100%';
 
-        var ckfinder = new CKFinder(config);
+        let ckfinder = new CKFinder(config);
         ckfinder.replace('ckfinder', config);
     })();
     //]]>

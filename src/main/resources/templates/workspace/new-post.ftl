@@ -267,7 +267,7 @@
         <textarea id="input-content" name="content"></textarea>
         <script>
             CKEDITOR.replace('input-content', {
-                filebrowserImageBrowseUrl: '/vendor/ckfinder/ckfinder.html?type=Image',
+                filebrowserImageBrowseUrl: '/file-manager?type=Image',
                 filebrowserImageUploadUrl: '/vendor/ckfinder/core/connector/java/connector.java?command=QuickUpload&type=Image',
             });
             CKEDITOR.config.height = 500;
