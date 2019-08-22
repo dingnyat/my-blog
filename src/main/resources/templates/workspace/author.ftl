@@ -83,6 +83,7 @@
               },
               order: [1, 'desc'],
               language: {
+                  // TODO de cdn bi loi
                   url: "http://cdn.datatables.net/plug-ins/1.10.19/i18n/Vietnamese.json",
                   searchPlaceholder: ""
               },
