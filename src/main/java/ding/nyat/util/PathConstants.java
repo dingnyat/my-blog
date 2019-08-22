@@ -10,7 +10,7 @@ public class PathConstants {
     // folders
     public static final String UPLOAD_BASE_DIR = System.getProperty("user.dir") + "/upload";
     public static final String IMAGE_UPLOAD_DIR = UPLOAD_BASE_DIR + "/image";
-    public static final String AVATAR_UPLOAD_DIR = IMAGE_UPLOAD_DIR + "/user";
+    public static final String AVATAR_UPLOAD_DIR = UPLOAD_BASE_DIR + "/avatar";
 
     // urls
     public static final String DOWNLOAD_PREFIX_URL = "/public";

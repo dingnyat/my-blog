@@ -1,5 +1,6 @@
 package ding.nyat.security;
 
+import ding.nyat.config.CKFinderConfig;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -15,8 +16,12 @@ public class CustomUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticati
     protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String targetUrl = "/";
-        if (roles.contains("ROLE_AUTHOR")) {
+        if (roles.contains(Role.ADMIN.getFullName())) {
             targetUrl = "/workspace";
+            request.getSession().setAttribute(CKFinderConfig.CKFINDER_USER_ROLE_SESSION_VAR, Role.ADMIN.getName());
+        } else if (roles.contains(Role.AUTHOR.getFullName())) {
+            targetUrl = "/workspace";
+            request.getSession().setAttribute(CKFinderConfig.CKFINDER_USER_ROLE_SESSION_VAR, Role.AUTHOR.getName());
         }
         if (response.isCommitted()) {
             System.out.println("Can't redirect");

@@ -1,6 +1,6 @@
 <#include "../layout/layout.ftl"/>
 
-<#macro customResources >
+<#macro customResources>
   <script type="text/javascript">
       $(function () {
           $('.toggle-password').on('click', function () {

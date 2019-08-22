@@ -332,7 +332,7 @@
       function deleteSocialLink(linkId, authorId) {
           $.ajax({
               url: "/admin/author/delete-link",
-              type: "DELETE",
+              type: "POST",
               dataType: "text",
               headers: {'X-CSRF-TOKEN': csrf_token},
               data: {linkId: linkId, authorId: authorId},

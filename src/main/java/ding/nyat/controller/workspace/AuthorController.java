@@ -118,7 +118,7 @@ public class AuthorController {
         }
     }
 
-    @DeleteMapping("/author/delete-link")
+    @PostMapping("/author/delete-link")
     @ResponseBody
     public ResponseEntity<String> deleteLink(@RequestParam("linkId") Integer linkId, @RequestParam("authorId") Integer authorId) {
         try {

@@ -1,7 +1,7 @@
 <#import "/spring.ftl" as s>
 <#assign sec=JspTaglibs["http://www.springframework.org/security/tags"]/>
 
-<#macro displayPage page_title>
+<#macro displayPage page_title="">
   <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -22,7 +22,7 @@
 <#macro commonHeaderTags title>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title><#if title??>${title + " | "}</#if>Annanjin</title>
+  <title><#if title?? && title?has_content>${title + " | "}</#if>Annanjin</title>
 </#macro>
 <#macro commonResources>
   <!--jQuery-->
@@ -124,7 +124,9 @@
     </nav>
   </header>
 </#macro>
-<#macro bodyFragment></#macro>
+<#macro bodyFragment>
+
+</#macro>
 <#macro footerFragment>
   <footer class="container-fluid">
     <div class="row">
@@ -186,6 +188,10 @@
 </#macro>
 
 
+<#macro leftBannerSide>
+  <img alt="banner" class="img-fluid"
+       src="https://www.baeldung.com/wp-content/uploads/2018/03/201801_APM_ads_set_b_Java2_300.jpg">
+</#macro>
 
 <#-- custom functions -->
 <#function currentRequestUriHasPrefix urls>

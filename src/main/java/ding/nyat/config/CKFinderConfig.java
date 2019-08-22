@@ -12,6 +12,7 @@ import com.ckfinder.connector.errors.ConnectorException;
 import com.ckfinder.connector.plugins.ImageResize;
 import com.ckfinder.connector.plugins.Watermark;
 import com.ckfinder.connector.utils.PathUtils;
+import ding.nyat.security.Role;
 import ding.nyat.util.PathConstants;
 
 import javax.servlet.ServletConfig;
@@ -27,6 +28,8 @@ public class CKFinderConfig extends Configuration {
     // Chú ý: vendor là đường dẫn static đến folder ckfinder trong static
     // ckfinder.js cần jquery nhá
     public static final String CKFINDER_URL_PATTERN = "/vendor" + "/ckfinder/core/connector/java/connector.java";
+
+    public static final String CKFINDER_USER_ROLE_SESSION_VAR = "CKFINDER_ROLE";
 
     public CKFinderConfig(ServletConfig servletConfig) {
         super(servletConfig);
@@ -63,13 +66,22 @@ public class CKFinderConfig extends Configuration {
         this.thumbsPath = "";
         this.thumbsQuality = 0.5F;
         this.thumbsDirectAccess = false;
-        this.thumbsMaxHeight = 50;
-        this.thumbsMaxWidth = 50;
+        this.thumbsMaxHeight = 80;
+        this.thumbsMaxWidth = 80;
 
-        this.userRoleSessionVar = "CKFINDER_ROLE";
+        this.types = new LinkedHashMap<>();
+        ResourceType type = new ResourceType("Image");
+        type.setUrl(this.baseURL + PathConstants.IMAGE_PREFIX_URL + PathConstants.DOWNLOAD_PREFIX_URL);
+        type.setPath(PathConstants.IMAGE_UPLOAD_DIR);
+        type.setMaxSize("0");
+        type.setDeniedExtensions(null);
+        type.setAllowedExtensions("bmp,gif,jpeg,jpg,png");
+        this.types.put(type.getName(), type);
+
+        this.userRoleSessionVar = CKFinderConfig.CKFINDER_USER_ROLE_SESSION_VAR;
         this.accessControlLevels = new AccessControlLevelsList<>(true);
         AccessControlLevel acl = new AccessControlLevel();
-        acl.setRole("*");
+        acl.setRole(Role.ADMIN.getName());
         acl.setResourceType("*");
         acl.setFolder("/");
         acl.setFileDelete(true);
@@ -99,15 +111,6 @@ public class CKFinderConfig extends Configuration {
         this.enableCsrfProtection = true;
 
         this.defaultResourceTypes = new LinkedHashSet<>();
-
-        this.types = new LinkedHashMap<>();
-        ResourceType type = new ResourceType("Image");
-        type.setUrl(this.baseURL + PathConstants.IMAGE_PREFIX_URL + PathConstants.DOWNLOAD_PREFIX_URL);
-        type.setPath(PathConstants.IMAGE_UPLOAD_DIR);
-        type.setMaxSize("0");
-        type.setDeniedExtensions(null);
-        type.setAllowedExtensions("bmp,gif,jpeg,jpg,png");
-        this.types.put(type.getName(), type);
 
         PluginInfo imgResizePlg = new PluginInfo();
         imgResizePlg.setName("imageresize");

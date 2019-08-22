@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import ding.nyat.config.CKFinderConfig;
 import ding.nyat.security.*;
 import ding.nyat.util.PasswordUtils;
+import freemarker.ext.jsp.TaglibFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
@@ -42,6 +43,8 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
 
     public BlogApplication(FreeMarkerConfigurer freeMarkerConfigurer, HikariDataSource dataSource) {
         freeMarkerConfigurer.getTaglibFactory().setClasspathTlds(Collections.singletonList("/META-INF/security.tld"));
+        TaglibFactory taglibFactory = freeMarkerConfigurer.getTaglibFactory();
+        taglibFactory.setObjectWrapper(freeMarkerConfigurer.getConfiguration().getObjectWrapper());
         try {
             for (Field field : Role.class.getFields()) {
                 if (Modifier.isFinal(field.getModifiers()) && Modifier.isStatic(field.getModifiers())) {
