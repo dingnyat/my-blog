@@ -33,6 +33,7 @@
               ],
               columnDefs: [
                   {orderable: false, targets: [0, 4, 5, 6, 7]},
+                  {searchable: false, targets: [0, 4, 5, 6, 7]},
                   {
                       render: function () {
                           return "";
@@ -48,7 +49,6 @@
                   },
                   {
                       className: "description-details",
-                      orderable: false,
                       data: "description",
                       defaultContent: "",
                       render: function (data) {
@@ -60,7 +60,6 @@
                   },
                   {
                       className: "details-control",
-                      orderable: false,
                       data: "socialLinks.length",
                       defaultContent: "",
                       render: function (data) {
@@ -83,8 +82,7 @@
               },
               order: [1, 'desc'],
               language: {
-                  // TODO de cdn bi loi
-                  url: "http://cdn.datatables.net/plug-ins/1.10.19/i18n/Vietnamese.json",
+                  url: "${'/vendor/datatables-jquery/Vietnamese.json'}",
                   searchPlaceholder: ""
               },
               lengthMenu: [10, 25, 50, 100, 200],
@@ -508,7 +506,7 @@
                 <label class="control-label col-md-4" for="input-description">Giới thiệu:</label>
                 <div class="col-md-12">
                                 <textarea class="form-control" name="author.description"
-                                          id="input-description"></textarea>
+                                          id="input-description" rows="5"></textarea>
                 </div>
               </div>
             </div>
@@ -615,7 +613,7 @@
               <div class="form-group">
                 <label class="control-label col-md-4" for="input-description">Giới thiệu:</label>
                 <div class="col-md-12">
-                  <textarea class="form-control" name="description" id="input-description"></textarea>
+                  <textarea class="form-control" name="description" id="input-description" rows="5"></textarea>
                 </div>
               </div>
             </div>

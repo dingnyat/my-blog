@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service(value = "CustomUserDetailsService")
@@ -40,8 +41,13 @@ public class SecurityUserDetailsService implements UserDetailsService {
             List<GrantedAuthority> authorities = new ArrayList<>();
             Set<Role> roles = accountEntity.getRoles();
             roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getFullName())));
-            return new UserPrincipal(accountEntity.getUsername(), accountEntity.getPassword(),
+            UserPrincipal userPrincipal = new UserPrincipal(accountEntity.getUsername(), accountEntity.getPassword(),
                     accountEntity.isActive(), true, true, true, authorities);
+
+            if (authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()).contains(Role.AUTHOR.getFullName()))
+                userPrincipal.setAuthorCode(accountEntity.getAuthor().getCode());
+
+            return userPrincipal;
         } else {
             throw new UsernameNotFoundException("Account isn't existed!");
         }

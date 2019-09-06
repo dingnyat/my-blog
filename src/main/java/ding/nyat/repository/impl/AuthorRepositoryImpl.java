@@ -1,6 +1,6 @@
 package ding.nyat.repository.impl;
 
-import ding.nyat.repository.RepositoryAbstract;
+import ding.nyat.repository.RepositoryAbstraction;
 import ding.nyat.entity.AuthorEntity;
 import ding.nyat.repository.AuthorRepository;
 import org.springframework.stereotype.Repository;
@@ -10,7 +10,7 @@ import javax.persistence.NoResultException;
 
 @Repository
 @Transactional
-public class AuthorRepositoryImpl extends RepositoryAbstract<Integer, AuthorEntity> implements AuthorRepository {
+public class AuthorRepositoryImpl extends RepositoryAbstraction<AuthorEntity> implements AuthorRepository {
     @Override
     public AuthorEntity getByCode(String code) {
         try {

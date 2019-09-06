@@ -1,12 +1,13 @@
 package ding.nyat.model;
 
+import ding.nyat.annotation.Identifier;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class Tag extends CommonModel<Integer> {
+public class Tag {
+    @Identifier
+    private Integer id;
     private String code;
     private String name;
 }

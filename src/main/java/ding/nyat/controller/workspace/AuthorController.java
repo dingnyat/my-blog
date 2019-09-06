@@ -40,10 +40,11 @@ public class AuthorController {
     @PostMapping("/author/list")
     @ResponseBody
     public DataTableResponse<Author> accountList(@RequestBody DataTableRequest dataTableRequest) {
-        List<Author> authors = authorService.getTableData(dataTableRequest, "id", "code", "name");
-        DataTableResponse<Author> dataTableResponse = new DataTableResponse<>(authors);
+        List<Author> authors = authorService.getTableData(dataTableRequest);
+        DataTableResponse<Author> dataTableResponse = new DataTableResponse<>();
+        dataTableResponse.setData(authors);
         dataTableResponse.setDraw(dataTableRequest.getDraw());
-        dataTableResponse.setRecordsFiltered(authorService.countTableDataRecords(dataTableRequest, "id", "code", "name"));
+        dataTableResponse.setRecordsFiltered(authorService.countTableDataRecords(dataTableRequest));
         dataTableResponse.setRecordsTotal(authorService.countAllRecords());
         return dataTableResponse;
     }

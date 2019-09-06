@@ -1,13 +1,15 @@
 package ding.nyat.model;
 
+import ding.nyat.annotation.Identifier;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.Set;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class Category extends CommonModel<Integer> {
+public class Category {
+    @Identifier
+    private Integer id;
     private String code;
     private String name;
     private String description;

@@ -19,8 +19,8 @@
       position: absolute;
       display: inline-block;
       cursor: pointer;
-      right: 1.7rem;
-      top: 8.4rem;
+      right: 1.1rem;
+      top: 8rem;
       z-index: 2;
     }
   </style>
@@ -41,7 +41,7 @@
         </div>
         <div class="form-group">
           <input type="password" name="password" id="password" placeholder="Mật khẩu" class="form-control" required>
-          <span class="fas fa-eye field-icon toggle-password"></span>
+          <span class="btn fas fa-eye field-icon toggle-password"></span>
         </div>
         <div class="custom-control custom-checkbox mb-3">
           <input type="checkbox" class="custom-control-input" id="remember-me" name="remember-me">

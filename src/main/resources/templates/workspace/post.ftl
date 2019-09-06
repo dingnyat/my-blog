@@ -31,6 +31,7 @@
               ],
               columnDefs: [
                   {orderable: false, targets: [0, 5]},
+                  {searchable: false, targets: [0, 5]},
                   {
                       render: function () {
                           return "";

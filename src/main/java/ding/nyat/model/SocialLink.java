@@ -1,11 +1,12 @@
 package ding.nyat.model;
 
+import ding.nyat.annotation.Identifier;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class SocialLink extends CommonModel<Integer> {
+public class SocialLink {
+    @Identifier
+    private Integer id;
     private String name;
     private String link;
 }

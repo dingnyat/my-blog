@@ -1,19 +1,19 @@
 package ding.nyat.service.impl;
 
-import ding.nyat.repository.AuthorRepository;
 import ding.nyat.entity.AuthorEntity;
 import ding.nyat.entity.SocialLinkEntity;
 import ding.nyat.model.Author;
 import ding.nyat.model.SocialLink;
+import ding.nyat.repository.AuthorRepository;
 import ding.nyat.service.AuthorService;
-import ding.nyat.service.ServiceAbstract;
+import ding.nyat.service.ServiceAbstraction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class AuthorServiceImpl extends ServiceAbstract<Integer, Author, AuthorEntity, AuthorRepository> implements AuthorService {
+public class AuthorServiceImpl extends ServiceAbstraction<Author, AuthorEntity, AuthorRepository> implements AuthorService {
 
     @Autowired
     public AuthorServiceImpl(AuthorRepository repository) {
@@ -22,7 +22,7 @@ public class AuthorServiceImpl extends ServiceAbstract<Integer, Author, AuthorEn
 
     @Override
     public void update(Author author) {
-        AuthorEntity authorEntity = repository.getById(author.getId());
+        AuthorEntity authorEntity = repository.read(author.getId());
         authorEntity.setName(author.getName());
         authorEntity.setCode(author.getCode());
         authorEntity.setDescription(author.getDescription());
@@ -33,7 +33,7 @@ public class AuthorServiceImpl extends ServiceAbstract<Integer, Author, AuthorEn
 
     @Override
     public void deleteLink(Integer linkId, Integer authorId) {
-        AuthorEntity authorEntity = repository.getById(authorId);
+        AuthorEntity authorEntity = repository.read(authorId);
         if (authorEntity == null) return;
         authorEntity.getSocialLinks().removeIf(scl -> scl.getId() == linkId);
         repository.update(authorEntity);
@@ -41,7 +41,7 @@ public class AuthorServiceImpl extends ServiceAbstract<Integer, Author, AuthorEn
 
     @Override
     public void addLink(Integer authorId, SocialLink socialLink) {
-        AuthorEntity authorEntity = repository.getById(authorId);
+        AuthorEntity authorEntity = repository.read(authorId);
         if (authorEntity == null) return;
         SocialLinkEntity socialLinkEntity = new SocialLinkEntity();
         socialLinkEntity.setName(socialLink.getName());

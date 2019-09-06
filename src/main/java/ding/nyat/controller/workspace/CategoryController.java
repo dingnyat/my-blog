@@ -33,17 +33,18 @@ public class CategoryController {
 
     @GetMapping("/category")
     public String category(Model model) {
-        model.addAttribute("seriesList", seriesService.getAllRecords());
+        model.addAttribute("seriesList", seriesService.readAll());
         return "workspace/category";
     }
 
     @PostMapping("/category/list")
     @ResponseBody
     public DataTableResponse<Category> list(@RequestBody DataTableRequest dataTableRequest) {
-        List<Category> categories = categoryService.getTableData(dataTableRequest, "id", "code", "name");
-        DataTableResponse<Category> dataTableResponse = new DataTableResponse<>(categories);
+        List<Category> categories = categoryService.getTableData(dataTableRequest);
+        DataTableResponse<Category> dataTableResponse = new DataTableResponse<>();
+        dataTableResponse.setData(categories);
         dataTableResponse.setDraw(dataTableRequest.getDraw());
-        dataTableResponse.setRecordsFiltered(categoryService.countTableDataRecords(dataTableRequest, "id", "code", "name"));
+        dataTableResponse.setRecordsFiltered(categoryService.countTableDataRecords(dataTableRequest));
         dataTableResponse.setRecordsTotal(categoryService.countAllRecords());
         return dataTableResponse;
     }

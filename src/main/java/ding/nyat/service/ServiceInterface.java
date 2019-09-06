@@ -1,29 +1,29 @@
 package ding.nyat.service;
 
 import ding.nyat.util.datatable.DataTableRequest;
-import ding.nyat.util.search.SearchCriteria;
+import ding.nyat.util.search.SearchRequest;
 
 import java.io.Serializable;
 import java.util.List;
 
-public interface ServiceInterface<PrimaryKeyType extends Serializable, M> {
-    PrimaryKeyType create(M model);
+public interface ServiceInterface<M> {
+    void create(M model);
 
-    void update(M model);
+    void update(M model) throws IllegalAccessException;
 
-    void delete(PrimaryKeyType id);
+    void delete(Serializable id);
 
-    M getById(PrimaryKeyType id);
+    M read(Serializable id);
 
-    List<M> getAllRecords();
+    List<M> readAll();
 
-    List<M> search(List<SearchCriteria> searchCriteria);
+    <S extends SearchRequest> List<M> search(S searchRequest);
 
-    Long countSearchedRecords(List<SearchCriteria> searchCriteria);
+    <S extends SearchRequest> int countSearchRecords(S searchRequest);
 
-    List<M> getTableData(DataTableRequest dataTableRequest, String... fieldNames);
+    List<M> getTableData(DataTableRequest dataTableRequest);
 
-    Long countTableDataRecords(DataTableRequest dataTableRequest, String... fieldNames);
+    int countTableDataRecords(DataTableRequest dataTableRequest);
 
-    Long countAllRecords();
+    int countAllRecords();
 }

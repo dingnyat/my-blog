@@ -27,10 +27,11 @@ public class SeriesController {
     @PostMapping("/series/list")
     @ResponseBody
     public DataTableResponse<Series> list(@RequestBody DataTableRequest dataTableRequest) {
-        List<Series> series = seriesService.getTableData(dataTableRequest, "id", "code", "name");
-        DataTableResponse<Series> dataTableResponse = new DataTableResponse<>(series);
+        List<Series> series = seriesService.getTableData(dataTableRequest);
+        DataTableResponse<Series> dataTableResponse = new DataTableResponse<>();
+        dataTableResponse.setData(series);
         dataTableResponse.setDraw(dataTableRequest.getDraw());
-        dataTableResponse.setRecordsFiltered(seriesService.countTableDataRecords(dataTableRequest, "id", "code", "name"));
+        dataTableResponse.setRecordsFiltered(seriesService.countTableDataRecords(dataTableRequest));
         dataTableResponse.setRecordsTotal(seriesService.countAllRecords());
         return dataTableResponse;
     }

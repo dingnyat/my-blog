@@ -1,27 +1,25 @@
 package ding.nyat.service.impl;
 
-import ding.nyat.repository.*;
 import ding.nyat.entity.AccountEntity;
 import ding.nyat.entity.CommentEntity;
 import ding.nyat.entity.PostEntity;
 import ding.nyat.model.Comment;
 import ding.nyat.model.Post;
 import ding.nyat.model.Tag;
+import ding.nyat.repository.*;
 import ding.nyat.service.PostService;
-import ding.nyat.service.ServiceAbstract;
+import ding.nyat.service.ServiceAbstraction;
 import ding.nyat.util.DateTimeUtils;
-import ding.nyat.util.datatable.DataTableRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class PostServiceImpl extends ServiceAbstract<Integer, Post, PostEntity, PostRepository> implements PostService {
+public class PostServiceImpl extends ServiceAbstraction<Post, PostEntity, PostRepository> implements PostService {
 
     @Autowired
     private TagRepository tagRepository;
@@ -35,31 +33,34 @@ public class PostServiceImpl extends ServiceAbstract<Integer, Post, PostEntity, 
     @Autowired
     private CommentRepository commentRepository;
 
+    private PostRepository postRepository;
+
     @Autowired
     public PostServiceImpl(PostRepository repository) {
         super(repository);
+        this.postRepository = repository;
     }
 
     @Override
-    public Integer create(Post model) {
+    public void create(Post model) {
         PostEntity postEntity = new PostEntity();
         postEntity.setCode(model.getCode());
         postEntity.setTitle(model.getTitle());
-        postEntity.setTags(model.getTags().stream().map(tag -> tagRepository.getById(tag.getId())).collect(Collectors.toSet()));
+        postEntity.setTags(model.getTags().stream().map(tag -> tagRepository.read(tag.getId())).collect(Collectors.toSet()));
         if (model.getSeriesCode() != null && !model.getSeriesCode().isEmpty())
             postEntity.setSeries(seriesRepository.getByCode(model.getSeriesCode()));
         if (model.getPositionInSeries() != null) postEntity.setPositionInSeries(model.getPositionInSeries());
         postEntity.setContent(model.getContent());
         postEntity.setActived(true);
-        return repository.create(postEntity);
+        postRepository.create(postEntity);
     }
 
     @Override
     public void update(Post model) {
-        PostEntity entity = repository.getById(model.getId());
+        PostEntity entity = postRepository.read(model.getId());
         entity.setCode(model.getCode());
         entity.setTitle(model.getTitle());
-        entity.setTags(model.getTags().stream().map(tag -> tagRepository.getById(tag.getId())).collect(Collectors.toSet()));
+        entity.setTags(model.getTags().stream().map(tag -> tagRepository.read(tag.getId())).collect(Collectors.toSet()));
         if (model.getSeriesCode() != null && !model.getSeriesCode().isEmpty())
             entity.setSeries(seriesRepository.getByCode(model.getSeriesCode()));
         else entity.setSeries(null);
@@ -67,7 +68,7 @@ public class PostServiceImpl extends ServiceAbstract<Integer, Post, PostEntity, 
             entity.setPositionInSeries(model.getPositionInSeries());
         else entity.setPositionInSeries(null);
         entity.setContent(model.getContent());
-        repository.update(entity);
+        postRepository.update(entity);
     }
 
     @Override
@@ -125,38 +126,22 @@ public class PostServiceImpl extends ServiceAbstract<Integer, Post, PostEntity, 
     }
 
     @Override
-    public List<Post> getTableData(String username, DataTableRequest dataTableRequest, String... fieldNames) {
-        return repository.getTableData(username, dataTableRequest, fieldNames)
-                .stream().map(this::convertToModel).collect(Collectors.toList());
-    }
-
-    @Override
-    public Long countTableDataRecords(String username, DataTableRequest dataTableRequest, String... fieldNames) {
-        return repository.countTableDataRecords(username, dataTableRequest, fieldNames);
-    }
-
-    @Override
-    public Long countAllRecords(String username) {
-        return repository.countAllRecords(username);
-    }
-
-    @Override
-    public Boolean isAuthor(String username, Integer postId) {
+    public boolean checkOwnership(String username, Integer postId) {
         AccountEntity account = accountRepository.getByUsername(username);
-        PostEntity post = repository.getById(postId);
-        return post.getAuthor().getId() == account.getAuthor().getId();
+        PostEntity post = postRepository.read(postId);
+        return post.getAuthor().getId().equals(account.getAuthor().getId());
     }
 
     @Override
     public Post getByCode(String code) {
-        PostEntity postEntity = repository.getByCode(code);
+        PostEntity postEntity = postRepository.getByCode(code);
         if (postEntity != null) return convertToModel(postEntity);
         return null;
     }
 
     @Override
     public void addChildComment(Integer parentCommentId, Comment comment) {
-        CommentEntity commentEntity = commentRepository.getById(parentCommentId);
+        CommentEntity commentEntity = commentRepository.read(parentCommentId);
         if (commentEntity != null) {
             CommentEntity entity = new CommentEntity();
             entity.setCommentBy(comment.getCommentBy());
@@ -171,7 +156,7 @@ public class PostServiceImpl extends ServiceAbstract<Integer, Post, PostEntity, 
 
     @Override
     public void addComment(Integer postId, Comment comment) {
-        PostEntity postEntity = repository.getById(postId);
+        PostEntity postEntity = postRepository.read(postId);
         if (postEntity != null) {
             CommentEntity entity = new CommentEntity();
             entity.setCommentBy(comment.getCommentBy());
@@ -180,7 +165,7 @@ public class PostServiceImpl extends ServiceAbstract<Integer, Post, PostEntity, 
             entity.setRemoved(false);
             postEntity.getComments().add(entity);
             entity.setPost(postEntity);
-            repository.update(postEntity);
+            postRepository.update(postEntity);
         }
     }
 }

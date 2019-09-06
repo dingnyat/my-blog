@@ -16,14 +16,15 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "post")
+@Table(name = "post",
+        uniqueConstraints = @UniqueConstraint(name = "position_series", columnNames = {"position_in_series", "series_id"}))
 @EntityListeners(AuditingEntityListener.class)
 public class PostEntity {
 
     @Id
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "code", nullable = false, unique = true, length = 64)
     private String code;
@@ -33,9 +34,6 @@ public class PostEntity {
 
     @Column(name = "content", nullable = false, columnDefinition = "text")
     private String content;
-
-    @Column(name = "position_in_series")
-    private Integer positionInSeries;
 
     @Column(name = "is_actived", nullable = false)
     private boolean isActived;
@@ -68,6 +66,9 @@ public class PostEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "series_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_post_series_series"))
     private SeriesEntity series;
+
+    @Column(name = "position_in_series")
+    private Integer positionInSeries;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "post_tag",

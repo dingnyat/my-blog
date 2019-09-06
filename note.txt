@@ -1,0 +1,5 @@
+sua query selector thanh input[name] de loai bo id DOM bi trung lap bao warning
+
+xu ly join table SearchCriterion
+
+xu ly can than Integer thanh int

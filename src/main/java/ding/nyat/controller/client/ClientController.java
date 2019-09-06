@@ -68,11 +68,11 @@ public class ClientController {
     @PostMapping("/post/add-comment")
     public ResponseEntity<String> addComment(@ModelAttribute Comment comment) {
         try {
-            if (comment.getPostId() == null && comment.getParentCommentId() != null) {
+            if (comment.getPostId() == -1 && comment.getParentCommentId() != -1) {
                 // why not add just only comment? comment has parentcommentid itself
                 postService.addChildComment(comment.getParentCommentId(), comment);
             }
-            if (comment.getPostId() != null && comment.getParentCommentId() == null) {
+            if (comment.getPostId() != -1 && comment.getParentCommentId() == -1) {
                 // why not add just only comment? comment has parentcommentid itself
                 postService.addComment(comment.getPostId(), comment);
             }

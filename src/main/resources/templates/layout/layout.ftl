@@ -48,9 +48,10 @@
           href="<@s.url '/vendor/datatables-jquery/dataTables.bootstrap4-1.10.19.min.css'/>">
     <link rel="stylesheet" type="text/css" href="<@s.url '/vendor/datatables-jquery/select.bootstrap4-1.3.0.min.css'/>">
   </#if>
-  <link rel="stylesheet" href="<@s.url '/client/style.css'/>">
+  <link rel="stylesheet" href="<@s.url '/css/style.css'/>">
 </#macro>
-<#macro customResources></#macro>
+<#macro customResources>
+</#macro>
 <#macro headerFragment>
   <header class="container-fluid px-0">
     <nav class="navbar navbar-expand-md navbar-light bg-light">

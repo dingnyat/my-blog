@@ -5,7 +5,7 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 import java.util.function.Consumer;
 
-public class SearchCriteriaConsumer implements Consumer<SearchCriteria> {
+public class SearchCriteriaConsumer implements Consumer<SearchCriterion> {
 
     protected Predicate predicate;
     protected CriteriaBuilder criteriaBuilder;
@@ -49,24 +49,24 @@ public class SearchCriteriaConsumer implements Consumer<SearchCriteria> {
         this.root = root;
     }
 
-    public Predicate createPredicate(SearchCriteria searchCriteria) {
-        switch (searchCriteria.getOperator()) {
+    public Predicate createPredicate(SearchCriterion searchCriterion) {
+        switch (searchCriterion.getOperator()) {
             case EQUALITY:
-                return criteriaBuilder.equal(root.get(searchCriteria.getKey()), searchCriteria.getValue());
+                return criteriaBuilder.equal(root.get(searchCriterion.getKey()), searchCriterion.getValue());
             case NEGATION:
-                return criteriaBuilder.notEqual(root.get(searchCriteria.getKey()), searchCriteria.getValue());
+                return criteriaBuilder.notEqual(root.get(searchCriterion.getKey()), searchCriterion.getValue());
             case GREATER_THAN:
-                return criteriaBuilder.greaterThanOrEqualTo(root.get(searchCriteria.getKey()), searchCriteria.getValue().toString());
+                return criteriaBuilder.greaterThanOrEqualTo(root.get(searchCriterion.getKey()), searchCriterion.getValue().toString());
             case LESS_THAN:
-                return criteriaBuilder.lessThanOrEqualTo(root.get(searchCriteria.getKey()), searchCriteria.getValue().toString());
+                return criteriaBuilder.lessThanOrEqualTo(root.get(searchCriterion.getKey()), searchCriterion.getValue().toString());
             case LIKE:
-                return criteriaBuilder.like(root.get(searchCriteria.getKey()).as(String.class), searchCriteria.getValue().toString());
+                return criteriaBuilder.like(root.get(searchCriterion.getKey()).as(String.class), searchCriterion.getValue().toString());
             case CONTAINS:
-                return criteriaBuilder.like(root.get(searchCriteria.getKey()).as(String.class), "%" + searchCriteria.getValue() + "%");
+                return criteriaBuilder.like(root.get(searchCriterion.getKey()).as(String.class), "%" + searchCriterion.getValue() + "%");
             case STARTS_WITH:
-                return criteriaBuilder.like(root.get(searchCriteria.getKey()).as(String.class), searchCriteria.getValue() + "%");
+                return criteriaBuilder.like(root.get(searchCriterion.getKey()).as(String.class), searchCriterion.getValue() + "%");
             case ENDS_WITH:
-                return criteriaBuilder.like(root.get(searchCriteria.getKey()).as(String.class), "%" + searchCriteria.getValue());
+                return criteriaBuilder.like(root.get(searchCriterion.getKey()).as(String.class), "%" + searchCriterion.getValue());
             default:
                 break;
         }
@@ -74,31 +74,31 @@ public class SearchCriteriaConsumer implements Consumer<SearchCriteria> {
     }
 
     @Override
-    public void accept(SearchCriteria searchCriteria) {
-        switch (searchCriteria.getOperator()) {
+    public void accept(SearchCriterion searchCriterion) {
+        switch (searchCriterion.getOperator()) {
             case EQUALITY:
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get(searchCriteria.getKey()), searchCriteria.getValue()));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get(searchCriterion.getKey()), searchCriterion.getValue()));
                 break;
             case NEGATION:
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.notEqual(root.get(searchCriteria.getKey()), searchCriteria.getValue()));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.notEqual(root.get(searchCriterion.getKey()), searchCriterion.getValue()));
                 break;
             case GREATER_THAN:
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.greaterThanOrEqualTo(root.get(searchCriteria.getKey()), searchCriteria.getValue().toString()));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.greaterThanOrEqualTo(root.get(searchCriterion.getKey()), searchCriterion.getValue().toString()));
                 break;
             case LESS_THAN:
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.lessThanOrEqualTo(root.get(searchCriteria.getKey()), searchCriteria.getValue().toString()));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.lessThanOrEqualTo(root.get(searchCriterion.getKey()), searchCriterion.getValue().toString()));
                 break;
             case LIKE:
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get(searchCriteria.getKey()).as(String.class), searchCriteria.getValue().toString()));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get(searchCriterion.getKey()).as(String.class), searchCriterion.getValue().toString()));
                 break;
             case CONTAINS:
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get(searchCriteria.getKey()).as(String.class), "%" + searchCriteria.getValue() + "%"));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get(searchCriterion.getKey()).as(String.class), "%" + searchCriterion.getValue() + "%"));
                 break;
             case STARTS_WITH:
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get(searchCriteria.getKey()).as(String.class), searchCriteria.getValue() + "%"));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get(searchCriterion.getKey()).as(String.class), searchCriterion.getValue() + "%"));
                 break;
             case ENDS_WITH:
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get(searchCriteria.getKey()).as(String.class), "%" + searchCriteria.getValue()));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get(searchCriterion.getKey()).as(String.class), "%" + searchCriterion.getValue()));
                 break;
             default:
                 break;

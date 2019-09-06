@@ -33,6 +33,7 @@
               ],
               columnDefs: [
                   {orderable: false, targets: [0, 4, 5, 6, 7]},
+                  {searchable: false, targets: [0, 4, 5, 6, 7]},
                   {
                       render: function () {
                           return "";
@@ -86,7 +87,7 @@
               },
               order: [1, 'desc'],
               language: {
-                  url: "http://cdn.datatables.net/plug-ins/1.10.19/i18n/Vietnamese.json",
+                  url: "${'/vendor/datatables-jquery/Vietnamese.json'}",
                   searchPlaceholder: ""
               },
               lengthMenu: [10, 25, 50, 100, 200],

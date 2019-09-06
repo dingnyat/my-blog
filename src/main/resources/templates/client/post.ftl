@@ -94,11 +94,11 @@
             <h3 class="display-4"><strong class="post-title">${post.title}</strong></h3>
             <hr/>
             <div class="row">
-              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 pl-5">
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 pl-5">
                 Chỉnh sửa lần cuối: ${post.lastModifiedDate} <br/>
                 Tác giả: <a href="${'/author/' + post.authorCode}">${post.authorName}</a>
               </div>
-              <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-12 mt-2 pr-5 text-right">
+              <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 mt-2 pr-5 text-right">
                 <i class="sign fas fa-tags"></i>
                 <#list post.tags as tag>
                   <span class="chip my-1 ml-1">
