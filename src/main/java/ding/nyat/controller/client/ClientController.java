@@ -1,21 +1,21 @@
 package ding.nyat.controller.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ding.nyat.model.Author;
 import ding.nyat.model.Comment;
 import ding.nyat.model.Post;
 import ding.nyat.service.AccountService;
 import ding.nyat.service.AuthorService;
 import ding.nyat.service.PostService;
+import ding.nyat.util.search.SearchRequest;
+import ding.nyat.util.search.SearchResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class ClientController {
@@ -79,6 +79,16 @@ public class ClientController {
             return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/post/search")
+    public ResponseEntity<SearchResponse<Post>> searchPost(@RequestBody SearchRequest searchRequest) {
+        try {
+            return new ResponseEntity<>(postService.search(searchRequest), HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

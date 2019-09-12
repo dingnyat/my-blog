@@ -41,8 +41,7 @@ public class PostController {
     }
 
     @PostMapping("/user/post/list")
-    @ResponseBody
-    private DataTableResponse<Post> posts(@RequestBody DataTableRequest dataTableRequest) {
+    private ResponseEntity<DataTableResponse<Post>> posts(@RequestBody DataTableRequest dataTableRequest) {
         UserPrincipal userPrincipal = AdvancedSecurityContextHolder.getUserPrincipal();
         List<SearchCriterion> searchCriteria = new ArrayList<>();
         if (!userPrincipal.hasAnyRoles(Role.ADMIN.getFullName()) && userPrincipal.hasAnyRoles(Role.AUTHOR.getFullName())) {
@@ -50,12 +49,11 @@ public class PostController {
         }
         dataTableRequest.setSearchCriteria(searchCriteria);
 
-        DataTableResponse<Post> dataTableResponse = new DataTableResponse<>();
-        dataTableResponse.setDraw(dataTableRequest.getDraw());
-        dataTableResponse.setData(postService.getTableData(dataTableRequest));
-        dataTableResponse.setRecordsFiltered(postService.countTableDataRecords(dataTableRequest));
-        dataTableResponse.setRecordsTotal(postService.countAllRecords());
-        return dataTableResponse;
+        try {
+            return new ResponseEntity<>(postService.getTableData(dataTableRequest), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/user/post/new")
@@ -71,7 +69,6 @@ public class PostController {
     }
 
     @PostMapping("/user/post/new")
-    @ResponseBody
     public ResponseEntity<String> addNewPost(@RequestBody Post post) {
         postService.create(post);
         return new ResponseEntity<>("OK", HttpStatus.OK);
@@ -106,7 +103,6 @@ public class PostController {
     }
 
     @PostMapping("/user/post/get/{id}")
-    @ResponseBody
     private ResponseEntity<?> getPost(@PathVariable("id") Integer id) {
         try {
             UserPrincipal userPrincipal = AdvancedSecurityContextHolder.getUserPrincipal();
@@ -121,7 +117,6 @@ public class PostController {
     }
 
     @DeleteMapping("/user/post/delete/{id}")
-    @ResponseBody
     private ResponseEntity<String> delete(@PathVariable("id") Integer postId) {
         try {
             UserPrincipal userPrincipal = AdvancedSecurityContextHolder.getUserPrincipal();
@@ -137,7 +132,6 @@ public class PostController {
     }
 
     @GetMapping("/user/post/multiple-delete/{ids}")
-    @ResponseBody
     private ResponseEntity<String> multipleDelete(@PathVariable("ids") List<Integer> postIds) {
         try {
             UserPrincipal userPrincipal = AdvancedSecurityContextHolder.getUserPrincipal();

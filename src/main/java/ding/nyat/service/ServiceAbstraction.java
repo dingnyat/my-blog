@@ -3,7 +3,9 @@ package ding.nyat.service;
 import ding.nyat.annotation.Identifier;
 import ding.nyat.repository.RepositoryInterface;
 import ding.nyat.util.datatable.DataTableRequest;
+import ding.nyat.util.datatable.DataTableResponse;
 import ding.nyat.util.search.SearchRequest;
+import ding.nyat.util.search.SearchResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,18 +46,20 @@ public abstract class ServiceAbstraction<M, E, R extends RepositoryInterface<E>>
             }
         }
         E entity = repository.read(id);
-        mapper.map(model, entity);
-        repository.update(entity);
+        if (entity != null) {
+            mapper.map(model, entity);
+            repository.update(entity);
+        }
     }
 
     public void delete(Serializable id) {
         E entity = repository.read(id);
-        repository.delete(entity);
+        if (entity != null) repository.delete(entity);
     }
 
     public M read(Serializable id) {
         E entity = repository.read(id);
-        return convertToModel(entity);
+        return entity != null ? convertToModel(entity) : null;
     }
 
     public List<M> readAll() {
@@ -63,22 +67,24 @@ public abstract class ServiceAbstraction<M, E, R extends RepositoryInterface<E>>
         return entities.stream().map(this::convertToModel).collect(Collectors.toList());
     }
 
-    public <S extends SearchRequest> List<M> search(S searchRequest) {
+    public SearchResponse<M> search(SearchRequest searchRequest) {
+        SearchResponse<M> response = new SearchResponse<>();
         List<E> entities = repository.search(searchRequest);
-        return entities.stream().map(this::convertToModel).collect(Collectors.toList());
+        response.setData(entities.stream().map(this::convertToModel).collect(Collectors.toList()));
+        response.setDraw(searchRequest.getDraw());
+        response.setRecordsFiltered(repository.countSearchRecords(searchRequest));
+        response.setRecordsTotal(repository.countAllRecords());
+        return response;
     }
 
-    public <S extends SearchRequest> int countSearchRecords(S searchRequest) {
-        return repository.countSearchRecords(searchRequest);
-    }
-
-    public List<M> getTableData(DataTableRequest dataTableRequest) {
+    public DataTableResponse<M> getTableData(DataTableRequest dataTableRequest) {
+        DataTableResponse<M> response = new DataTableResponse<>();
         List<E> entities = repository.getTableData(dataTableRequest);
-        return entities.stream().map(this::convertToModel).collect(Collectors.toList());
-    }
-
-    public int countTableDataRecords(DataTableRequest dataTableRequest) {
-        return repository.countFilteredTableData(dataTableRequest);
+        response.setData(entities.stream().map(this::convertToModel).collect(Collectors.toList()));
+        response.setDraw(dataTableRequest.getDraw());
+        response.setRecordsFiltered(repository.countFilteredTableData(dataTableRequest));
+        response.setRecordsTotal(repository.countAllRecords());
+        return response;
     }
 
     public int countAllRecords() {

@@ -17,9 +17,9 @@ public interface RepositoryInterface<E> {
 
     List<E> readAll();
 
-    <S extends SearchRequest> List<E> search(S searchRequest);
+    List<E> search(SearchRequest searchRequest);
 
-    <S extends SearchRequest> int countSearchRecords(S searchRequest);
+    int countSearchRecords(SearchRequest searchRequest);
 
     List<E> getTableData(DataTableRequest dataTableRequest);
 

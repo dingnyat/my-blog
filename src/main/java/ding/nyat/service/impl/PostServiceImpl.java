@@ -10,11 +10,14 @@ import ding.nyat.repository.*;
 import ding.nyat.service.PostService;
 import ding.nyat.service.ServiceAbstraction;
 import ding.nyat.util.DateTimeUtils;
+import ding.nyat.util.search.SearchRequest;
+import ding.nyat.util.search.SearchResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +54,8 @@ public class PostServiceImpl extends ServiceAbstraction<Post, PostEntity, PostRe
             postEntity.setSeries(seriesRepository.getByCode(model.getSeriesCode()));
         if (model.getPositionInSeries() != null) postEntity.setPositionInSeries(model.getPositionInSeries());
         postEntity.setContent(model.getContent());
-        postEntity.setActived(true);
+        postEntity.setActive(true);
+        postEntity.setCommentBlocked(false);
         postRepository.create(postEntity);
     }
 
@@ -92,7 +96,7 @@ public class PostServiceImpl extends ServiceAbstraction<Post, PostEntity, PostRe
         post.setContent(entity.getContent());
         post.setAuthorCode(entity.getAuthor().getCode());
         post.setAuthorName(entity.getAuthor().getName());
-        post.setActived(entity.isActived());
+        post.setActive(entity.isActive());
         post.setCommentBlocked(entity.isCommentBlocked());
         post.setCreatedDate(DateTimeUtils.formatDate(entity.getCreatedDate(), DateTimeUtils.DD_MM_YYYY));
         post.setLastModifiedDate(DateTimeUtils.formatDate(entity.getLastModifiedDate(), DateTimeUtils.DD_MM_YYYY));
@@ -110,7 +114,7 @@ public class PostServiceImpl extends ServiceAbstraction<Post, PostEntity, PostRe
         return post;
     }
 
-    public void setComment(CommentEntity entity, Comment model) {
+    private void setComment(CommentEntity entity, Comment model) {
         model.setId(entity.getId());
         model.setCommentBy(entity.getCommentBy());
         model.setCreatedDate(DateTimeUtils.formatDate(entity.getCreatedDate(), DateTimeUtils.DD_MM_YYYY));
@@ -167,5 +171,21 @@ public class PostServiceImpl extends ServiceAbstraction<Post, PostEntity, PostRe
             entity.setPost(postEntity);
             postRepository.update(postEntity);
         }
+    }
+
+    @Override
+    public SearchResponse<Post> search(SearchRequest searchRequest) {
+        SearchResponse<Post> response = new SearchResponse<>();
+        List<PostEntity> entities = repository.search(searchRequest);
+        response.setData(entities.stream().map(entity -> {
+            Post post = new Post();
+            post.setCode(entity.getCode());
+            post.setTitle(entity.getTitle());
+            return post;
+        }).collect(Collectors.toList()));
+        response.setDraw(searchRequest.getDraw());
+        response.setRecordsFiltered(repository.countSearchRecords(searchRequest));
+        response.setRecordsTotal(repository.countAllRecords());
+        return response;
     }
 }

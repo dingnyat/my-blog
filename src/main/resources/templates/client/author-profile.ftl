@@ -12,6 +12,36 @@
       }
     }
   </style>
+
+  <script>
+      let csrf_token = '${_csrf.token}';
+      $.ajax({
+          url: "/post/search",
+          type: "POST",
+          dataType: "json",
+          contentType: "application/json",
+          headers: {'X-CSRF-TOKEN': csrf_token},
+          data: JSON.stringify({
+              draw: 0,
+              start: 0,
+              length: 12,
+              searchCriteria: [{"key": "authorCode", "operator": "EQUALITY", "value": '${author.code}'}]
+          }),
+          success: function (resp) {
+              let samplePost = $("#sample-post");
+              resp.data.forEach(function (value) {
+                  let postDiv = samplePost.clone().removeClass("d-none").removeAttr("id");
+                  $(postDiv).find(".post-title h5").html(value.title);
+                  $(postDiv).find(".post-desc").html(value.title);
+                  $(postDiv).find(".post-link").attr("href", "/post/" + value.code);
+                  $(".post-list-div").append(postDiv);
+              });
+          },
+          error: function (resp) {
+
+          }
+      })
+  </script>
 </#macro>
 <#macro bodyFragment>
   <section class="container-fluid mt-5 mb-5">
@@ -41,20 +71,7 @@
             <div class="row mt-5 post-author-div">
               <h3 class="mb-5">Xem thêm bài viết của ${author.name}</h3>
               <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                <div class="row">
-                  <div class="col-xl-4 post-div px-4 mb-4">
-                    <div class="row">
-                      <a href="#" class="post-title">
-                        <h5 class="text-success">Checked and Unchecked Exceptions in Java</h5>
-                      </a>
-                    </div>
-                    <div class="row">
-                      <p>Checked and Unchecked Exceptions in Java. Checked and Unchecked Exceptions in Java</p>
-                    </div>
-                    <div class="row">
-                      <a href="#" class="text-secondary"><h6><u>Xem thêm --></u></h6></a>
-                    </div>
-                  </div>
+                <div class="row post-list-div">
                 </div>
               </div>
             </div>
@@ -66,6 +83,20 @@
       </div>
     </div>
   </section>
+
+  <div id="sample-post" class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 post-div px-4 mb-4 d-none">
+    <div class="row">
+      <a href="#" class="post-title post-link">
+        <h5 class="text-success"></h5>
+      </a>
+    </div>
+    <div class="row">
+      <p class="post-desc"></p>
+    </div>
+    <div class="row">
+      <a href="#" class="text-secondary post-link"><h6><u>Xem thêm --></u></h6></a>
+    </div>
+  </div>
 </#macro>
 
 <@displayPage page_title=author.name/>

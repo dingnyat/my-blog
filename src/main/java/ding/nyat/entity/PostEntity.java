@@ -35,8 +35,8 @@ public class PostEntity {
     @Column(name = "content", nullable = false, columnDefinition = "text")
     private String content;
 
-    @Column(name = "is_actived", nullable = false)
-    private boolean isActived;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
 
     @Column(name = "is_comment_blocked", nullable = false)
     private boolean isCommentBlocked;
@@ -81,7 +81,7 @@ public class PostEntity {
     private List<CommentEntity> comments;
 
     public PostEntity() {
-        this.isActived = false;
+        this.isActive = false;
         this.isCommentBlocked = false;
     }
 }

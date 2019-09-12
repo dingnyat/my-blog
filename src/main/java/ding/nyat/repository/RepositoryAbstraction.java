@@ -1,9 +1,7 @@
 package ding.nyat.repository;
 
 import ding.nyat.util.datatable.DataTableRequest;
-import ding.nyat.util.search.SearchCriterion;
 import ding.nyat.util.search.SearchCriteriaConsumer;
-import ding.nyat.util.search.SearchOperator;
 import ding.nyat.util.search.SearchRequest;
 
 import javax.persistence.EntityManager;
@@ -53,10 +51,11 @@ public abstract class RepositoryAbstraction<E> {
         return entityManager.createQuery("SELECT e FROM " + entityClassName + " e", entityClazz).getResultList();
     }
 
-    public <S extends SearchRequest> List<E> search(S searchRequest) {
+    public List<E> search(SearchRequest searchRequest) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(entityClazz);
         Root<E> root = criteriaQuery.from(entityClazz);
+
         Predicate predicate = criteriaBuilder.conjunction();
         if (searchRequest.getSearchCriteria() != null) {
             SearchCriteriaConsumer searchCriteriaConsumer = new SearchCriteriaConsumer(predicate, criteriaBuilder, root);
@@ -64,13 +63,18 @@ public abstract class RepositoryAbstraction<E> {
             predicate = searchCriteriaConsumer.getPredicate();
         }
         criteriaQuery.where(predicate);
-        return entityManager.createQuery(criteriaQuery).getResultList();
+
+        TypedQuery<E> typedQuery = entityManager.createQuery(criteriaQuery.select(root));
+        typedQuery.setFirstResult(searchRequest.getStart());
+        typedQuery.setMaxResults(searchRequest.getLength());
+        return typedQuery.getResultList();
     }
 
-    public <S extends SearchRequest> int countSearchRecords(S searchRequest) {
+    public int countSearchRecords(SearchRequest searchRequest) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Integer> criteriaQuery = criteriaBuilder.createQuery(Integer.class);
         Root<E> root = criteriaQuery.from(entityClazz);
+
         Predicate predicate = criteriaBuilder.conjunction();
         if (searchRequest.getSearchCriteria() != null) {
             SearchCriteriaConsumer searchCriteriaConsumer = new SearchCriteriaConsumer(predicate, criteriaBuilder, root);
@@ -78,6 +82,7 @@ public abstract class RepositoryAbstraction<E> {
             predicate = searchCriteriaConsumer.getPredicate();
         }
         criteriaQuery.where(predicate);
+
         return entityManager.createQuery(criteriaQuery.select(criteriaBuilder.count(root).as(Integer.class))).getSingleResult();
     }
 
@@ -85,21 +90,15 @@ public abstract class RepositoryAbstraction<E> {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(entityClazz);
         Root<E> root = criteriaQuery.from(entityClazz);
-        SearchCriteriaConsumer searchCriteriaConsumer = new SearchCriteriaConsumer(criteriaBuilder, root);
 
+        /*TODO check lại logic xem người dùng có thể lợi dụng field để truy cập field trái phép ko?*/
+        // nên có cơ chế ngăn chặn ko search được field cấm (dùng annotation đánh dấu)
         List<Predicate> predicates = new ArrayList<>();
         if (dataTableRequest.getSearch().getValue() != null && !dataTableRequest.getSearch().getValue().isEmpty()) {
             for (String field : dataTableRequest.getSearchableFields()) {
-                SearchCriterion searchCriterion = new SearchCriterion(field, SearchOperator.CONTAINS, dataTableRequest.getSearch().getValue());
-                predicates.add(searchCriteriaConsumer.createPredicate(searchCriterion));
+                predicates.add(criteriaBuilder.like(root.get(field).as(String.class), "%" + dataTableRequest.getSearch().getValue() + "%"));
             }
             criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[]{})));
-        }
-
-        if (dataTableRequest.getSearchCriteria() != null) {
-            for (SearchCriterion searchCriterion : dataTableRequest.getSearchCriteria()) {
-                criteriaQuery.where(criteriaBuilder.and(searchCriteriaConsumer.createPredicate(searchCriterion)));
-            }
         }
 
         String orderColumn = dataTableRequest.sortBy(dataTableRequest.getOrder().get(0));
@@ -122,21 +121,15 @@ public abstract class RepositoryAbstraction<E> {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Integer> criteriaQuery = criteriaBuilder.createQuery(Integer.class);
         Root<E> root = criteriaQuery.from(entityClazz);
-        SearchCriteriaConsumer searchCriteriaConsumer = new SearchCriteriaConsumer(criteriaBuilder, root);
 
+        /*TODO check lại logic xem người dùng có thể lợi dụng field để truy cập field trái phép ko?*/
+        // nên có cơ chế ngăn chặn ko search được field cấm (dùng annotation đánh dấu)
         List<Predicate> predicates = new ArrayList<>();
         if (dataTableRequest.getSearch().getValue() != null && !dataTableRequest.getSearch().getValue().isEmpty()) {
             for (String field : dataTableRequest.getSearchableFields()) {
-                SearchCriterion searchCriterion = new SearchCriterion(field, SearchOperator.CONTAINS, dataTableRequest.getSearch().getValue());
-                predicates.add(searchCriteriaConsumer.createPredicate(searchCriterion));
+                predicates.add(criteriaBuilder.like(root.get(field).as(String.class), "%" + dataTableRequest.getSearch().getValue() + "%"));
             }
             criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[]{})));
-        }
-
-        if (dataTableRequest.getSearchCriteria() != null) {
-            for (SearchCriterion searchCriterion : dataTableRequest.getSearchCriteria()) {
-                criteriaQuery.where(criteriaBuilder.and(searchCriteriaConsumer.createPredicate(searchCriterion)));
-            }
         }
 
         return entityManager.createQuery(criteriaQuery.select(criteriaBuilder.count(root).as(Integer.class))).getSingleResult();

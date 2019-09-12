@@ -1,7 +1,9 @@
 package ding.nyat.service;
 
 import ding.nyat.util.datatable.DataTableRequest;
+import ding.nyat.util.datatable.DataTableResponse;
 import ding.nyat.util.search.SearchRequest;
+import ding.nyat.util.search.SearchResponse;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,13 +19,9 @@ public interface ServiceInterface<M> {
 
     List<M> readAll();
 
-    <S extends SearchRequest> List<M> search(S searchRequest);
+    SearchResponse<M> search(SearchRequest searchRequest);
 
-    <S extends SearchRequest> int countSearchRecords(S searchRequest);
-
-    List<M> getTableData(DataTableRequest dataTableRequest);
-
-    int countTableDataRecords(DataTableRequest dataTableRequest);
+    DataTableResponse<M> getTableData(DataTableRequest dataTableRequest);
 
     int countAllRecords();
 }

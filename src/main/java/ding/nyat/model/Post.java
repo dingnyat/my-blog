@@ -1,5 +1,6 @@
 package ding.nyat.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import ding.nyat.annotation.Identifier;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Post {
     @Identifier
     private Integer id;
@@ -14,8 +16,8 @@ public class Post {
     private String title;
     private String content;
     private Integer positionInSeries;
-    private boolean isActived;
-    private boolean isCommentBlocked;
+    private Boolean active;
+    private Boolean commentBlocked;
     private String createdDate;
     private String lastModifiedDate;
     private String authorCode;
@@ -24,9 +26,4 @@ public class Post {
     private String seriesName;
     private Set<Tag> tags;
     private List<Comment> comments;
-
-    public Post() {
-        this.isActived = false;
-        this.isCommentBlocked = false;
-    }
 }
