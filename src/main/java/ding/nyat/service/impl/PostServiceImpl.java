@@ -185,11 +185,18 @@ public class PostServiceImpl extends ServiceAbstraction<Post, PostEntity, PostRe
             post.setCode(entity.getCode());
             post.setTitle(entity.getTitle());
             if (entity.getDescription() != null) post.setDescription(entity.getDescription());
+            post.setTags(entity.getTags().stream().map(tagEntity -> {
+                Tag tag = new Tag();
+                tag.setCode(tagEntity.getCode());
+                tag.setName(tagEntity.getName());
+                return tag;
+            }).collect(Collectors.toSet()));
             return post;
         }).collect(Collectors.toList()));
         response.setDraw(searchRequest.getDraw());
         response.setRecordsFiltered(repository.countSearchRecords(searchRequest));
         response.setRecordsTotal(repository.countAllRecords());
+        response.setTotalDraw(response.getRecordsFiltered() / searchRequest.getLength());
         return response;
     }
 }

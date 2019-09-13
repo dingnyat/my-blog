@@ -8,6 +8,8 @@ import ding.nyat.security.Role;
 import ding.nyat.service.AccountService;
 import ding.nyat.service.AuthorService;
 import ding.nyat.service.PostService;
+import ding.nyat.util.search.SearchCriterion;
+import ding.nyat.util.search.SearchOperator;
 import ding.nyat.util.search.SearchRequest;
 import ding.nyat.util.search.SearchResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,13 +53,21 @@ public class WebAppController {
     }
 
     @GetMapping("/author/{author-code}")
-    public String authorProfile(@PathVariable("author-code") String authorCode, Model model) {
+    public String authorProfile(@PathVariable("author-code") String authorCode, Model model,
+                                @RequestParam(value = "page", required = false) Integer pageNo) {
         Author author = authorService.getByCode(authorCode);
         if (author == null) {
             model.addAttribute("errorCodeMessage", "Error 404, Not Found!");
             model.addAttribute("message", "Sorry, Something went wrong!");
             return "error/error";
         }
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setLength(15);
+        searchRequest.setDraw(pageNo == null ? 0 : (pageNo < 1 ? 0 : pageNo - 1));
+        searchRequest.setStart(searchRequest.getDraw() * searchRequest.getLength());
+        searchRequest.setSearchCriteria(Collections.singletonList(
+                new SearchCriterion("authorCode", SearchOperator.EQUALITY, authorCode)));
+        model.addAttribute("postsResp", postService.search(searchRequest));
         model.addAttribute("author", author);
         return "author-profile";
     }
@@ -109,5 +120,19 @@ public class WebAppController {
         }
         response.sendRedirect("/access-denied");
         return null;
+    }
+
+    @GetMapping("/test")
+    @ResponseBody
+    public String test() {
+        Post post = postService.read(5);
+        post.setId(null);
+        String code = post.getCode();
+        for (int i = 1; i <= 50; i++) {
+            post.setCode(code + i);
+            post.setPositionInSeries(i + 100);
+            postService.create(post);
+        }
+        return "ok";
     }
 }

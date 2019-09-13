@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequestMapping("/user")
 public class PostController {
 
     @Autowired
@@ -35,12 +36,12 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @GetMapping("/user/post")
+    @GetMapping("/post")
     public String post() {
         return "workspace/post";
     }
 
-    @PostMapping("/user/post/list")
+    @PostMapping("/post/list")
     private ResponseEntity<DataTableResponse<Post>> posts(@RequestBody DataTableRequest dataTableRequest) {
         UserPrincipal userPrincipal = AdvancedSecurityContextHolder.getUserPrincipal();
         List<SearchCriterion> searchCriteria = new ArrayList<>();
@@ -56,25 +57,25 @@ public class PostController {
         }
     }
 
-    @GetMapping("/user/post/new")
+    @GetMapping("/post/new")
     public String newPost(Model model) {
         model.addAttribute("seriesList", seriesService.readAll());
         return "workspace/new-post";
     }
 
-    @PostMapping("/user/post/get-tags")
+    @PostMapping("/post/get-tags")
     @ResponseBody
     public List<Tag> getTags() {
         return tagService.readAll();
     }
 
-    @PostMapping("/user/post/new")
+    @PostMapping("/post/new")
     public ResponseEntity<String> addNewPost(@RequestBody Post post) {
         postService.create(post);
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
-    @GetMapping("/user/post/update/{id}")
+    @GetMapping("/post/update/{id}")
     private String update(@PathVariable("id") Integer id, Model model, Authentication authentication) {
         UserPrincipal userPrincipal = AdvancedSecurityContextHolder.getUserPrincipal();
         if (userPrincipal.hasAnyRoles(Role.ADMIN.getFullName(), Role.AUTHOR.getFullName()) && postService.checkOwnership(userPrincipal.getUsername(), id)) {
@@ -86,7 +87,7 @@ public class PostController {
         }
     }
 
-    @PutMapping("/user/post/update")
+    @PutMapping("/post/update")
     private ResponseEntity<String> update(@RequestBody Post post) {
         try {
             UserPrincipal userPrincipal = AdvancedSecurityContextHolder.getUserPrincipal();
@@ -102,7 +103,7 @@ public class PostController {
         return new ResponseEntity<>("ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @PostMapping("/user/post/get/{id}")
+    @PostMapping("/post/get/{id}")
     private ResponseEntity<?> getPost(@PathVariable("id") Integer id) {
         try {
             UserPrincipal userPrincipal = AdvancedSecurityContextHolder.getUserPrincipal();
@@ -116,7 +117,7 @@ public class PostController {
         return new ResponseEntity<>("ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @DeleteMapping("/user/post/delete/{id}")
+    @DeleteMapping("/post/delete/{id}")
     private ResponseEntity<String> delete(@PathVariable("id") Integer postId) {
         try {
             UserPrincipal userPrincipal = AdvancedSecurityContextHolder.getUserPrincipal();
@@ -131,7 +132,7 @@ public class PostController {
         return new ResponseEntity<>("ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping("/user/post/multiple-delete/{ids}")
+    @GetMapping("/post/multiple-delete/{ids}")
     private ResponseEntity<String> multipleDelete(@PathVariable("ids") List<Integer> postIds) {
         try {
             UserPrincipal userPrincipal = AdvancedSecurityContextHolder.getUserPrincipal();

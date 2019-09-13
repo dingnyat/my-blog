@@ -74,6 +74,7 @@ public abstract class ServiceAbstraction<M, E, R extends RepositoryInterface<E>>
         response.setDraw(searchRequest.getDraw());
         response.setRecordsFiltered(repository.countSearchRecords(searchRequest));
         response.setRecordsTotal(repository.countAllRecords());
+        response.setTotalDraw(response.getRecordsFiltered() / searchRequest.getLength());
         return response;
     }
 
