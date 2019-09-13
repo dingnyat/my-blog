@@ -56,6 +56,7 @@ public abstract class RepositoryAbstraction<E> {
         CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(entityClazz);
         Root<E> root = criteriaQuery.from(entityClazz);
 
+        //TODO nên có cơ chế ngăn chặn ko search được field cấm (dùng annotation đánh dấu)
         Predicate predicate = criteriaBuilder.conjunction();
         if (searchRequest.getSearchCriteria() != null) {
             SearchCriteriaConsumer searchCriteriaConsumer = new SearchCriteriaConsumer(predicate, criteriaBuilder, root);
@@ -75,6 +76,7 @@ public abstract class RepositoryAbstraction<E> {
         CriteriaQuery<Integer> criteriaQuery = criteriaBuilder.createQuery(Integer.class);
         Root<E> root = criteriaQuery.from(entityClazz);
 
+        //TODO nên có cơ chế ngăn chặn ko search được field cấm (dùng annotation đánh dấu)
         Predicate predicate = criteriaBuilder.conjunction();
         if (searchRequest.getSearchCriteria() != null) {
             SearchCriteriaConsumer searchCriteriaConsumer = new SearchCriteriaConsumer(predicate, criteriaBuilder, root);

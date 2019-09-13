@@ -45,7 +45,7 @@ public class PostController {
         UserPrincipal userPrincipal = AdvancedSecurityContextHolder.getUserPrincipal();
         List<SearchCriterion> searchCriteria = new ArrayList<>();
         if (!userPrincipal.hasAnyRoles(Role.ADMIN.getFullName()) && userPrincipal.hasAnyRoles(Role.AUTHOR.getFullName())) {
-            searchCriteria.add(new SearchCriterion("author.code", SearchOperator.EQUALITY, userPrincipal.getAuthorCode()));
+            searchCriteria.add(new SearchCriterion("authorCode", SearchOperator.EQUALITY, userPrincipal.getAuthorCode()));
         }
         dataTableRequest.setSearchCriteria(searchCriteria);
 

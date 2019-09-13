@@ -22,6 +22,7 @@
               let data = {
                   id: document.getElementsByName("id")[0].value,
                   code: document.getElementsByName("code")[0].value,
+                  description: document.getElementsByName("description")[0].value,
                   title: document.getElementsByName("title")[0].value,
                   content: CKEDITOR.instances["input-content"].getData(),
                   tags: Array.from(selectedTags.values()),
@@ -34,8 +35,6 @@
 
               updatePost(data, "/user/post/update");
           };
-
-          getPostById(${postId}); // freemarker
       };
 
       function getAllTags(func) {
@@ -164,6 +163,7 @@
                   document.getElementById("input-id").value = data.id;
                   document.getElementById("input-code").value = data.code;
                   document.getElementById("input-title").value = data.title;
+                  if (data.description != null) document.getElementById("input-description").value = data.description;
                   document.getElementById("input-position").value = data.positionInSeries;
                   if (data.seriesCode != null)
                       document.querySelector('#select-series [value="' + data.seriesCode + '"]').selected = true;
@@ -262,10 +262,7 @@
   <section class="container-fluid mt-5 mb-5 px-5 text-center">
     <h3 class="mt-3">Chỉnh Sửa Bài Viết</h3>
     <form id="update-post-form" class="text-left" action="${'/user/post/update'}" method="post">
-      <div class="form-group">
-        <label for="input-id">ID: </label>
-        <input id="input-id" class="form-control" type="text" name="id" readonly>
-      </div>
+      <input id="input-id" class="form-control" type="text" name="id" readonly hidden>
       <div class="form-group">
         <label for="input-code">Mã bài viết: </label>
         <input id="input-code" class="form-control" type="text" name="code" value="">
@@ -273,6 +270,10 @@
       <div class="form-group">
         <label for="input-title">Tiêu đề: </label>
         <input id="input-title" class="form-control" type="text" name="title" value="">
+      </div>
+      <div class="form-group">
+        <label for="input-description">Tóm tắt nội dung: </label>
+        <textarea id="input-description" class="form-control" name="description"></textarea>
       </div>
       <div class="form-group">
         <label for="autocomplete-tags">Thẻ :</label>
@@ -335,6 +336,9 @@
       </div>
     </div>
   </section>
+  <script>
+      getPostById(${postId}); // freemarker
+  </script>
 </#macro>
 
 <@displayPage page_title="Chỉnh sửa bài viết"/>

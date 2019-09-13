@@ -469,7 +469,7 @@
               <div class="form-group">
                 <label class="control-label col-md-4" for="input-description">Mô tả:</label>
                 <div class="col-md-12">
-                  <textarea class="form-control" name="description" id="input-description"></textarea>
+                  <textarea class="form-control" name="description" id="input-description" rows="10"></textarea>
                 </div>
               </div>
             </div>
@@ -491,12 +491,7 @@
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-              <div class="form-group">
-                <label class="control-label col-md-4" for="input-id">ID :</label>
-                <div class="col-md-12">
-                  <input class="form-control" name="id" id="input-id" type="text" readonly>
-                </div>
-              </div>
+              <input class="form-control" name="id" id="input-id" type="text" readonly hidden>
               <div class="form-group">
                 <label class="control-label col-md-4" for="input-code">Mã Danh Mục :</label>
                 <div class="col-md-12">
@@ -512,7 +507,7 @@
               <div class="form-group">
                 <label class="control-label col-md-4" for="input-description">Mô tả:</label>
                 <div class="col-md-12">
-                  <textarea class="form-control" name="description" id="input-description"></textarea>
+                  <textarea class="form-control" name="description" id="input-description" rows="10"></textarea>
                 </div>
               </div>
             </div>

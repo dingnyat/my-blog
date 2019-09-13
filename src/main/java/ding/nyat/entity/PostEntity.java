@@ -32,6 +32,9 @@ public class PostEntity {
     @Column(name = "title", nullable = false, length = 2048)
     private String title;
 
+    @Column(name = "description", columnDefinition = "text")
+    private String description;
+
     @Column(name = "content", nullable = false, columnDefinition = "text")
     private String content;
 

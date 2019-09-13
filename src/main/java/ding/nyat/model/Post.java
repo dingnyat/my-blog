@@ -14,6 +14,7 @@ public class Post {
     private Integer id;
     private String code;
     private String title;
+    private String description;
     private String content;
     private Integer positionInSeries;
     private Boolean active;

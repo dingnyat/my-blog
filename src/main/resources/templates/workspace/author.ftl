@@ -580,12 +580,7 @@
             </div>
             <div class="modal-body">
               <h5>Thông tin tác giả</h5>
-              <div class="form-group">
-                <label class="control-label col-md-4" for="input-id">ID :</label>
-                <div class="col-md-12">
-                  <input class="form-control" name="id" id="input-id" readonly="readonly" type="text">
-                </div>
-              </div>
+              <input class="form-control" name="id" id="input-id" type="text" readonly hidden>
               <div class="form-group">
                 <label class="control-label col-md-4" for="input-name">Tên tác giả:</label>
                 <div class="col-md-12">
@@ -636,12 +631,7 @@
             </div>
             <div class="modal-body">
               <h5>Thông tin tài khoản</h5>
-              <div class="form-group">
-                <label class="control-label col-md-4" for="input-id">ID :</label>
-                <div class="col-md-12">
-                  <input class="form-control" name="id" id="input-id" readonly="readonly" type="text">
-                </div>
-              </div>
+              <input class="form-control" name="id" id="input-id" type="text" readonly hidden>
               <div class="form-group">
                 <label class="control-label col-md-4" for="input-username">Tên tài khoản:</label>
                 <div class="col-md-12">

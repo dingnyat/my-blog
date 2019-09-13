@@ -49,6 +49,7 @@ public class PostServiceImpl extends ServiceAbstraction<Post, PostEntity, PostRe
         PostEntity postEntity = new PostEntity();
         postEntity.setCode(model.getCode());
         postEntity.setTitle(model.getTitle());
+        if (model.getDescription() != null) postEntity.setDescription(model.getDescription());
         postEntity.setTags(model.getTags().stream().map(tag -> tagRepository.read(tag.getId())).collect(Collectors.toSet()));
         if (model.getSeriesCode() != null && !model.getSeriesCode().isEmpty())
             postEntity.setSeries(seriesRepository.getByCode(model.getSeriesCode()));
@@ -64,6 +65,7 @@ public class PostServiceImpl extends ServiceAbstraction<Post, PostEntity, PostRe
         PostEntity entity = postRepository.read(model.getId());
         entity.setCode(model.getCode());
         entity.setTitle(model.getTitle());
+        if (model.getDescription() != null) entity.setDescription(model.getDescription());
         entity.setTags(model.getTags().stream().map(tag -> tagRepository.read(tag.getId())).collect(Collectors.toSet()));
         if (model.getSeriesCode() != null && !model.getSeriesCode().isEmpty())
             entity.setSeries(seriesRepository.getByCode(model.getSeriesCode()));
@@ -81,6 +83,7 @@ public class PostServiceImpl extends ServiceAbstraction<Post, PostEntity, PostRe
         post.setId(entity.getId());
         post.setCode(entity.getCode());
         post.setTitle(entity.getTitle());
+        post.setDescription(entity.getDescription());
         post.setTags(entity.getTags().stream().map(tagEntity -> {
             Tag tag = new Tag();
             tag.setId(tagEntity.getId());
@@ -181,6 +184,7 @@ public class PostServiceImpl extends ServiceAbstraction<Post, PostEntity, PostRe
             Post post = new Post();
             post.setCode(entity.getCode());
             post.setTitle(entity.getTitle());
+            if (entity.getDescription() != null) post.setDescription(entity.getDescription());
             return post;
         }).collect(Collectors.toList()));
         response.setDraw(searchRequest.getDraw());

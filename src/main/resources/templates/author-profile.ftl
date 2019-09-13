@@ -1,4 +1,4 @@
-<#include "../layout/layout.ftl"/>
+<#include "./layout/layout.ftl"/>
 
 <#macro customResources>
   <style>
@@ -32,7 +32,7 @@
               resp.data.forEach(function (value) {
                   let postDiv = samplePost.clone().removeClass("d-none").removeAttr("id");
                   $(postDiv).find(".post-title h5").html(value.title);
-                  $(postDiv).find(".post-desc").html(value.title);
+                  if (value.description != null) $(postDiv).find(".post-desc").html(value.description);
                   $(postDiv).find(".post-link").attr("href", "/post/" + value.code);
                   $(".post-list-div").append(postDiv);
               });
@@ -69,7 +69,7 @@
               </div>
             </div>
             <div class="row mt-5 post-author-div">
-              <h3 class="mb-5">Xem thêm bài viết của ${author.name}</h3>
+              <h3 class="mb-5">Xem thêm bài viết của <span class="text-dark">${author.name}</span> </h3>
               <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="row post-list-div">
                 </div>

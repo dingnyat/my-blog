@@ -1,5 +1,2 @@
 sua query selector thanh input[name] de loai bo id DOM bi trung lap bao warning
 
-xu ly join table SearchCriterion
-
-thêm property description cho post. kiểu tóm tắt nội dung chính của bài

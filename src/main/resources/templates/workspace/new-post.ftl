@@ -21,6 +21,7 @@
               let data = {
                   code: document.getElementsByName("code")[0].value,
                   title: document.getElementsByName("title")[0].value,
+                  description: document.getElementsByName("description")[0].value,
                   content: CKEDITOR.instances["input-content"].getData(),
                   tags: Array.from(selectedTags.values()),
                   'seriesCode': function () {
@@ -234,6 +235,10 @@
       <div class="form-group">
         <label for="input-title">Tiêu đề: </label>
         <input id="input-title" class="form-control" type="text" name="title" value="">
+      </div>
+      <div class="form-group">
+        <label for="input-description">Tóm tắt nội dung: </label>
+        <textarea id="input-description" class="form-control" name="description"></textarea>
       </div>
       <div class="form-group">
         <label for="autocomplete-tags">Thẻ :</label>
