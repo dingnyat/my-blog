@@ -23,6 +23,10 @@ public class TagEntity {
     @Column(name = "name", nullable = false, length = 64)
     private String name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_category_category_tag"))
+    private CategoryEntity category;
+
     @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     private Set<PostEntity> posts;
 }

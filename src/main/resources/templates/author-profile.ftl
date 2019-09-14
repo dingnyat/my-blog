@@ -16,21 +16,21 @@
 <#macro bodyFragment>
   <section class="container-fluid mt-5 mb-5">
     <div class="row">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="col-12">
         <div class="row">
-          <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12 pl-xl-5 pl-lg-5 pl-md-5 pl-sm-5 pl-4 author-div">
+          <div class="col-lg-9 col-12 pl-xl-5 pl-lg-5 pl-md-5 pl-sm-5 pl-4 mb-5 author-div">
             <div class="row mb-4" style="display: flex; align-items: center;">
-              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-12 p-md-3 p-sm-3 p-5 author-avatar">
+              <div class="col-md-3 col-sm-4 col-12 p-md-3 p-sm-3 p-5 author-avatar">
                 <img class="rounded-circle" src="<@s.url '/image/user/' + author.avatarUrl/>" width="100%"
                      height="100%"
                      alt="avatar"/>
               </div>
-              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-8 col-12">
+              <div class="col-md-6 col-sm-8 col-12">
                 <h3 class="text-xl-left text-lg-left text-center"><span>${author.name}</span></h3>
                 <hr/>
                 <div>${author.description}</div>
               </div>
-              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-12 mt-3 text-left text-xl-left text-lg-left text-md-left text-sm-right">
+              <div class="col-md-3 col-sm-12 col-12 mt-3 text-left text-xl-left text-lg-left text-md-left text-sm-right">
                 <h5>Theo dõi tác giả tại: </h5>
                 <#list author.socialLinks as link>
                   >> <a href="${link.link}">${link.name}</a>
@@ -52,9 +52,10 @@
                         </div>
                         <div class="row">
                           <#if post.tags?? && (post.tags?size > 0)>
-                            <p class="text-secondary py-0 my-0">Tags:
-                              <#list post.tags as tag>
-                                <a href="${'/tag/' + tag.code}" class="text-secondary">${tag.name}</a>${tag?has_next?then(',', '')}
+                            <p class="text-secondary py-0 my-0">Danh mục:
+                              <#list post.categories as cate>
+                                <a href="${'/category/' + cate.code}"
+                                   class="text-secondary">${cate.name}</a>${cate?has_next?then(',', '')}
                               </#list>
                             </p>
                           </#if>

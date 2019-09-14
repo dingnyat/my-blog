@@ -71,7 +71,7 @@ public class CKFinderConfig extends Configuration {
 
         this.types = new LinkedHashMap<>();
         ResourceType type = new ResourceType("Image");
-        type.setUrl(this.baseURL + PathConstants.IMAGE_PREFIX_URL + PathConstants.DOWNLOAD_PREFIX_URL);
+        type.setUrl(PathConstants.IMAGE_PREFIX_URL + PathConstants.DOWNLOAD_PREFIX_URL);
         type.setPath(PathConstants.IMAGE_UPLOAD_DIR);
         type.setMaxSize("0");
         type.setDeniedExtensions(null);

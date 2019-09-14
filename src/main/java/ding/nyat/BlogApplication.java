@@ -47,7 +47,6 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
         TaglibFactory taglibFactory = freeMarkerConfigurer.getTaglibFactory();
         taglibFactory.setObjectWrapper(freeMarkerConfigurer.getConfiguration().getObjectWrapper());
 
-
         try {
             for (Field field : Role.class.getFields()) {
                 if (Modifier.isFinal(field.getModifiers()) && Modifier.isStatic(field.getModifiers())) {
@@ -117,6 +116,10 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
                 .and().sessionFixation().migrateSession();// default value // prevent session fixation acttack. // When user tries to authenticate again, old session is invalidated and the attributes from the old session are copied over new one
     }
 
+    /**
+     * This is a trick how to inject authenticationManagerBean, userDetailsService
+     * to static variables in AdvancedSecurityContextHolder
+     */
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -135,16 +138,17 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
         return registrationBean;
     }
 
-    @Bean
-    public FilterRegistrationBean<ResourceUrlEncodingFilter> resourceUrlEncodingFilter() {
-        FilterRegistrationBean<ResourceUrlEncodingFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new ResourceUrlEncodingFilter());
-        registrationBean.addUrlPatterns("/*");
-        return registrationBean;
-    }
+    @EnableWebMvc // khong impl tren BlogApplication duoc (loi taglib freemarker)
+    public static class CustomWebMvcConfigurer implements WebMvcConfigurer {
 
-    @EnableWebMvc
-    public static class CacheStaticConfigurer implements WebMvcConfigurer {
+        @Bean
+        public FilterRegistrationBean<ResourceUrlEncodingFilter> resourceUrlEncodingFilter() {
+            FilterRegistrationBean<ResourceUrlEncodingFilter> registrationBean = new FilterRegistrationBean<>();
+            registrationBean.setFilter(new ResourceUrlEncodingFilter());
+            registrationBean.addUrlPatterns("/*");
+            return registrationBean;
+        }
+
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
             registry.addResourceHandler("/**").addResourceLocations("classpath:/static/")
@@ -153,5 +157,7 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
                     .addResolver(new VersionResourceResolver().addContentVersionStrategy("/**"))
                     .addTransformer(new CssLinkResourceTransformer());
         }
+
     }
+
 }

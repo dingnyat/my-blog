@@ -27,4 +27,5 @@ public class Post {
     private String seriesName;
     private Set<Tag> tags;
     private List<Comment> comments;
+    private Set<Category> categories;
 }

@@ -40,7 +40,23 @@ public class WebAppController {
     private AuthorService authorService;
 
     @GetMapping("/")
-    public String homepage() {
+    public String homepage(Model model) {
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setLength(25);
+        searchRequest.setDraw(0);
+        searchRequest.setStart(searchRequest.getDraw() * searchRequest.getLength());
+        model.addAttribute("postsResp", postService.search(searchRequest));
+        return "index";
+    }
+
+    @GetMapping("/page/{pageNo}")
+    public String homepage(@PathVariable("pageNo") Integer pageNo, Model model) {
+        if (pageNo != null && pageNo <= 1) return "redirect:/";
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setLength(25);
+        searchRequest.setDraw(pageNo == null ? 0 : pageNo - 1);
+        searchRequest.setStart(searchRequest.getDraw() * searchRequest.getLength());
+        model.addAttribute("postsResp", postService.search(searchRequest));
         return "index";
     }
 

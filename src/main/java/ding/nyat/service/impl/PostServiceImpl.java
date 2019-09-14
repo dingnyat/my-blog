@@ -1,8 +1,10 @@
 package ding.nyat.service.impl;
 
 import ding.nyat.entity.AccountEntity;
+import ding.nyat.entity.CategoryEntity;
 import ding.nyat.entity.CommentEntity;
 import ding.nyat.entity.PostEntity;
+import ding.nyat.model.Category;
 import ding.nyat.model.Comment;
 import ding.nyat.model.Post;
 import ding.nyat.model.Tag;
@@ -17,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,6 +95,19 @@ public class PostServiceImpl extends ServiceAbstraction<Post, PostEntity, PostRe
             tag.setName(tagEntity.getName());
             return tag;
         }).collect(Collectors.toSet()));
+
+        if (entity.getTags() != null) {
+            Set<Category> categories = new HashSet<>();
+            entity.getTags().forEach(tagEntity -> {
+                CategoryEntity categoryEntity = tagEntity.getCategory();
+                Category category = new Category();
+                category.setCode(categoryEntity.getCode());
+                category.setName(categoryEntity.getName());
+                categories.add(category);
+            });
+            post.setCategories(categories);
+        }
+
         if (entity.getSeries() != null) {
             post.setSeriesCode(entity.getSeries().getCode());
             post.setSeriesName(entity.getSeries().getName());
@@ -180,19 +197,7 @@ public class PostServiceImpl extends ServiceAbstraction<Post, PostEntity, PostRe
     public SearchResponse<Post> search(SearchRequest searchRequest) {
         SearchResponse<Post> response = new SearchResponse<>();
         List<PostEntity> entities = repository.search(searchRequest);
-        response.setData(entities.stream().map(entity -> {
-            Post post = new Post();
-            post.setCode(entity.getCode());
-            post.setTitle(entity.getTitle());
-            if (entity.getDescription() != null) post.setDescription(entity.getDescription());
-            post.setTags(entity.getTags().stream().map(tagEntity -> {
-                Tag tag = new Tag();
-                tag.setCode(tagEntity.getCode());
-                tag.setName(tagEntity.getName());
-                return tag;
-            }).collect(Collectors.toSet()));
-            return post;
-        }).collect(Collectors.toList()));
+        response.setData(entities.stream().map(this::convertToModel).collect(Collectors.toList()));
         response.setDraw(searchRequest.getDraw());
         response.setRecordsFiltered(repository.countSearchRecords(searchRequest));
         response.setRecordsTotal(repository.countAllRecords());

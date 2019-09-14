@@ -49,6 +49,8 @@ public class PostRepositoryImpl extends RepositoryAbstraction<PostEntity> implem
         }
         criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[]{})));
 
+        criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDate")));
+
         TypedQuery<PostEntity> typedQuery = entityManager.createQuery(criteriaQuery.select(root));
         typedQuery.setFirstResult(searchRequest.getStart());
         typedQuery.setMaxResults(searchRequest.getLength());

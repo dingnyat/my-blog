@@ -1,2 +1,3 @@
 sua query selector thanh input[name] de loai bo id DOM bi trung lap bao warning
 
+sua lai cơ chế role enum tự động gen vào bảng
