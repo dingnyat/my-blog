@@ -1,6 +1,7 @@
 package ding.nyat.repository.impl;
 
 import ding.nyat.entity.PostEntity;
+import ding.nyat.entity.TagEntity;
 import ding.nyat.repository.PostRepository;
 import ding.nyat.repository.RepositoryAbstraction;
 import ding.nyat.util.datatable.DataTableRequest;
@@ -11,10 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,12 +36,21 @@ public class PostRepositoryImpl extends RepositoryAbstraction<PostEntity> implem
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<PostEntity> criteriaQuery = criteriaBuilder.createQuery(PostEntity.class);
         Root<PostEntity> root = criteriaQuery.from(PostEntity.class);
+        Join<PostEntity, TagEntity> postTagJoin = root.join("tags");
 
         List<Predicate> predicates = new ArrayList<>();
         if (searchRequest.getSearchCriteria() != null) {
             for (SearchCriterion searchCriterion : searchRequest.getSearchCriteria()) {
-                if (searchCriterion.getKey().equals("authorCode")) {
-                    predicates.add(criteriaBuilder.equal(root.get("author").get("code"), searchCriterion.getValue()));
+                switch (searchCriterion.getKey()) {
+                    case "authorCode":
+                        predicates.add(criteriaBuilder.equal(root.get("author").get("code"), searchCriterion.getValue()));
+                        break;
+                    case "categoryCode":
+                        predicates.add(criteriaBuilder.equal(postTagJoin.get("category").get("code"), searchCriterion.getValue()));
+                        break;
+                    case "tagCode":
+                        predicates.add(criteriaBuilder.equal(postTagJoin.get("code"), searchCriterion.getValue()));
+                        break;
                 }
             }
         }
@@ -62,12 +69,21 @@ public class PostRepositoryImpl extends RepositoryAbstraction<PostEntity> implem
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Integer> criteriaQuery = criteriaBuilder.createQuery(Integer.class);
         Root<PostEntity> root = criteriaQuery.from(PostEntity.class);
+        Join<PostEntity, TagEntity> postTagJoin = root.join("tags");
 
         List<Predicate> predicates = new ArrayList<>();
         if (searchRequest.getSearchCriteria() != null) {
             for (SearchCriterion searchCriterion : searchRequest.getSearchCriteria()) {
-                if (searchCriterion.getKey().equals("authorCode")) {
-                    predicates.add(criteriaBuilder.equal(root.get("author").get("code"), searchCriterion.getValue()));
+                switch (searchCriterion.getKey()) {
+                    case "authorCode":
+                        predicates.add(criteriaBuilder.equal(root.get("author").get("code"), searchCriterion.getValue()));
+                        break;
+                    case "categoryCode":
+                        predicates.add(criteriaBuilder.equal(postTagJoin.get("category").get("code"), searchCriterion.getValue()));
+                        break;
+                    case "tagCode":
+                        predicates.add(criteriaBuilder.equal(postTagJoin.get("code"), searchCriterion.getValue()));
+                        break;
                 }
             }
         }
@@ -110,6 +126,7 @@ public class PostRepositoryImpl extends RepositoryAbstraction<PostEntity> implem
                 }
             }
         }
+
         TypedQuery<PostEntity> typedQuery = entityManager.createQuery(criteriaQuery.select(root));
         typedQuery.setFirstResult(dataTableRequest.getStart());
         typedQuery.setMaxResults(dataTableRequest.getLength());

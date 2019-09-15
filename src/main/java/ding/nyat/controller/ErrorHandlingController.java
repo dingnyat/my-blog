@@ -28,6 +28,13 @@ public class ErrorHandlingController implements ErrorController {
         return "error/access-denied";
     }
 
+    @GetMapping("/404")
+    public String error404(HttpServletRequest request) {
+        request.setAttribute("message", "Error 404, Not Found!");
+        request.setAttribute("errorCodeMessage", "Sorry, we couldn't find the page you were looking for.");
+        return "error/error";
+    }
+
     @GetMapping("/error")
     public String handleError(HttpServletRequest request) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);

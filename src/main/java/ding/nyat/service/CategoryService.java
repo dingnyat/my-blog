@@ -9,4 +9,6 @@ public interface CategoryService extends ServiceInterface<Category> {
     void deselectSeries(Integer seriesId, Integer categoryId);
 
     void linkSeries(Integer seriesId, Integer categoryId);
+
+    Category getByCode(String code);
 }

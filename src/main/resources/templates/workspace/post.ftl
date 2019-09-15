@@ -52,7 +52,7 @@
                   style: 'multi',
                   selector: 'td:first-child'
               },
-              order: [1, 'desc'],
+              order: [4, 'desc'],
               language: {
                   url: "${'/vendor/datatables-jquery/Vietnamese.json'}",
                   searchPlaceholder: ""

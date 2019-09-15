@@ -1,13 +1,9 @@
 package ding.nyat.controller;
 
-import ding.nyat.model.Author;
-import ding.nyat.model.Comment;
-import ding.nyat.model.Post;
+import ding.nyat.model.*;
 import ding.nyat.security.AdvancedSecurityContextHolder;
 import ding.nyat.security.Role;
-import ding.nyat.service.AccountService;
-import ding.nyat.service.AuthorService;
-import ding.nyat.service.PostService;
+import ding.nyat.service.*;
 import ding.nyat.util.search.SearchCriterion;
 import ding.nyat.util.search.SearchOperator;
 import ding.nyat.util.search.SearchRequest;
@@ -39,6 +35,12 @@ public class WebAppController {
     @Autowired
     private AuthorService authorService;
 
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private TagService tagService;
+
     @GetMapping("/")
     public String homepage(Model model) {
         SearchRequest searchRequest = new SearchRequest();
@@ -68,8 +70,8 @@ public class WebAppController {
         return "login";
     }
 
-    @GetMapping("/author/{author-code}")
-    public String authorProfile(@PathVariable("author-code") String authorCode, Model model,
+    @GetMapping("/author/{authorCode}")
+    public String authorProfile(@PathVariable("authorCode") String authorCode, Model model,
                                 @RequestParam(value = "page", required = false) Integer pageNo) {
         Author author = authorService.getByCode(authorCode);
         if (author == null) {
@@ -124,6 +126,80 @@ public class WebAppController {
         } catch (Exception ex) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/category/{categoryCode}")
+    public String category(@PathVariable("categoryCode") String categoryCode, Model model) {
+        Category category = categoryService.getByCode(categoryCode);
+        if (category == null) return "redirect:/404";
+        model.addAttribute("category", category);
+
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setLength(25);
+        searchRequest.setDraw(0);
+        searchRequest.setStart(searchRequest.getDraw() * searchRequest.getLength());
+        searchRequest.setSearchCriteria(Collections.singletonList(
+                new SearchCriterion("categoryCode", SearchOperator.EQUALITY, categoryCode)));
+        model.addAttribute("postsResp", postService.search(searchRequest));
+
+        return "category";
+    }
+
+    @GetMapping("/category/{categoryCode}/page/{pageNo}")
+    public String category(@PathVariable("categoryCode") String categoryCode,
+                           @PathVariable("pageNo") Integer pageNo, Model model) {
+        if (pageNo != null && pageNo <= 1) return "redirect:/category/" + categoryCode;
+
+        Category category = categoryService.getByCode(categoryCode);
+        if (category == null) return "redirect:/404";
+        model.addAttribute("category", category);
+
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setLength(25);
+        searchRequest.setDraw(pageNo == null ? 0 : pageNo - 1);
+        searchRequest.setStart(searchRequest.getDraw() * searchRequest.getLength());
+        searchRequest.setSearchCriteria(Collections.singletonList(
+                new SearchCriterion("categoryCode", SearchOperator.EQUALITY, categoryCode)));
+        model.addAttribute("postsResp", postService.search(searchRequest));
+
+        return "category";
+    }
+
+    @GetMapping("/tag/{tagCode}")
+    public String tag(@PathVariable("tagCode") String tagCode, Model model) {
+        Tag tag = tagService.getByCode(tagCode);
+        if (tag == null) return "redirect:/404";
+        model.addAttribute("tag", tag);
+
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setLength(25);
+        searchRequest.setDraw(0);
+        searchRequest.setStart(searchRequest.getDraw() * searchRequest.getLength());
+        searchRequest.setSearchCriteria(Collections.singletonList(
+                new SearchCriterion("tagCode", SearchOperator.EQUALITY, tagCode)));
+        model.addAttribute("postsResp", postService.search(searchRequest));
+
+        return "tag";
+    }
+
+    @GetMapping("/tag/{tagCode}/page/{pageNo}")
+    public String tag(@PathVariable("tagCode") String tagCode,
+                      @PathVariable("pageNo") Integer pageNo, Model model) {
+        if (pageNo != null && pageNo <= 1) return "redirect:/tag/" + tagCode;
+
+        Tag tag = tagService.getByCode(tagCode);
+        if (tag == null) return "redirect:/404";
+        model.addAttribute("tag", tag);
+
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setLength(25);
+        searchRequest.setDraw(pageNo == null ? 0 : pageNo - 1);
+        searchRequest.setStart(searchRequest.getDraw() * searchRequest.getLength());
+        searchRequest.setSearchCriteria(Collections.singletonList(
+                new SearchCriterion("tagCode", SearchOperator.EQUALITY, tagCode)));
+        model.addAttribute("postsResp", postService.search(searchRequest));
+
+        return "tag";
     }
 
     @GetMapping("/file-manager")

@@ -29,7 +29,8 @@ public class DataTableRequest extends SearchRequest {
     public List<String> getOrderableFields() {
         List<String> orderableFields = new ArrayList<>();
         for (Column column : columns) {
-            if (column.isOrderable()) orderableFields.add(column.getName());
+            if (column.isOrderable())
+                orderableFields.add(column.getData());
         }
         return orderableFields;
     }

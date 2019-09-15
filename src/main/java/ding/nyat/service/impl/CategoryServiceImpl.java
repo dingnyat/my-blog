@@ -22,9 +22,12 @@ public class CategoryServiceImpl extends ServiceAbstraction<Category, CategoryEn
     @Autowired
     private SeriesRepository seriesRepository;
 
+    private CategoryRepository repository;
+
     @Autowired
     public CategoryServiceImpl(CategoryRepository repository) {
         super(repository);
+        this.repository = repository;
     }
 
     @Override
@@ -42,6 +45,7 @@ public class CategoryServiceImpl extends ServiceAbstraction<Category, CategoryEn
         TagEntity tagEntity = new TagEntity();
         tagEntity.setCode(tag.getCode());
         tagEntity.setName(tag.getName());
+        tagEntity.setCategory(categoryEntity);
         categoryEntity.getTags().add(tagEntity);
         repository.update(categoryEntity);
     }
@@ -61,5 +65,12 @@ public class CategoryServiceImpl extends ServiceAbstraction<Category, CategoryEn
         if (entity == null) return;
         entity.getSeries().add(seriesEntity);
         repository.update(entity);
+    }
+
+    @Override
+    public Category getByCode(String code) {
+        CategoryEntity categoryEntity = repository.getByCode(code);
+        if (categoryEntity != null) return convertToModel(categoryEntity);
+        return null;
     }
 }
