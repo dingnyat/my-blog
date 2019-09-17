@@ -50,15 +50,19 @@
                     </div>
                     <div class="row post-details">
                       <#if post.categories??>
-                        Danh mục:
-                        <#list post.categories as cate>
-                          <a class="text-secondary"
-                             href="${'/category/' + cate.code}">${cate.name + (cate?has_next?then(', ', ''))}</a>
-                        </#list>
+                        <div class="col-12 px-0">
+                          Danh mục:
+                          <#list post.categories as cate>
+                            <a class="text-secondary"
+                               href="${'/category/' + cate.code}">${cate.name + (cate?has_next?then(', ', ''))}</a>
+                          </#list>
+                        </div>
                       </#if>
                       <#if post.seriesCode??>
-                        | Series:
-                        <a class="text-secondary" href="${'/series/' + post.seriesCode}">${post.seriesName}</a>
+                        <div class="col-12 px-0">
+                          | Series:
+                          <a class="text-secondary" href="${'/series/' + post.seriesCode}">${post.seriesName}</a>
+                        </div>
                       </#if>
                     </div>
                   </div>
@@ -83,7 +87,7 @@
                 </#if>
                 <#list start..end as x>
                   <a href="${pageLink + x}"
-                     class="mb-2 btn btn-sm ${(postsResp.draw + 1 == x)?then('disabled btn-primary', 'btn-light')}">${x}</a>
+                     class="mb-2 btn btn-sm ${(postsResp.draw + 1 == x)?then('disabled btn-warning', 'btn-light')}">${x}</a>
                 </#list>
                 <#if (end < totalPage)>
                   <a href="#"

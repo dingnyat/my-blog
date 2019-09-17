@@ -41,6 +41,9 @@ public class WebAppController {
     @Autowired
     private TagService tagService;
 
+    @Autowired
+    private SeriesService seriesService;
+
     @GetMapping("/")
     public String homepage(Model model) {
         SearchRequest searchRequest = new SearchRequest();
@@ -99,17 +102,20 @@ public class WebAppController {
             return "error/error";
         }
         model.addAttribute("post", post);
+        if (post.getSeriesCode() != null) {
+            model.addAttribute("postSeries", seriesService.getByCode(post.getSeriesCode()));
+        }
         return "post";
     }
 
     @PostMapping("/post/add-comment")
     public ResponseEntity<String> addComment(@ModelAttribute Comment comment) {
         try {
-            if (comment.getPostId() == -1 && comment.getParentCommentId() != -1) {
+            if (comment.getPostId() == null && comment.getParentCommentId() != null) {
                 // why not add just only comment? comment has parentcommentid itself
                 postService.addChildComment(comment.getParentCommentId(), comment);
             }
-            if (comment.getPostId() != -1 && comment.getParentCommentId() == -1) {
+            if (comment.getPostId() != null && comment.getParentCommentId() == null) {
                 // why not add just only comment? comment has parentcommentid itself
                 postService.addComment(comment.getPostId(), comment);
             }
@@ -200,6 +206,43 @@ public class WebAppController {
         model.addAttribute("postsResp", postService.search(searchRequest));
 
         return "tag";
+    }
+
+    @GetMapping("/series/{seriesCode}")
+    public String series(@PathVariable("seriesCode") String seriesCode, Model model) {
+        Series series = seriesService.getByCode(seriesCode);
+        if (series == null) return "redirect:/404";
+        model.addAttribute("series", series);
+
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setLength(25);
+        searchRequest.setDraw(0);
+        searchRequest.setStart(searchRequest.getDraw() * searchRequest.getLength());
+        searchRequest.setSearchCriteria(Collections.singletonList(
+                new SearchCriterion("seriesCode", SearchOperator.EQUALITY, seriesCode)));
+        model.addAttribute("postsResp", postService.search(searchRequest));
+
+        return "series";
+    }
+
+    @GetMapping("/series/{seriesCode}/page/{pageNo}")
+    public String series(@PathVariable("seriesCode") String seriesCode,
+                         @PathVariable("pageNo") Integer pageNo, Model model) {
+        if (pageNo != null && pageNo <= 1) return "redirect:/series/" + seriesCode;
+
+        Series series = seriesService.getByCode(seriesCode);
+        if (series == null) return "redirect:/404";
+        model.addAttribute("series", series);
+
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setLength(25);
+        searchRequest.setDraw(pageNo == null ? 0 : pageNo - 1);
+        searchRequest.setStart(searchRequest.getDraw() * searchRequest.getLength());
+        searchRequest.setSearchCriteria(Collections.singletonList(
+                new SearchCriterion("seriesCode", SearchOperator.EQUALITY, seriesCode)));
+        model.addAttribute("postsResp", postService.search(searchRequest));
+
+        return "series";
     }
 
     @GetMapping("/file-manager")

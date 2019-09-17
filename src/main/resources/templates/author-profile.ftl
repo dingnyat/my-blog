@@ -89,7 +89,7 @@
                     </#if>
                     <#list start..end as x>
                       <a href="${pageLink + x}"
-                         class="mb-2 btn btn-sm ${(postsResp.draw + 1 == x)?then('disabled btn-primary', 'btn-light')}">${x}</a>
+                         class="mb-2 btn btn-sm ${(postsResp.draw + 1 == x)?then('disabled btn-warning', 'btn-light')}">${x}</a>
                     </#list>
                     <#if (end < totalPage)>
                       <a href="#"

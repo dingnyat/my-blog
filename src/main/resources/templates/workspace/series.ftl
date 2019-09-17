@@ -289,7 +289,7 @@
               <div class="form-group">
                 <label class="control-label col-md-4" for="input-description">Mô tả:</label>
                 <div class="col-md-12">
-                  <textarea class="form-control" name="description" id="input-description"></textarea>
+                  <textarea class="form-control" name="description" rows="10" id="input-description"></textarea>
                 </div>
               </div>
             </div>
@@ -327,7 +327,7 @@
               <div class="form-group">
                 <label class="control-label col-md-4" for="input-description">Mô tả:</label>
                 <div class="col-md-12">
-                  <textarea class="form-control" name="description" id="input-description"></textarea>
+                  <textarea class="form-control" name="description" rows="10" id="input-description"></textarea>
                 </div>
               </div>
             </div>

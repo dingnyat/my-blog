@@ -143,22 +143,25 @@
               <li><a href="${'/category/spring-framework'}">Spring Framework</a></li>
               <li><a href="${'/category/jpa-hibernate'}">JPA/Hibernate</a></li>
               <li><a href="${'/category/mybatis'}">MyBatis</a></li>
+              <li><a href="${'/categories'}">and more...</a></li>
             </ul>
           </div>
           <div class="col-12 col-sm-12 col-md-4 col-lg-4">
             <h5 class="font-weight-normal">HƯỚNG DẪN</h5>
             <ul class="pl-0 footer-link">
-              <li><a href="/">Lập trình Web với Servlet/JSP</a></li>
-              <li><a href="/">Lập trình Web với Spring Framework</a></li>
-              <li><a href="/">Lập trình cơ bản Java</a></li>
+              <li><a href="${'/series/basic-java'}">Lập trình cơ bản Java</a></li>
+              <li><a href="${'/series/servlet-jsp-tutorials'}">Java web căn bản với Servlet - JSP</a></li>
+              <li><a href="${'/series/spring-framework-tutorials'}">Lập trình web với Spring Framework</a></li>
+              <li><a href="${'/series/security-in-spring'}">Bảo mật web với Spring Security</a></li>
+              <li><a href="${'/series/rest-with-spring'}">Lập trình REST với Spring</a></li>
+              <li><a href="${'/series'}">and more...</a></li>
             </ul>
           </div>
           <div class="col-12 col-sm-12 col-md-4 col-lg-4">
             <h5 class="font-weight-normal">THÔNG TIN - LIÊN HỆ</h5>
             <ul class="pl-0 footer-link">
-              <li><a href="/">Giới thiệu blog</a></li>
+              <li><a href="${'/about'}">Giới thiệu blog</a></li>
               <li><a href="/">Liên hệ quảng cáo</a></li>
-              <li><a href="/">Tuyển người viết bài</a></li>
             </ul>
           </div>
         </div>

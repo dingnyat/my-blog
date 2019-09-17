@@ -38,6 +38,8 @@ public class PostRepositoryImpl extends RepositoryAbstraction<PostEntity> implem
         Root<PostEntity> root = criteriaQuery.from(PostEntity.class);
         Join<PostEntity, TagEntity> postTagJoin = root.join("tags");
 
+        criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDate")));
+
         List<Predicate> predicates = new ArrayList<>();
         if (searchRequest.getSearchCriteria() != null) {
             for (SearchCriterion searchCriterion : searchRequest.getSearchCriteria()) {
@@ -51,12 +53,14 @@ public class PostRepositoryImpl extends RepositoryAbstraction<PostEntity> implem
                     case "tagCode":
                         predicates.add(criteriaBuilder.equal(postTagJoin.get("code"), searchCriterion.getValue()));
                         break;
+                    case "seriesCode":
+                        predicates.add(criteriaBuilder.equal(root.get("series").get("code"), searchCriterion.getValue()));
+                        criteriaQuery.orderBy(criteriaBuilder.asc(root.get("positionInSeries")));
+                        break;
                 }
             }
         }
         criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[]{})));
-
-        criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDate")));
 
         TypedQuery<PostEntity> typedQuery = entityManager.createQuery(criteriaQuery.select(root));
         typedQuery.setFirstResult(searchRequest.getStart());
@@ -83,6 +87,9 @@ public class PostRepositoryImpl extends RepositoryAbstraction<PostEntity> implem
                         break;
                     case "tagCode":
                         predicates.add(criteriaBuilder.equal(postTagJoin.get("code"), searchCriterion.getValue()));
+                        break;
+                    case "seriesCode":
+                        predicates.add(criteriaBuilder.equal(root.get("series").get("code"), searchCriterion.getValue()));
                         break;
                 }
             }

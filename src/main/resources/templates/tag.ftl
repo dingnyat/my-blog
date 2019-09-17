@@ -14,28 +14,6 @@
       margin-left: 2px;
       margin-right: 2px;
     }
-
-    .chip {
-      display: inline-block;
-      height: 25px;
-      font-size: 12px;
-      font-weight: 400;
-      color: rgba(0, 0, 0, .6);
-      line-height: 25px;
-      padding: 0 7px;
-      border-radius: 16px;
-      cursor: pointer;
-      transition: all .3s linear;
-      background-color: #c1bebe;
-    }
-
-    .chip:hover {
-      background-color: #979494;
-    }
-
-    .sign.fas {
-      color: rgba(0, 0, 0, 0.6);
-    }
   </style>
 </#macro>
 
@@ -52,7 +30,7 @@
                 <h2>Tag: ${tag.name}</h2>
               </div>
               <div class="col-12 mb-5 px-0">
-                <h5 class="mb-5">Bài Viết Được Gắn Thẻ</h5>
+                <h5 class="mb-5">Bài Viết Được Gắn Tag</h5>
                 <#if postsResp??>
                   <#list postsResp.data as post>
                     <div class="col-12 mb-3 pl-5 post-div">
@@ -66,15 +44,19 @@
                       </div>
                       <div class="row post-details">
                         <#if post.categories??>
-                          Danh mục:
-                          <#list post.categories as cate>
-                            <a class="text-secondary"
-                               href="${'/category/' + cate.code}">${cate.name + (cate?has_next?then(', ', ''))}</a>
-                          </#list>
+                          <div class="col-12 px-0">
+                            Danh mục:
+                            <#list post.categories as cate>
+                              <a class="text-secondary"
+                                 href="${'/category/' + cate.code}">${cate.name + (cate?has_next?then(', ', ''))}</a>
+                            </#list>
+                          </div>
                         </#if>
                         <#if post.seriesCode??>
-                          | Series:
-                          <a class="text-secondary" href="${'/series/' + post.seriesCode}">${post.seriesName}</a>
+                          <div class="col-12 px-0">
+                            | Series:
+                            <a class="text-secondary" href="${'/series/' + post.seriesCode}">${post.seriesName}</a>
+                          </div>
                         </#if>
                       </div>
                     </div>
@@ -100,7 +82,7 @@
                 </#if>
                 <#list start..end as x>
                   <a href="${pageLink + x}"
-                     class="mb-2 btn btn-sm ${(postsResp.draw + 1 == x)?then('disabled btn-primary', 'btn-light')}">${x}</a>
+                     class="mb-2 btn btn-sm ${(postsResp.draw + 1 == x)?then('disabled btn-warning', 'btn-light')}">${x}</a>
                 </#list>
                 <#if (end < totalPage)>
                   <a href="#"

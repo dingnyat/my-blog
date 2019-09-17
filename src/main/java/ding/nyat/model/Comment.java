@@ -16,8 +16,8 @@ public class Comment {
     private boolean isAccepted;
     private boolean isRemoved;
 
-    private int postId;
-    private int parentCommentId;
+    private Integer postId;
+    private Integer parentCommentId;
 
     public Comment() {
         this.isAccepted = false;

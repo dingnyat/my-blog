@@ -88,17 +88,17 @@
 <#macro bodyFragment>
   <section class="container-fluid mt-5 mb-5">
     <div class="row">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="col-12">
         <div class="row">
-          <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12 post-div">
+          <div class="col-lg-9 col-12 post-div">
             <h3 class="display-4"><strong class="post-title">${post.title}</strong></h3>
             <hr/>
             <div class="row">
-              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 pl-5">
+              <div class="col-md-4 col-12 pl-5">
                 Chỉnh sửa lần cuối: ${post.lastModifiedDate} <br/>
                 Tác giả: <a href="${'/author/' + post.authorCode}">${post.authorName}</a>
               </div>
-              <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 mt-2 pr-5 text-right">
+              <div class="col-md-8 col-12 mt-2 pr-5 text-right">
                 <i class="sign fas fa-tags"></i>
                 <#list post.tags as tag>
                   <span class="chip my-1 ml-1">
@@ -108,8 +108,37 @@
               </div>
             </div>
             <hr/>
+            <#if postSeries??>
+              <div class="row mt-5">
+                <div class="col-12 pl-md-4">
+                  <div class="post-series-list" data-toggle="collapse" data-target="#post-series-links"
+                       aria-expanded="true">
+                    Bài viết nằm trong series hướng dẫn:
+                    <a class="post-series-header" href="javascript:void(0);">${postSeries.name} <i
+                              class="fas fa-plus"></i></a>
+                    <div id="post-series-links" class="row collapse pl-md-3 mt-3" aria-expanded="true">
+                      <div class="col-12">
+                        <#list postSeries.posts as s_post>
+                          <#if s_post.first == post.code>
+                            <div>
+                              <i class="fas fa-long-arrow-alt-right mr-2"></i> ${s_post.second} <span>(bài viết đang đọc)</span>
+                            </div>
+                          <#else >
+                            <a href="${'/post/' + s_post.first}">
+                              <i class="fas fa-long-arrow-alt-right mr-2"></i> ${s_post.second}
+                            </a>
+                            <br>
+                          </#if>
+                        </#list>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </#if>
             <div class="row mb-4">
-              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-5 post-content">
+              <div class="col-12 mt-5 post-content text-wrap">
                 ${post.content}
               </div>
             </div>
