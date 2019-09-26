@@ -16,7 +16,7 @@ public class AccountEntity {
     @Id
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "username", nullable = false, unique = true, length = 128)
     private String username;
@@ -27,7 +27,6 @@ public class AccountEntity {
     @Column(name = "email", unique = true, length = 128)
     private String email;
 
-    // TODO sửa tên biến
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
 

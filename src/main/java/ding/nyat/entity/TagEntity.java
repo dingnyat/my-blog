@@ -1,7 +1,6 @@
 package ding.nyat.entity;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,7 +8,6 @@ import java.util.Set;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "tag")
 public class TagEntity {
@@ -17,13 +15,17 @@ public class TagEntity {
     @Id
     @Column(name = "id", nullable = false, updatable = false, insertable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "code", nullable = false, unique = true, length = 16)
     private String code;
 
     @Column(name = "name", nullable = false, length = 64)
     private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_category_category_tag"))
+    private CategoryEntity category;
 
     @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     private Set<PostEntity> posts;

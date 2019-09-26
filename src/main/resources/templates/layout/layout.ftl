@@ -48,9 +48,10 @@
           href="<@s.url '/vendor/datatables-jquery/dataTables.bootstrap4-1.10.19.min.css'/>">
     <link rel="stylesheet" type="text/css" href="<@s.url '/vendor/datatables-jquery/select.bootstrap4-1.3.0.min.css'/>">
   </#if>
-  <link rel="stylesheet" href="<@s.url '/client/style.css'/>">
+  <link rel="stylesheet" href="<@s.url '/css/style.css'/>">
 </#macro>
-<#macro customResources></#macro>
+<#macro customResources>
+</#macro>
 <#macro headerFragment>
   <header class="container-fluid px-0">
     <nav class="navbar navbar-expand-md navbar-light bg-light">
@@ -79,24 +80,25 @@
             </li>
           <#else>
             <li class="nav-item">
-              <a class="nav-link ${currentRequestUriHasPrefix(['/java'])?then('active', '')}" href="${'/java'}">Java</a>
+              <a class="nav-link ${currentRequestUriHasPrefix(['/category/java'])?then('active', '')}"
+                 href="${'/category/java'}">Java</a>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle ${currentRequestUriHasPrefix(['/servlet-jsp', '/spring-framework'])?then('active', '')}"
+              <a class="nav-link dropdown-toggle ${currentRequestUriHasPrefix(['/category/servlet-jsp', '/category/spring-framework'])?then('active', '')}"
                  href="#" id="angular-dropdown" data-toggle="dropdown" aria-haspopup="true"
                  aria-expanded="false">Java Web</a>
               <div class="dropdown-menu" aria-labelledby="angular-dropdown">
-                <a class="dropdown-item" href="${'/servlet-jsp'}">Servlet/JSP</a>
-                <a class="dropdown-item" href="${'/spring-framework'}">Spring Framework</a>
+                <a class="dropdown-item" href="${'/category/servlet-jsp'}">Servlet/JSP</a>
+                <a class="dropdown-item" href="${'/category/spring-framework'}">Spring Framework</a>
               </div>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle ${currentRequestUriHasPrefix(['/jpa-hibernate', '/mybatis'])?then('active', '')}"
+              <a class="nav-link dropdown-toggle ${currentRequestUriHasPrefix(['/category/jpa-hibernate', '/category/mybatis'])?then('active', '')}"
                  href="#" id="angular-dropdown" data-toggle="dropdown" aria-haspopup="true"
                  aria-expanded="false">Java Persistence</a>
               <div class="dropdown-menu" aria-labelledby="angular-dropdown">
-                <a class="dropdown-item" href="${'/jpa-hibernate'}">JPA/Hibernate</a>
-                <a class="dropdown-item" href="${'/mybatis'}">MyBatis</a>
+                <a class="dropdown-item" href="${'/category/jpa-hibernate'}">JPA/Hibernate</a>
+                <a class="dropdown-item" href="${'/category/mybatis'}">MyBatis</a>
               </div>
             </li>
           </#if>
@@ -134,28 +136,32 @@
       <div class="col-12 col-sm-12 col-md-12 col-lg-12 text-dark bg-light text-center">
         <div class="row pt-4">
           <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-            <h5 class="font-weight-normal">THỂ LOẠI</h5>
+            <h5 class="font-weight-normal">DANH MỤC</h5>
             <ul class="pl-0 footer-link">
-              <li><a href="/">Java</a></li>
-              <li><a href="/">Servlet/JSP</a></li>
-              <li><a href="/">Spring Framework</a></li>
-              <li><a href="/">JPA/Hibernate</a></li>
+              <li><a href="${'/category/java'}">Java</a></li>
+              <li><a href="${'/category/servlet-jsp'}">Servlet/JSP</a></li>
+              <li><a href="${'/category/spring-framework'}">Spring Framework</a></li>
+              <li><a href="${'/category/jpa-hibernate'}">JPA/Hibernate</a></li>
+              <li><a href="${'/category/mybatis'}">MyBatis</a></li>
+              <li><a href="${'/categories'}">and more...</a></li>
             </ul>
           </div>
           <div class="col-12 col-sm-12 col-md-4 col-lg-4">
             <h5 class="font-weight-normal">HƯỚNG DẪN</h5>
             <ul class="pl-0 footer-link">
-              <li><a href="/">Lập trình Web với Servlet/JSP</a></li>
-              <li><a href="/">Lập trình Web với Spring Framework</a></li>
-              <li><a href="/">Lập trình cơ bản Java</a></li>
+              <li><a href="${'/series/basic-java'}">Lập trình cơ bản Java</a></li>
+              <li><a href="${'/series/servlet-jsp-tutorials'}">Java web căn bản với Servlet - JSP</a></li>
+              <li><a href="${'/series/spring-framework-tutorials'}">Lập trình web với Spring Framework</a></li>
+              <li><a href="${'/series/security-in-spring'}">Bảo mật web với Spring Security</a></li>
+              <li><a href="${'/series/rest-with-spring'}">Lập trình REST với Spring</a></li>
+              <li><a href="${'/series'}">and more...</a></li>
             </ul>
           </div>
           <div class="col-12 col-sm-12 col-md-4 col-lg-4">
             <h5 class="font-weight-normal">THÔNG TIN - LIÊN HỆ</h5>
             <ul class="pl-0 footer-link">
-              <li><a href="/">Giới thiệu blog</a></li>
+              <li><a href="${'/about'}">Giới thiệu blog</a></li>
               <li><a href="/">Liên hệ quảng cáo</a></li>
-              <li><a href="/">Tuyển người viết bài</a></li>
             </ul>
           </div>
         </div>

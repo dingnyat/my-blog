@@ -25,18 +25,15 @@ public class SeriesController {
     }
 
     @PostMapping("/series/list")
-    @ResponseBody
-    public DataTableResponse<Series> list(@RequestBody DataTableRequest dataTableRequest) {
-        List<Series> series = seriesService.getTableData(dataTableRequest, "id", "code", "name");
-        DataTableResponse<Series> dataTableResponse = new DataTableResponse<>(series);
-        dataTableResponse.setDraw(dataTableRequest.getDraw());
-        dataTableResponse.setRecordsFiltered(seriesService.countTableDataRecords(dataTableRequest, "id", "code", "name"));
-        dataTableResponse.setRecordsTotal(seriesService.countAllRecords());
-        return dataTableResponse;
+    public ResponseEntity<DataTableResponse<Series>> list(@RequestBody DataTableRequest dataTableRequest) {
+        try {
+            return new ResponseEntity<>(seriesService.getTableData(dataTableRequest), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/series/add")
-    @ResponseBody
     public ResponseEntity<String> add(@ModelAttribute Series series) {
         try {
             seriesService.create(series);
@@ -47,7 +44,6 @@ public class SeriesController {
     }
 
     @PutMapping("/series/update")
-    @ResponseBody
     public ResponseEntity<String> update(@ModelAttribute Series series) {
         try {
             seriesService.update(series);
@@ -58,7 +54,6 @@ public class SeriesController {
     }
 
     @DeleteMapping("/series/delete/{id}")
-    @ResponseBody
     public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
         try {
             seriesService.delete(id);
@@ -69,7 +64,6 @@ public class SeriesController {
     }
 
     @GetMapping("/series/multiple-delete/{ids}")
-    @ResponseBody
     public ResponseEntity<String> multipleDelete(@PathVariable("ids") List<Integer> ids) {
         try {
             for (Integer id : ids) {

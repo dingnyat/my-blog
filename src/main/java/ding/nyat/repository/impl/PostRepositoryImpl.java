@@ -1,13 +1,12 @@
 package ding.nyat.repository.impl;
 
-import ding.nyat.entity.AuthorEntity;
 import ding.nyat.entity.PostEntity;
+import ding.nyat.entity.TagEntity;
 import ding.nyat.repository.PostRepository;
-import ding.nyat.repository.RepositoryAbstract;
+import ding.nyat.repository.RepositoryAbstraction;
 import ding.nyat.util.datatable.DataTableRequest;
-import ding.nyat.util.search.SearchCriteria;
-import ding.nyat.util.search.SearchCriteriaConsumer;
-import ding.nyat.util.search.SearchOperator;
+import ding.nyat.util.search.SearchCriterion;
+import ding.nyat.util.search.SearchRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,89 +18,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class PostRepositoryImpl extends RepositoryAbstract<Integer, PostEntity> implements PostRepository {
-    @Override
-    public List<PostEntity> getTableData(String username, DataTableRequest dataTableRequest, String... fieldNames) {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<PostEntity> postQuery = builder.createQuery(PostEntity.class);
-        Root<PostEntity> postRoot = postQuery.from(PostEntity.class);
-        Join<AuthorEntity, PostEntity> postAuthorJoin = postRoot.join("author");
-
-
-        List<Predicate> predicates = new ArrayList<>();
-
-        if (fieldNames != null && fieldNames.length > 0) {
-            if (dataTableRequest.getSearch().getValue() != null && !dataTableRequest.getSearch().getValue().isEmpty()) {
-                SearchCriteriaConsumer searchCriteriaConsumer = new SearchCriteriaConsumer(builder, postRoot);
-                for (String field : fieldNames) {
-                    SearchCriteria searchCriteria = new SearchCriteria(field, SearchOperator.CONTAINS, dataTableRequest.getSearch().getValue());
-                    predicates.add(searchCriteriaConsumer.createPredicate(searchCriteria));
-                }
-            }
-            String orderColumn = dataTableRequest.sortBy(dataTableRequest.getOrder().get(0));
-            for (String field : fieldNames) {
-                if (orderColumn.equalsIgnoreCase(field)) {
-                    if (dataTableRequest.getOrder().get(0).getDir().equalsIgnoreCase("asc")) {
-                        postQuery.orderBy(builder.asc(postRoot.get(field)));
-                    } else {
-                        postQuery.orderBy(builder.desc(postRoot.get(field)));
-                    }
-                }
-            }
-        }
-
-        predicates.add(builder.equal(postAuthorJoin.get("account").get("username"), username));
-
-        postQuery.where(builder.or(predicates.toArray(new Predicate[]{})));
-
-        TypedQuery<PostEntity> typedQuery = entityManager.createQuery(postQuery.select(postRoot));
-        typedQuery.setFirstResult(dataTableRequest.getStart());
-        typedQuery.setMaxResults(dataTableRequest.getLength());
-        return typedQuery.getResultList();
-    }
-
-    @Override
-    public Long countTableDataRecords(String username, DataTableRequest dataTableRequest, String... fieldNames) {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> postQuery = builder.createQuery(Long.class);
-        Root<PostEntity> postRoot = postQuery.from(PostEntity.class);
-        Join<AuthorEntity, PostEntity> postAuthorJoin = postRoot.join("author");
-
-
-        List<Predicate> predicates = new ArrayList<>();
-
-        if (fieldNames != null && fieldNames.length > 0 && dataTableRequest.getSearch().getValue() != null && !dataTableRequest.getSearch().getValue().isEmpty()) {
-            SearchCriteriaConsumer searchCriteriaConsumer = new SearchCriteriaConsumer(builder, postRoot);
-            for (String field : fieldNames) {
-                SearchCriteria searchCriteria = new SearchCriteria(field, SearchOperator.CONTAINS, dataTableRequest.getSearch().getValue());
-                predicates.add(searchCriteriaConsumer.createPredicate(searchCriteria));
-            }
-        }
-
-        predicates.add(builder.equal(postAuthorJoin.get("account").get("username"), username));
-
-        postQuery.where(builder.or(predicates.toArray(new Predicate[]{})));
-
-        return entityManager.createQuery(postQuery.select(builder.count(postRoot))).getSingleResult();
-    }
-
-    @Override
-    public Long countAllRecords(String username) {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-
-        CriteriaQuery<Long> postQuery = builder.createQuery(Long.class);
-        Root<PostEntity> postRoot = postQuery.from(PostEntity.class);
-        Join<AuthorEntity, PostEntity> postAuthorJoin = postRoot.join("author");
-
-        List<Predicate> predicates = new ArrayList<>();
-
-        predicates.add(builder.equal(postAuthorJoin.get("account").get("username"), username));
-
-        postQuery.where(builder.or(predicates.toArray(new Predicate[]{})));
-
-        return entityManager.createQuery(postQuery.select(builder.count(postRoot))).getSingleResult();
-    }
-
+public class PostRepositoryImpl extends RepositoryAbstraction<PostEntity> implements PostRepository {
     @Override
     public PostEntity getByCode(String code) {
         try {
@@ -111,5 +28,142 @@ public class PostRepositoryImpl extends RepositoryAbstract<Integer, PostEntity> 
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+
+    @Override
+    public List<PostEntity> search(SearchRequest searchRequest) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<PostEntity> criteriaQuery = criteriaBuilder.createQuery(PostEntity.class);
+        Root<PostEntity> root = criteriaQuery.from(PostEntity.class);
+        Join<PostEntity, TagEntity> postTagJoin = root.join("tags");
+
+        criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDate")));
+
+        List<Predicate> predicates = new ArrayList<>();
+        if (searchRequest.getSearchCriteria() != null) {
+            for (SearchCriterion searchCriterion : searchRequest.getSearchCriteria()) {
+                switch (searchCriterion.getKey()) {
+                    case "authorCode":
+                        predicates.add(criteriaBuilder.equal(root.get("author").get("code"), searchCriterion.getValue()));
+                        break;
+                    case "categoryCode":
+                        predicates.add(criteriaBuilder.equal(postTagJoin.get("category").get("code"), searchCriterion.getValue()));
+                        break;
+                    case "tagCode":
+                        predicates.add(criteriaBuilder.equal(postTagJoin.get("code"), searchCriterion.getValue()));
+                        break;
+                    case "seriesCode":
+                        predicates.add(criteriaBuilder.equal(root.get("series").get("code"), searchCriterion.getValue()));
+                        criteriaQuery.orderBy(criteriaBuilder.asc(root.get("positionInSeries")));
+                        break;
+                }
+            }
+        }
+        criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[]{})));
+
+        TypedQuery<PostEntity> typedQuery = entityManager.createQuery(criteriaQuery.select(root));
+        typedQuery.setFirstResult(searchRequest.getStart());
+        typedQuery.setMaxResults(searchRequest.getLength());
+        return typedQuery.getResultList();
+    }
+
+    @Override
+    public int countSearchRecords(SearchRequest searchRequest) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Integer> criteriaQuery = criteriaBuilder.createQuery(Integer.class);
+        Root<PostEntity> root = criteriaQuery.from(PostEntity.class);
+        Join<PostEntity, TagEntity> postTagJoin = root.join("tags");
+
+        List<Predicate> predicates = new ArrayList<>();
+        if (searchRequest.getSearchCriteria() != null) {
+            for (SearchCriterion searchCriterion : searchRequest.getSearchCriteria()) {
+                switch (searchCriterion.getKey()) {
+                    case "authorCode":
+                        predicates.add(criteriaBuilder.equal(root.get("author").get("code"), searchCriterion.getValue()));
+                        break;
+                    case "categoryCode":
+                        predicates.add(criteriaBuilder.equal(postTagJoin.get("category").get("code"), searchCriterion.getValue()));
+                        break;
+                    case "tagCode":
+                        predicates.add(criteriaBuilder.equal(postTagJoin.get("code"), searchCriterion.getValue()));
+                        break;
+                    case "seriesCode":
+                        predicates.add(criteriaBuilder.equal(root.get("series").get("code"), searchCriterion.getValue()));
+                        break;
+                }
+            }
+        }
+        criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[]{})));
+
+        return entityManager.createQuery(criteriaQuery.select(criteriaBuilder.count(root).as(Integer.class))).getSingleResult();
+    }
+
+    @Override
+    public List<PostEntity> getTableData(DataTableRequest dataTableRequest) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<PostEntity> criteriaQuery = criteriaBuilder.createQuery(PostEntity.class);
+        Root<PostEntity> root = criteriaQuery.from(PostEntity.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+        if (dataTableRequest.getSearch().getValue() != null && !dataTableRequest.getSearch().getValue().isEmpty()) {
+            for (String field : dataTableRequest.getSearchableFields()) {
+                predicates.add(criteriaBuilder.like(root.get(field).as(String.class), "%" + dataTableRequest.getSearch().getValue() + "%"));
+            }
+            criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[]{})));
+        }
+
+        if (dataTableRequest.getSearchCriteria() != null) {
+            List<Predicate> predicates2 = new ArrayList<>();
+            for (SearchCriterion searchCriterion : dataTableRequest.getSearchCriteria()) {
+                if (searchCriterion.getKey().equals("authorCode")) {
+                    predicates2.add(criteriaBuilder.equal(root.get("author").get("code"), searchCriterion.getValue()));
+                }
+            }
+            criteriaQuery.where(criteriaBuilder.and(predicates2.toArray(new Predicate[]{})));
+        }
+
+        String orderColumn = dataTableRequest.sortBy(dataTableRequest.getOrder().get(0));
+        for (String field : dataTableRequest.getOrderableFields()) {
+            if (orderColumn.equalsIgnoreCase(field)) {
+                if (dataTableRequest.getOrder().get(0).getDir().equalsIgnoreCase("asc")) {
+                    criteriaQuery.orderBy(criteriaBuilder.asc(root.get(field)));
+                } else {
+                    criteriaQuery.orderBy(criteriaBuilder.desc(root.get(field)));
+                }
+            }
+        }
+
+        TypedQuery<PostEntity> typedQuery = entityManager.createQuery(criteriaQuery.select(root));
+        typedQuery.setFirstResult(dataTableRequest.getStart());
+        typedQuery.setMaxResults(dataTableRequest.getLength());
+        return typedQuery.getResultList();
+    }
+
+    @Override
+    public int countFilteredTableData(DataTableRequest dataTableRequest) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Integer> criteriaQuery = criteriaBuilder.createQuery(Integer.class);
+        Root<PostEntity> root = criteriaQuery.from(PostEntity.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+        if (dataTableRequest.getSearch().getValue() != null && !dataTableRequest.getSearch().getValue().isEmpty()) {
+            for (String field : dataTableRequest.getSearchableFields()) {
+                predicates.add(criteriaBuilder.like(root.get(field).as(String.class), "%" + dataTableRequest.getSearch().getValue() + "%"));
+            }
+            criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[]{})));
+        }
+
+        if (dataTableRequest.getSearchCriteria() != null) {
+            List<Predicate> predicates2 = new ArrayList<>();
+            for (SearchCriterion searchCriterion : dataTableRequest.getSearchCriteria()) {
+                if (searchCriterion.getKey().equals("authorCode")) {
+                    predicates2.add(criteriaBuilder.equal(root.get("author").get("code"), searchCriterion.getValue()));
+                }
+            }
+            criteriaQuery.where(criteriaBuilder.and(predicates2.toArray(new Predicate[]{})));
+        }
+
+        return entityManager.createQuery(criteriaQuery.select(criteriaBuilder.count(root).as(Integer.class))).getSingleResult();
     }
 }

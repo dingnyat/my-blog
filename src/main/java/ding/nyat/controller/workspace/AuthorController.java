@@ -38,18 +38,15 @@ public class AuthorController {
     }
 
     @PostMapping("/author/list")
-    @ResponseBody
-    public DataTableResponse<Author> accountList(@RequestBody DataTableRequest dataTableRequest) {
-        List<Author> authors = authorService.getTableData(dataTableRequest, "id", "code", "name");
-        DataTableResponse<Author> dataTableResponse = new DataTableResponse<>(authors);
-        dataTableResponse.setDraw(dataTableRequest.getDraw());
-        dataTableResponse.setRecordsFiltered(authorService.countTableDataRecords(dataTableRequest, "id", "code", "name"));
-        dataTableResponse.setRecordsTotal(authorService.countAllRecords());
-        return dataTableResponse;
+    public ResponseEntity<DataTableResponse<Author>> accountList(@RequestBody DataTableRequest dataTableRequest) {
+        try {
+            return new ResponseEntity<>(authorService.getTableData(dataTableRequest), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/account/add")
-    @ResponseBody
     public ResponseEntity<String> add(@ModelAttribute Account account) {
         try {
 
@@ -73,7 +70,6 @@ public class AuthorController {
     }
 
     @PutMapping("/author/update")
-    @ResponseBody
     public ResponseEntity<String> update(@ModelAttribute Author author) {
         try {
 
@@ -95,7 +91,6 @@ public class AuthorController {
     }
 
     @GetMapping("/author/multiple-delete/{ids}")
-    @ResponseBody
     public ResponseEntity<String> multipleDelete(@PathVariable("ids") List<Integer> ids) {
         try {
             for (Integer id : ids) {
@@ -108,7 +103,6 @@ public class AuthorController {
     }
 
     @DeleteMapping("/author/delete/{id}")
-    @ResponseBody
     public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
         try {
             authorService.delete(id);
@@ -119,7 +113,6 @@ public class AuthorController {
     }
 
     @PostMapping("/author/delete-link")
-    @ResponseBody
     public ResponseEntity<String> deleteLink(@RequestParam("linkId") Integer linkId, @RequestParam("authorId") Integer authorId) {
         try {
             authorService.deleteLink(linkId, authorId);
@@ -130,15 +123,17 @@ public class AuthorController {
     }
 
     @PostMapping("/author/get-account/{id}")
-    @ResponseBody
-    public Account getAccount(@PathVariable("id") Integer id) {
-        Account account = accountService.getByAuthorId(id);
-        if (account != null) account.setPassword("");
-        return account;
+    public ResponseEntity<Account> getAccount(@PathVariable("id") Integer id) {
+        try {
+            Account account = accountService.getByAuthorId(id);
+            if (account != null) account.setPassword("");
+            return new ResponseEntity<>(account, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/account/update")
-    @ResponseBody
     public ResponseEntity<String> updateAccount(@ModelAttribute Account account) {
         try {
             if (account.getPassword() != null && !account.getPassword().isEmpty())
@@ -151,7 +146,6 @@ public class AuthorController {
     }
 
     @PutMapping("/author/add-link/{id}")
-    @ResponseBody
     public ResponseEntity<String> addLink(@PathVariable("id") Integer authorId, @ModelAttribute SocialLink socialLink) {
         try {
             authorService.addLink(authorId, socialLink);

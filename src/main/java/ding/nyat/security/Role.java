@@ -1,14 +1,21 @@
 package ding.nyat.security;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "role")
 public class Role {
 
     @Id
     @Column(name = "id", nullable = false, unique = true, updatable = false, insertable = false)
-    private int id;
+    private Integer id;
 
     @Column(name = "name", nullable = false, unique = true, updatable = false, insertable = false)
     private String name;
@@ -19,31 +26,7 @@ public class Role {
     @Transient
     public static final Role AUTHOR = new Role(2, "AUTHOR");
 
-    public Role() {
-    }
-
-    public Role(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
     public String getFullName() {
         return "ROLE_" + name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }

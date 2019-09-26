@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class SearchBuilder {
 
-    private List<SearchCriteria> searchCriteria;
+    private List<SearchCriterion> searchCriteria;
 
     private static Pattern pattern;
 
@@ -31,12 +31,12 @@ public class SearchBuilder {
                     searchOperator = SearchOperator.STARTS_WITH;
                 }
             }
-            this.searchCriteria.add(new SearchCriteria(key, searchOperator, value));
+            this.searchCriteria.add(new SearchCriterion(key, searchOperator, value));
         }
         return this;
     }
 
-    public List<SearchCriteria> build() {
+    public List<SearchCriterion> build() {
         return this.searchCriteria;
     }
 

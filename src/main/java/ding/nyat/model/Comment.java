@@ -1,13 +1,14 @@
 package ding.nyat.model;
 
+import ding.nyat.annotation.Identifier;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class Comment extends CommonModel<Integer> {
+public class Comment {
+    @Identifier
+    private Integer id;
     private String commentBy;
     private String content;
     private String createdDate;

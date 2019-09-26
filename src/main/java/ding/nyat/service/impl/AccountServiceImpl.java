@@ -6,7 +6,7 @@ import ding.nyat.model.Account;
 import ding.nyat.repository.AccountRepository;
 import ding.nyat.security.Role;
 import ding.nyat.service.AccountService;
-import ding.nyat.service.ServiceAbstract;
+import ding.nyat.service.ServiceAbstraction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,14 +16,14 @@ import java.util.HashSet;
 
 @Service
 @Transactional
-public class AccountServiceImpl extends ServiceAbstract<Integer, Account, AccountEntity, AccountRepository> implements AccountService {
+public class AccountServiceImpl extends ServiceAbstraction<Account, AccountEntity, AccountRepository> implements AccountService {
 
     public AccountServiceImpl(@Autowired AccountRepository repository) {
         super(repository);
     }
 
     @Override
-    public Integer create(Account account) {
+    public void create(Account account) {
         AccountEntity accountEntity = new AccountEntity();
         accountEntity.setUsername(account.getUsername());
         accountEntity.setPassword(account.getPassword());
@@ -40,12 +40,12 @@ public class AccountServiceImpl extends ServiceAbstract<Integer, Account, Accoun
 
         accountEntity.setAuthor(authorEntity);
         accountEntity.setRoles(new HashSet<>(Collections.singletonList(Role.AUTHOR)));
-        return repository.create(accountEntity);
+        repository.create(accountEntity);
     }
 
     @Override
     public void update(Account account) {
-        AccountEntity accountEntity = repository.getById(account.getId());
+        AccountEntity accountEntity = repository.read(account.getId());
         if (account.getPassword() != null && !account.getPassword().isEmpty())
             accountEntity.setPassword(account.getPassword());
         accountEntity.setEmail(account.getEmail());
@@ -67,7 +67,7 @@ public class AccountServiceImpl extends ServiceAbstract<Integer, Account, Accoun
     @Override
     public Account getByAuthorId(Integer id) {
         // lười viết xuống repo hay dùng authorRepo. dù sao account cũng ít record với hiếm khi dùng method này
-        return getAllRecords().stream()
+        return readAll().stream()
                 .filter(account -> account.getAuthor() != null && account.getAuthor().getId().equals(id))
                 .findFirst().orElse(null);
     }

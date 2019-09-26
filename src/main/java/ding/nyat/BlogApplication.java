@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.http.CacheControl;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -45,6 +46,7 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
         freeMarkerConfigurer.getTaglibFactory().setClasspathTlds(Collections.singletonList("/META-INF/security.tld"));
         TaglibFactory taglibFactory = freeMarkerConfigurer.getTaglibFactory();
         taglibFactory.setObjectWrapper(freeMarkerConfigurer.getConfiguration().getObjectWrapper());
+
         try {
             for (Field field : Role.class.getFields()) {
                 if (Modifier.isFinal(field.getModifiers()) && Modifier.isStatic(field.getModifiers())) {
@@ -102,7 +104,8 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
                 .and()
                 .rememberMe().key("remember-me").tokenValiditySeconds(Integer.parseInt(env.getRequiredProperty("authentication.persistent-login.max-age")))
                 .rememberMeServices(new CustomPersistentTokenBasedRememberMeServices("remember-me", userDetailsService, persistentTokenRepository))
-                .and()// dm binh thuong vanx dung logoutUrl ma sao tu nhien bi loi 404, phai dung cai nay. ko biet co lien quan den csrf ko
+                .and()
+                /*TODO bat csrf thi /logout phai dung method POST neu de dung logoutUrl(...), hoac ep dung GET nhu cach duoi*/
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")).logoutSuccessHandler(new CustomUrlLogoutSuccessHanlder())
                 .deleteCookies(env.getProperty("server.servlet.session.cookie.name")).invalidateHttpSession(true);
 
@@ -111,6 +114,18 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
                 .maximumSessions(Integer.parseInt(env.getRequiredProperty("session.max-session")))
                 .expiredUrl("/expired-session")
                 .and().sessionFixation().migrateSession();// default value // prevent session fixation acttack. // When user tries to authenticate again, old session is invalidated and the attributes from the old session are copied over new one
+    }
+
+    /**
+     * This is a trick how to inject authenticationManagerBean, userDetailsService
+     * to static variables in AdvancedSecurityContextHolder
+     */
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        AdvancedSecurityContextHolder.setAuthenticationManager(super.authenticationManagerBean());
+        AdvancedSecurityContextHolder.setUserDetailsService(this.userDetailsService);
+        return super.authenticationManagerBean();
     }
 
     @Bean
@@ -123,16 +138,17 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
         return registrationBean;
     }
 
-    @Bean
-    public FilterRegistrationBean<ResourceUrlEncodingFilter> resourceUrlEncodingFilter() {
-        FilterRegistrationBean<ResourceUrlEncodingFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new ResourceUrlEncodingFilter());
-        registrationBean.addUrlPatterns("/*");
-        return registrationBean;
-    }
+    @EnableWebMvc // khong impl tren BlogApplication duoc (loi taglib freemarker)
+    public static class CustomWebMvcConfigurer implements WebMvcConfigurer {
 
-    @EnableWebMvc
-    public static class CacheStaticConfigurer implements WebMvcConfigurer {
+        @Bean
+        public FilterRegistrationBean<ResourceUrlEncodingFilter> resourceUrlEncodingFilter() {
+            FilterRegistrationBean<ResourceUrlEncodingFilter> registrationBean = new FilterRegistrationBean<>();
+            registrationBean.setFilter(new ResourceUrlEncodingFilter());
+            registrationBean.addUrlPatterns("/*");
+            return registrationBean;
+        }
+
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
             registry.addResourceHandler("/**").addResourceLocations("classpath:/static/")
@@ -141,5 +157,7 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
                     .addResolver(new VersionResourceResolver().addContentVersionStrategy("/**"))
                     .addTransformer(new CssLinkResourceTransformer());
         }
+
     }
+
 }

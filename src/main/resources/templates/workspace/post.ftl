@@ -31,6 +31,7 @@
               ],
               columnDefs: [
                   {orderable: false, targets: [0, 5]},
+                  {searchable: false, targets: [0, 5]},
                   {
                       render: function () {
                           return "";
@@ -51,7 +52,7 @@
                   style: 'multi',
                   selector: 'td:first-child'
               },
-              order: [1, 'desc'],
+              order: [4, 'desc'],
               language: {
                   url: "${'/vendor/datatables-jquery/Vietnamese.json'}",
                   searchPlaceholder: ""

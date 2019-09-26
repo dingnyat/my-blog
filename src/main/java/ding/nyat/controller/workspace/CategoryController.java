@@ -33,23 +33,20 @@ public class CategoryController {
 
     @GetMapping("/category")
     public String category(Model model) {
-        model.addAttribute("seriesList", seriesService.getAllRecords());
+        model.addAttribute("seriesList", seriesService.readAll());
         return "workspace/category";
     }
 
     @PostMapping("/category/list")
-    @ResponseBody
-    public DataTableResponse<Category> list(@RequestBody DataTableRequest dataTableRequest) {
-        List<Category> categories = categoryService.getTableData(dataTableRequest, "id", "code", "name");
-        DataTableResponse<Category> dataTableResponse = new DataTableResponse<>(categories);
-        dataTableResponse.setDraw(dataTableRequest.getDraw());
-        dataTableResponse.setRecordsFiltered(categoryService.countTableDataRecords(dataTableRequest, "id", "code", "name"));
-        dataTableResponse.setRecordsTotal(categoryService.countAllRecords());
-        return dataTableResponse;
+    public ResponseEntity<DataTableResponse<Category>> list(@RequestBody DataTableRequest dataTableRequest) {
+        try {
+            return new ResponseEntity<>(categoryService.getTableData(dataTableRequest), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/category/add")
-    @ResponseBody
     public ResponseEntity<String> add(@ModelAttribute Category category) {
         try {
             categoryService.create(category);
@@ -60,7 +57,6 @@ public class CategoryController {
     }
 
     @PutMapping("/category/add-tag/{id}")
-    @ResponseBody
     public ResponseEntity<String> addTag(@PathVariable("id") Integer categoryId, @ModelAttribute Tag tag) {
         try {
             categoryService.addTag(categoryId, tag);
@@ -71,7 +67,6 @@ public class CategoryController {
     }
 
     @DeleteMapping("/category/delete-tag/{id}")
-    @ResponseBody
     public ResponseEntity<String> deleteTag(@PathVariable("id") Integer tagId) {
         try {
             tagService.delete(tagId);
@@ -82,7 +77,6 @@ public class CategoryController {
     }
 
     @DeleteMapping("/category/delete/{id}")
-    @ResponseBody
     public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
         try {
             categoryService.delete(id);
@@ -93,7 +87,6 @@ public class CategoryController {
     }
 
     @PutMapping("/category/update")
-    @ResponseBody
     public ResponseEntity<String> update(@ModelAttribute Category category) {
         try {
             categoryService.update(category);
@@ -104,7 +97,6 @@ public class CategoryController {
     }
 
     @GetMapping("/category/multiple-delete/{ids}")
-    @ResponseBody
     public ResponseEntity<String> multipleDelete(@PathVariable("ids") List<Integer> ids) {
         try {
             for (Integer id : ids) {
@@ -117,7 +109,6 @@ public class CategoryController {
     }
 
     @DeleteMapping("/category/deselect-series")
-    @ResponseBody
     public ResponseEntity<String> deselectSeries(@RequestBody String reqBody) {
         try {
             JsonNode root = (new ObjectMapper()).readTree(reqBody);
@@ -131,7 +122,6 @@ public class CategoryController {
     }
 
     @PutMapping("/category/link-series")
-    @ResponseBody
     public ResponseEntity<String> linkSeries(@RequestBody String reqBody) {
         try {
             JsonNode root = (new ObjectMapper()).readTree(reqBody);

@@ -1,29 +1,29 @@
 package ding.nyat.repository;
 
 import ding.nyat.util.datatable.DataTableRequest;
-import ding.nyat.util.search.SearchCriteria;
+import ding.nyat.util.search.SearchRequest;
 
 import java.io.Serializable;
 import java.util.List;
 
-public interface RepositoryInterface<PrimaryKeyType extends Serializable, E> {
-    PrimaryKeyType create(E entity);
+public interface RepositoryInterface<E> {
+    void create(E entity);
 
     void update(E entity);
 
     void delete(E entity);
 
-    E getById(PrimaryKeyType id);
+    E read(Serializable id);
 
-    List<E> getAllRecords();
+    List<E> readAll();
 
-    List<E> search(List<SearchCriteria> searchCriteria);
+    List<E> search(SearchRequest searchRequest);
 
-    Long getTheNumberOfSearchedRecords(List<SearchCriteria> searchCriteria);
+    int countSearchRecords(SearchRequest searchRequest);
 
-    List<E> getTableData(DataTableRequest dataTableRequest, String... fieldNames);
+    List<E> getTableData(DataTableRequest dataTableRequest);
 
-    Long getTheNumberOfFilteredRecords(DataTableRequest dataTableRequest, String... fieldNames);
+    int countFilteredTableData(DataTableRequest dataTableRequest);
 
-    Long getTheNumberOfAllRecords();
+    int countAllRecords();
 }

@@ -2,7 +2,7 @@ package ding.nyat.repository.impl;
 
 import ding.nyat.entity.AccountEntity;
 import ding.nyat.repository.AccountRepository;
-import ding.nyat.repository.RepositoryAbstract;
+import ding.nyat.repository.RepositoryAbstraction;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,7 +11,7 @@ import javax.persistence.NoResultException;
 
 @Repository
 @Transactional
-public class AccountRepositoryImpl extends RepositoryAbstract<Integer, AccountEntity> implements AccountRepository {
+public class AccountRepositoryImpl extends RepositoryAbstraction<AccountEntity> implements AccountRepository {
 
     @Override
     public AccountEntity getByUsername(String username) {
