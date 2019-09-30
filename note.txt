@@ -2,10 +2,6 @@ sua query selector thanh input[name] de loai bo id DOM bi trung lap bao warning
 
 sua lai cơ chế role enum tự động gen vào bảng
 
-nếu bài viết thuộc 1 series, thì post hiện ra các bài liên quan trong series trên đầu
-
 tìm kiếm bài viết
 
-giới thiệu trang
-
-làm 1 trang show hết cate với series /categories /series
+làm trang show tất cả categories "/categories" và tất cả series "/series"

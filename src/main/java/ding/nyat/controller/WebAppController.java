@@ -257,17 +257,8 @@ public class WebAppController {
         return null;
     }
 
-    @GetMapping("/test")
-    @ResponseBody
-    public String test() {
-        Post post = postService.read(5);
-        post.setId(null);
-        String code = post.getCode();
-        for (int i = 1; i <= 50; i++) {
-            post.setCode(code + i);
-            post.setPositionInSeries(i + 100);
-            postService.create(post);
-        }
-        return "ok";
+    @GetMapping("/about")
+    public String about() {
+        return "about";
     }
 }

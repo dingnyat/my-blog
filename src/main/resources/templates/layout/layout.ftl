@@ -23,7 +23,7 @@
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title><#if title?? && title?has_content>${title + " | "}</#if>Annanjin</title>
-  <link rel="icon" href="<@s.url '/favicon.ico'/>"/>
+  <#--<link rel="icon" href="<@s.url '/favicon.ico'/>"/>-->
 </#macro>
 <#macro commonResources>
   <!--jQuery-->
