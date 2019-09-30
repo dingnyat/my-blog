@@ -110,13 +110,13 @@
             </div>
           </@sec.authorize>
         <#else>
-          <form class="form-inline mt-2">
+          <form class="form-inline mt-2" action="${'/'}" method="get">
             <div class="input-group">
               <label>
-                <input type="text" class="form-control" placeholder="Tìm kiếm trong blog">
+                <input type="text" name="s" class="form-control" placeholder="Tìm kiếm trong blog">
               </label>
               <div class="input-group-append search-nav-btn">
-                <button class="btn btn-warning" type="button">
+                <button class="btn btn-warning" type="submit">
                   <i class="fas fa-search"></i>
                 </button>
               </div>

@@ -44,6 +44,10 @@ public class PostRepositoryImpl extends RepositoryAbstraction<PostEntity> implem
         if (searchRequest.getSearchCriteria() != null) {
             for (SearchCriterion searchCriterion : searchRequest.getSearchCriteria()) {
                 switch (searchCriterion.getKey()) {
+                    case "title":
+                        predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("title")),
+                                "%" + searchCriterion.getValue().toString().toLowerCase() + "%"));
+                        break;
                     case "authorCode":
                         predicates.add(criteriaBuilder.equal(root.get("author").get("code"), searchCriterion.getValue()));
                         break;
@@ -79,6 +83,10 @@ public class PostRepositoryImpl extends RepositoryAbstraction<PostEntity> implem
         if (searchRequest.getSearchCriteria() != null) {
             for (SearchCriterion searchCriterion : searchRequest.getSearchCriteria()) {
                 switch (searchCriterion.getKey()) {
+                    case "title":
+                        predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("title")),
+                                "%" + searchCriterion.getValue().toString().toLowerCase() + "%"));
+                        break;
                     case "authorCode":
                         predicates.add(criteriaBuilder.equal(root.get("author").get("code"), searchCriterion.getValue()));
                         break;

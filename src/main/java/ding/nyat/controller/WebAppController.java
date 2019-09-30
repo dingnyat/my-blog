@@ -7,7 +7,6 @@ import ding.nyat.service.*;
 import ding.nyat.util.search.SearchCriterion;
 import ding.nyat.util.search.SearchOperator;
 import ding.nyat.util.search.SearchRequest;
-import ding.nyat.util.search.SearchResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,22 +44,31 @@ public class WebAppController {
     private SeriesService seriesService;
 
     @GetMapping("/")
-    public String homepage(Model model) {
+    public String homepage(Model model, @RequestParam(value = "s", required = false) String keyword) {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setLength(25);
         searchRequest.setDraw(0);
         searchRequest.setStart(searchRequest.getDraw() * searchRequest.getLength());
+        if (keyword != null) {
+            SearchCriterion searchCriterion = new SearchCriterion("title", SearchOperator.LIKE, keyword);
+            searchRequest.setSearchCriteria(Collections.singletonList(searchCriterion));
+        }
         model.addAttribute("postsResp", postService.search(searchRequest));
         return "index";
     }
 
     @GetMapping("/page/{pageNo}")
-    public String homepage(@PathVariable("pageNo") Integer pageNo, Model model) {
-        if (pageNo != null && pageNo <= 1) return "redirect:/";
+    public String homepage(@PathVariable("pageNo") Integer pageNo, Model model,
+                           @RequestParam(value = "s", required = false) String keyword) {
+        if (pageNo != null && pageNo <= 1) return "redirect:/" + (keyword != null ? "?s=" + keyword : "");
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setLength(25);
         searchRequest.setDraw(pageNo == null ? 0 : pageNo - 1);
         searchRequest.setStart(searchRequest.getDraw() * searchRequest.getLength());
+        if (keyword != null) {
+            SearchCriterion searchCriterion = new SearchCriterion("title", SearchOperator.LIKE, keyword);
+            searchRequest.setSearchCriteria(Collections.singletonList(searchCriterion));
+        }
         model.addAttribute("postsResp", postService.search(searchRequest));
         return "index";
     }
@@ -122,15 +130,6 @@ public class WebAppController {
             return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping("/post/search")
-    public ResponseEntity<SearchResponse<Post>> searchPost(@RequestBody SearchRequest searchRequest) {
-        try {
-            return new ResponseEntity<>(postService.search(searchRequest), HttpStatus.OK);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

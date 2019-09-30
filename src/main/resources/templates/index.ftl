@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title><#if title?? && title?has_content>${title}</#if></title>
-  <#--<link rel="icon" href="<@s.url '/favicon.ico'/>"/>-->
+<#--<link rel="icon" href="<@s.url '/favicon.ico'/>"/>-->
 </#macro>
 
 <#macro customResources>
@@ -33,12 +33,23 @@
           <div class="col-lg-1 col-md-12 col-sm-12 col-12 text-center">
           </div>
           <div class="col-lg-8 col-12 pl-xl-5 pl-lg-5 pl-md-5 pl-sm-5 pl-4 mb-5">
-            <div class="row d-none">Thông báo (chưa code)</div>
+            <#if !RequestParameters.s??>
+              <div class="row d-none">Thông báo (chưa code)</div>
+            </#if>
             <div class="row post-list-div">
-              <div class="col-12 mb-5 px-0">
-                <h2>Bài Viết Mới Nhất</h2>
-              </div>
+              <#if !RequestParameters.s??>
+                <div class="col-12 mb-5 px-0">
+                  <h2>Bài Viết Mới Nhất</h2>
+                </div>
+              <#else>
+                <div class="col-12 mb-5 px-0">
+                  <h2>Kết quả tìm kiếm cho từ khóa: <span class="text-primary">${RequestParameters.s}</span></h2>
+                </div>
+              </#if>
               <#if postsResp??>
+                <#if postsResp.recordsFiltered <= 0>
+                  <p>Không tìm thấy kết quả</p>
+                </#if>
                 <#list postsResp.data as post>
                   <div class="col-12 mb-3 pl-5 post-div">
                     <div class="row">
@@ -69,37 +80,39 @@
                 </#list>
               </#if>
             </div>
-            <div class="row d-flex justify-content-start align-items-center mt-4">
-              <#assign pageLink = '/page/'/>
-              <#assign curPage = postsResp.draw + 1/>
-              <#assign totalPage = postsResp.totalDraw + 1/>
-              <div class="draw-select col-xl-7 col-lg-6 col-md-8 col-sm-10 col-12 text-center px-0">
-                <a href="${(curPage > 1)?then('/', '#')}"
-                   class="mb-2 btn btn-sm btn-light ${(curPage <= 1)?then('disabled', '')}">Đầu</a>
-                <a href="${(curPage > 1)?then(pageLink + (curPage - 1), '#')}"
-                   class="mb-2 btn btn-sm btn-light ${(curPage <= 1)?then('disabled', '')}"> &lt;</a>
+            <#if postsResp.recordsFiltered gt 1>
+              <div class="row d-flex justify-content-start align-items-center mt-4">
+                <#assign pageLink = '/page/'/>
+                <#assign curPage = postsResp.draw + 1/>
+                <#assign totalPage = postsResp.totalDraw + 1/>
+                <div class="draw-select col-xl-7 col-lg-6 col-md-8 col-sm-10 col-12 text-center px-0">
+                  <a href="${(curPage > 1)?then('/' + RequestParameters.s???then('?s=' + RequestParameters.s, ''), '#')}"
+                     class="mb-2 btn btn-sm btn-light ${(curPage <= 1)?then('disabled', '')}">Đầu</a>
+                  <a href="${(curPage > 1)?then(pageLink + (curPage - 1) + RequestParameters.s???then('?s=' + RequestParameters.s, ''), '#')}"
+                     class="mb-2 btn btn-sm btn-light ${(curPage <= 1)?then('disabled', '')}"> &lt;</a>
 
-                <#assign start = (curPage <= 4)?then(1, ((curPage + 4 > totalPage)?then((totalPage - 6 < 1)?then(1, totalPage - 6), curPage - 3)))>
-                <#assign end = (curPage + 4 <= totalPage)?then(curPage + 3, totalPage)>
-                <#if (start > 1)>
-                  <a href="#"
-                     class="mb-2 btn btn-sm btn-light disabled">...</a>
-                </#if>
-                <#list start..end as x>
-                  <a href="${pageLink + x}"
-                     class="mb-2 btn btn-sm ${(postsResp.draw + 1 == x)?then('disabled btn-warning', 'btn-light')}">${x}</a>
-                </#list>
-                <#if (end < totalPage)>
-                  <a href="#"
-                     class="mb-2 btn btn-sm btn-light disabled">...</a>
-                </#if>
+                  <#assign start = (curPage <= 4)?then(1, ((curPage + 4 > totalPage)?then((totalPage - 6 < 1)?then(1, totalPage - 6), curPage - 3)))>
+                  <#assign end = (curPage + 4 <= totalPage)?then(curPage + 3, totalPage)>
+                  <#if (start > 1)>
+                    <a href="#"
+                       class="mb-2 btn btn-sm btn-light disabled">...</a>
+                  </#if>
+                  <#list start..end as x>
+                    <a href="${pageLink + x + RequestParameters.s???then('?s=' + RequestParameters.s, '')}"
+                       class="mb-2 btn btn-sm ${(postsResp.draw + 1 == x)?then('disabled btn-warning', 'btn-light')}">${x}</a>
+                  </#list>
+                  <#if (end < totalPage)>
+                    <a href="#"
+                       class="mb-2 btn btn-sm btn-light disabled">...</a>
+                  </#if>
 
-                <a href="${(curPage < totalPage)?then(pageLink + (curPage + 1), '#')}"
-                   class="mb-2 btn btn-sm btn-light ${(curPage >= totalPage)?then('disabled', '')}">&gt;</a>
-                <a href="${(curPage < totalPage)?then(pageLink + totalPage, '#')}"
-                   class="mb-2 btn btn-sm btn-light ${(curPage >= totalPage)?then('disabled', '')}">Cuối</a>
+                  <a href="${(curPage < totalPage)?then(pageLink + (curPage + 1) + RequestParameters.s???then('?s=' + RequestParameters.s, ''), '#')}"
+                     class="mb-2 btn btn-sm btn-light ${(curPage >= totalPage)?then('disabled', '')}">&gt;</a>
+                  <a href="${(curPage < totalPage)?then(pageLink + totalPage + RequestParameters.s???then('?s=' + RequestParameters.s, ''), '#')}"
+                     class="mb-2 btn btn-sm btn-light ${(curPage >= totalPage)?then('disabled', '')}">Cuối</a>
+                </div>
               </div>
-            </div>
+            </#if>
           </div>
           <div class="col-lg-3 col-md-12 col-sm-12 col-12 text-center">
             <@leftBannerSide/>
@@ -110,4 +123,4 @@
   </section>
 </#macro>
 
-<@displayPage page_title='Annanjin - Nơi mình viết mấy bài hướng dẫn Java lúc rảnh <3'/>
+<@displayPage page_title=RequestParameters.s???then('Tìm kiếm: ' + RequestParameters.s + ' | Annanjin', 'Annanjin - Nơi mình viết mấy bài hướng dẫn Java lúc rảnh <3')/>
