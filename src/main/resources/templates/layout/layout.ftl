@@ -23,7 +23,7 @@
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title><#if title?? && title?has_content>${title + " | "}</#if>Annanjin</title>
-  <link rel="icon" href="<@s.url '/favicon.ico'/>"/>
+  <#--<link rel="icon" href="<@s.url '/favicon.ico'/>"/>-->
 </#macro>
 <#macro commonResources>
   <!--jQuery-->
@@ -110,13 +110,13 @@
             </div>
           </@sec.authorize>
         <#else>
-          <form class="form-inline mt-2">
+          <form class="form-inline mt-2" action="${'/'}" method="get">
             <div class="input-group">
               <label>
-                <input type="text" class="form-control" placeholder="Tìm kiếm trong blog">
+                <input type="text" name="s" class="form-control" placeholder="Tìm kiếm trong blog">
               </label>
               <div class="input-group-append search-nav-btn">
-                <button class="btn btn-warning" type="button">
+                <button class="btn btn-warning" type="submit">
                   <i class="fas fa-search"></i>
                 </button>
               </div>

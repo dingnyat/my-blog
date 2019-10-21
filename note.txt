@@ -1,11 +1,9 @@
-sua query selector thanh input[name] de loai bo id DOM bi trung lap bao warning
+sua query selector thanh input[name] de loai bo id DOM bi trung lap bao warning ở mấy trang workspace
 
 sua lai cơ chế role enum tự động gen vào bảng
 
-nếu bài viết thuộc 1 series, thì post hiện ra các bài liên quan trong series trên đầu
+làm trang show tất cả categories "/categories" và tất cả series "/series"
 
-tìm kiếm bài viết
+loi icon show password login luc co error=true
 
-giới thiệu trang
-
-làm 1 trang show hết cate với series /categories /series
+sau khi them author, xoa luon data cua form di
