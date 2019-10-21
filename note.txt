@@ -7,3 +7,5 @@ làm trang show tất cả categories "/categories" và tất cả series "/seri
 loi icon show password login luc co error=true
 
 sau khi them author, xoa luon data cua form di
+
+cacheable favicon.ico
