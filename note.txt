@@ -8,4 +8,6 @@ loi icon show password login luc co error=true
 
 sau khi them author, xoa luon data cua form di
 
+xu ly favicon.ico load cham
+
 cacheable favicon.ico

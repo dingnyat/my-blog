@@ -9,17 +9,17 @@ public class SearchCriteriaConsumer implements Consumer<SearchCriterion> {
 
     protected Predicate predicate;
     protected CriteriaBuilder criteriaBuilder;
-    protected From root;
+    protected From<?, ?> root;
 
     public SearchCriteriaConsumer() {
     }
 
-    public SearchCriteriaConsumer(CriteriaBuilder criteriaBuilder, From root) {
+    public SearchCriteriaConsumer(CriteriaBuilder criteriaBuilder, From<?, ?> root) {
         this.criteriaBuilder = criteriaBuilder;
         this.root = root;
     }
 
-    public SearchCriteriaConsumer(Predicate predicate, CriteriaBuilder criteriaBuilder, From root) {
+    public SearchCriteriaConsumer(Predicate predicate, CriteriaBuilder criteriaBuilder, From<?, ?> root) {
         this.predicate = predicate;
         this.criteriaBuilder = criteriaBuilder;
         this.root = root;
@@ -41,11 +41,11 @@ public class SearchCriteriaConsumer implements Consumer<SearchCriterion> {
         this.criteriaBuilder = criteriaBuilder;
     }
 
-    public From getRoot() {
+    public From<?, ?> getRoot() {
         return root;
     }
 
-    public void setRoot(From root) {
+    public void setRoot(From<?, ?> root) {
         this.root = root;
     }
 
