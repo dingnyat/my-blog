@@ -17,10 +17,10 @@ public class TagEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "code", nullable = false, unique = true, length = 16)
+    @Column(name = "code", nullable = false, unique = true, length = 128)
     private String code;
 
-    @Column(name = "name", nullable = false, length = 64)
+    @Column(name = "name", nullable = false, length = 128)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
