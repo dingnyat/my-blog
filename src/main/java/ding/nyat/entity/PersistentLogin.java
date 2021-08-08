@@ -1,3 +1,4 @@
+/*
 package ding.nyat.entity;
 
 import lombok.Getter;
@@ -25,3 +26,4 @@ public class PersistentLogin {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUsed;
 }
+*/

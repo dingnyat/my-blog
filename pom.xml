@@ -2,28 +2,30 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.1.4.RELEASE</version>
-    <relativePath/> <!-- lookup parent from repository -->
-  </parent>
-  <groupId>dou.ding.nyat</groupId>
-  <artifactId>blog</artifactId>
+
+  <groupId>com.easytask</groupId>
+  <artifactId>my-blog</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
   <name>blog</name>
   <description>My Blog</description>
 
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.4.8</version>
+    <relativePath/>
+  </parent>
+
   <properties>
-    <java.version>1.8</java.version>
+    <java.version>11</java.version>
   </properties>
 
   <repositories>
     <repository>
       <id>CKFINDER-CKEDITOR</id>
       <name>CKFINDER-CKEDITOR Libraries</name>
-      <url>https://github.com/dingnjat/mvn-repo/raw/master/</url>
+      <url>https://github.com/larry-do/mvn-repo/raw/master/</url>
     </repository>
   </repositories>
 
@@ -124,15 +126,16 @@
     <dependency>
       <groupId>org.modelmapper</groupId>
       <artifactId>modelmapper</artifactId>
-      <version>2.3.2</version>
+      <version>2.4.4</version>
     </dependency>
 
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.8</version>
+      <version>1.18.20</version>
       <scope>provided</scope>
     </dependency>
+
   </dependencies>
 
   <build>

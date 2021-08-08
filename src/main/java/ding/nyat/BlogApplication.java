@@ -31,10 +31,8 @@ import org.springframework.web.servlet.resource.CssLinkResourceTransformer;
 import org.springframework.web.servlet.resource.ResourceUrlEncodingFilter;
 import org.springframework.web.servlet.resource.VersionResourceResolver;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.sql.PreparedStatement;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
@@ -46,23 +44,6 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
         freeMarkerConfigurer.getTaglibFactory().setClasspathTlds(Collections.singletonList("/META-INF/security.tld"));
         TaglibFactory taglibFactory = freeMarkerConfigurer.getTaglibFactory();
         taglibFactory.setObjectWrapper(freeMarkerConfigurer.getConfiguration().getObjectWrapper());
-
-        try {
-            for (Field field : Role.class.getFields()) {
-                if (Modifier.isFinal(field.getModifiers()) && Modifier.isStatic(field.getModifiers())) {
-                    Role role = (Role) field.get(Role.class.newInstance());
-                    PreparedStatement preparedStatement =
-                            dataSource.getConnection().prepareStatement("INSERT INTO role VALUES (?, ?);");
-                    preparedStatement.setInt(1, role.getId());
-                    preparedStatement.setString(2, role.getName());
-                    preparedStatement.executeQuery();
-                }
-            }
-        } catch (Exception e) {
-            if (e.toString().contains("duplicate") || e.toString().contains("unique")) // ko thay class exeption
-                System.out.println("Initialize roles: already existed!");
-            else System.out.println("Initialize roles: Something went wrong! Can't create roles.");
-        }
     }
 
     public static void main(String[] args) {
@@ -140,6 +121,24 @@ public class BlogApplication extends WebSecurityConfigurerAdapter {
 
     @EnableWebMvc // khong impl tren BlogApplication duoc (loi taglib freemarker)
     public static class CustomWebMvcConfigurer implements WebMvcConfigurer {
+
+        @Bean
+        public FreeMarkerViewResolver freemarkerViewResolver() {
+            FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();
+            resolver.setContentType("text/html; charset=utf-8");
+            resolver.setCache(false);
+            resolver.setPrefix("");
+            resolver.setSuffix(".ftl");
+            return resolver;
+        }
+
+        @Bean
+        public FreeMarkerConfigurer freemarkerConfig() {
+            FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
+            configurer.setTemplateLoaderPath("classpath:/templates/");
+            configurer.setDefaultEncoding("UTF-8");
+            return configurer;
+        }
 
         @Bean
         public FilterRegistrationBean<ResourceUrlEncodingFilter> resourceUrlEncodingFilter() {

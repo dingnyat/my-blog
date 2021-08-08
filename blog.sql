@@ -1,3 +1,6 @@
+INSERT INTO public.role VALUES (1, 'ADMIN');
+INSERT INTO public.role VALUES (2, 'AUTHOR');
+
 INSERT INTO public.account (id, email, is_active, password, username) VALUES (1, 'email@email.com', true, '$2a$12$MCeylXMYogbtGjRc/HZ06uJ/3KmBWCxW93sYe.fKkK5V/k/7mCewa', 'admin');
 INSERT INTO public.account (id, email, is_active, password, username) VALUES (4, 'e@e.com', true, '$2a$12$e0WxEoaHVGH5eRNwD9.hb.wFiywoiyAttBqFTcV3ytHvsQ8Vglvee', '12345');
 INSERT INTO public.account (id, email, is_active, password, username) VALUES (6, 'r@r.c', true, '$2a$12$lH7G9SzXZhOEnePJyqfV/O..TDk1k.Mhrd1vGdwVaKdVLp/4C5cjm', '123');
